@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/page/all_product_page.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -20,11 +21,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   bool isLoading = true;
+  final seachController = TextEditingController();
 
   List imageCaraousel = [
     'assets/images/home.png',
     'assets/img.png',
   ];
+
+  @override
+  void dispose() {
+    seachController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -182,6 +190,14 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     GestureDetector(
+                      onTap: () {
+                        Get.to(
+                          () => AllProductPage(
+                            data: seachController.text,
+                          ),
+                        )!
+                            .then((value) => seachController.clear());
+                      },
                       child: Icon(
                         Icons.search,
                         color: greyColor,
@@ -191,6 +207,7 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.only(left: 11),
                       width: MediaQuery.of(context).size.width * 0.55,
                       child: TextFormField(
+                        controller: seachController,
                         decoration: InputDecoration.collapsed(
                             hintText: "Cari produk...",
                             hintStyle: greyTextStyle.copyWith(
@@ -295,14 +312,8 @@ class _HomePageState extends State<HomePage> {
                     child: isLoading
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              shimmerCategory(),
-                              shimmerCategory(),
-                              shimmerCategory(),
-                              shimmerCategory(),
-                              shimmerCategory(),
-                            ],
-                          )
+                            children:
+                                List.generate(5, (_) => shimmerCategory()))
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: categoryProvider.categories
@@ -334,9 +345,9 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 16, fontWeight: semiBold),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Get.toNamed('/all-product');
-                  },
+                  // onTap: () {
+                  //   Get.off ('/all-product');
+                  // },
                   child: Text(
                     'Semua Produk',
                     style: blackTextStyle.copyWith(fontSize: 12),
@@ -350,19 +361,14 @@ class _HomePageState extends State<HomePage> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: isLoading
-                  ? Row(
-                      children: [
-                        shimmerProduct(),
-                        shimmerProduct(),
-                        shimmerProduct(),
-                      ],
-                    )
+                  ? Row(children: List.generate(4, (_) => shimmerProduct()))
                   : Row(
                       children: productProvider.product
                           .map((product) => CardProductHome(
                                 product: product!,
                               ))
-                          .toList()),
+                          .toList(),
+                    ),
             ),
           ],
         ),

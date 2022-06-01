@@ -1,13 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
+import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_store.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AllProductPage extends StatefulWidget {
-  const AllProductPage({Key? key}) : super(key: key);
+  final String data;
+  const AllProductPage({Key? key, required this.data}) : super(key: key);
 
   @override
   State<AllProductPage> createState() => _AllProductPageState();
@@ -21,7 +26,19 @@ class _AllProductPageState extends State<AllProductPage> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       getAllProduct();
+      getSeachBarProduct();
     });
+  }
+
+  getSeachBarProduct() async {
+    var response = await Dio().get(
+      Service.apiUrl + '/search/${widget.data}',
+      options: Options(
+        followRedirects: false,
+        validateStatus: (status) => true,
+      ),
+    );
+    print(response.data);
   }
 
   getAllProduct() async {
@@ -46,7 +63,7 @@ class _AllProductPageState extends State<AllProductPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Get.back(),
               child: Icon(
                 Icons.chevron_left,
                 size: 35,
@@ -170,7 +187,7 @@ class _AllProductPageState extends State<AllProductPage> {
               ),
             )
           : ListView(
-              children: [header(), content()],
+              children: [header(), Text(widget.data), content()],
             ),
     );
   }

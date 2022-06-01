@@ -3,7 +3,6 @@ import 'package:flutter_tugas_akhir/page/all_product_page.dart';
 import 'package:flutter_tugas_akhir/page/edit_profil_page.dart';
 import 'package:flutter_tugas_akhir/page/edit_store_page.dart';
 import 'package:flutter_tugas_akhir/page/home/cart_page.dart';
-import 'package:flutter_tugas_akhir/page/my_product_page.dart';
 import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/page/registration_store_page.dart';
 import 'package:flutter_tugas_akhir/page/sign_in_page.dart';
@@ -68,10 +67,8 @@ class MyApp extends StatelessWidget {
           GetPage(
               name: '/information-store',
               page: () => const StoreInformationPage()),
-          GetPage(name: '/my-product', page: () => const MyProductPage()),
           GetPage(name: '/wishlist-page', page: () => const WishlistPage()),
           GetPage(name: '/cart-page', page: () => const CartPage()),
-          GetPage(name: '/all-product', page: () => const AllProductPage()),
           // '/sign-in': (context) => const SignInPage(),
           // '/sign-up': (context) => const SignUpPage(),
           // '/main-page': (context) => const MainPage(),
