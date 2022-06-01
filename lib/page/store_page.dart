@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/page/home/main_page.dart';
+import 'package:flutter_tugas_akhir/page/my_product_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/menu_item.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class StorePage extends StatefulWidget {
@@ -162,7 +164,8 @@ class _StorePageState extends State<StorePage> {
                         MenuItem(
                             title: 'Produk Saya',
                             onPressed: () {
-                              Navigator.pushNamed(context, '/my-product');
+                              Get.off(() => MyProductPage(toko: toko),
+                                  arguments: toko.products);
                             }),
                         // MenuItem(
                         //     title: 'Tambah Produk',

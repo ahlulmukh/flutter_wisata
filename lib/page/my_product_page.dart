@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
+import 'package:flutter_tugas_akhir/provider/product_provider.dart';
+import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_my_product.dart';
+import 'package:flutter_tugas_akhir/widget/card_product_store.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-class MyProductPage extends StatelessWidget {
-  const MyProductPage({Key? key}) : super(key: key);
+class MyProductPage extends StatefulWidget {
+  final TokoModel toko;
+  const MyProductPage({Key? key, required this.toko}) : super(key: key);
 
   @override
+  State<MyProductPage> createState() => _MyProductPageState();
+}
+
+class _MyProductPageState extends State<MyProductPage> {
+  @override
   Widget build(BuildContext context) {
+    TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
+    ProductProvider productProvider = Provider.of<ProductProvider>(context);
+
     Widget header() {
       return AppBar(
         centerTitle: true,
@@ -15,7 +31,7 @@ class MyProductPage extends StatelessWidget {
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Get.back();
             },
             icon: const Icon(
               Icons.chevron_left,
@@ -47,10 +63,13 @@ class MyProductPage extends StatelessWidget {
               mainAxisSpacing: 10,
               mainAxisExtent: 223, // here set custom Height You Want
             ),
-            itemCount: 5,
-            itemBuilder: (context, index) => const CardMyProduct(),
+            itemCount: tokoProvider.toko!.products.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return CardMyProduct(
+                  product: productProvider.product[index] as ProductModel);
+            },
           ),
         ),
       );

@@ -1,11 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:intl/intl.dart';
 
 class CardMyProduct extends StatelessWidget {
-  const CardMyProduct({Key? key}) : super(key: key);
+  final ProductModel product;
+  const CardMyProduct({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+
     return Container(
       width: MediaQuery.of(context).orientation == Orientation.landscape
           ? 181
@@ -23,14 +29,37 @@ class CardMyProduct extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 120,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadiusDirectional.vertical(
-                top: Radius.circular(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(defaultRadius),
               ),
-              image: DecorationImage(
-                  image: AssetImage('assets/img2.png'), fit: BoxFit.cover),
             ),
+            // ignore: unnecessary_null_comparison
+            child: product.image.toString() == null || product.image!.isEmpty
+                ? Image.asset(
+                    'assets/images/not_product.jpeg',
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(defaultRadius)),
+                    child: Hero(
+                      tag: product.image.toString(),
+                      child: CachedNetworkImage(
+                        height: 130,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        imageUrl: product.image.toString(),
+                        placeholder: (context, url) => const Icon(Icons.image),
+                        errorWidget: (context, url, error) => const Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/images/not_product.jpeg',
+                            )),
+                      ),
+                    ),
+                  ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 11),
@@ -41,17 +70,23 @@ class CardMyProduct extends StatelessWidget {
                   height: 13,
                 ),
                 Text(
-                  'Apel Manis',
+                  product.name,
+                  overflow: TextOverflow.ellipsis,
                   style: blackTextStyle.copyWith(fontWeight: medium),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Text(
-                  'Rp. 10.000',
-                  style: greenTextStyle.copyWith(fontWeight: medium),
+                  currencyFormatter.format(product.price),
+                  style: greyTextStyle.copyWith(fontWeight: medium),
                 ),
                 const SizedBox(height: 9),
+                Text(
+                  product.category!.name.toString(),
+                  overflow: TextOverflow.ellipsis,
+                  style: greyTextStyle.copyWith(fontWeight: medium),
+                ),
               ],
             ),
           )
