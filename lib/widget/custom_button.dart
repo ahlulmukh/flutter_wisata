@@ -6,12 +6,14 @@ class CustomButton extends StatelessWidget {
   final double width;
   final EdgeInsets margin;
   final String title;
+  final double height;
 
   const CustomButton({
     Key? key,
     required this.title,
     required this.onPressed,
     this.margin = EdgeInsets.zero,
+    this.height = 50,
     this.width = double.infinity,
   }) : super(key: key);
 
@@ -19,7 +21,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      height: 50,
+      height: height,
       margin: margin,
       child: TextButton(
         style: TextButton.styleFrom(

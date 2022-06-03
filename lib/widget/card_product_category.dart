@@ -6,10 +6,10 @@ import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class CardProductStore extends StatelessWidget {
+class CardProductCategory extends StatelessWidget {
   final ProductModel product;
 
-  const CardProductStore({
+  const CardProductCategory({
     required this.product,
     Key? key,
   }) : super(key: key);
@@ -26,7 +26,7 @@ class CardProductStore extends StatelessWidget {
         width: MediaQuery.of(context).orientation == Orientation.landscape
             ? 181
             : MediaQuery.of(context).size.width * 0.4,
-        height: 200,
+        height: 180,
         margin: const EdgeInsets.only(right: 5, left: 5),
         decoration: BoxDecoration(
             border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
@@ -42,7 +42,7 @@ class CardProductStore extends StatelessWidget {
                 ),
               ),
               // ignore: unnecessary_null_comparison
-              child: product.image.toString() == null || product.image!.isEmpty
+              child: product.image.toString() == null || product.image.isEmpty
                   ? Image.asset(
                       'assets/images/not_product.jpeg',
                       height: 150,
@@ -69,16 +69,6 @@ class CardProductStore extends StatelessWidget {
                       ),
                     ),
             ),
-            // Container(
-            //   height: 150,
-            //   decoration: const BoxDecoration(
-            //     borderRadius: BorderRadiusDirectional.vertical(
-            //       top: Radius.circular(12),
-            //     ),
-            //     image: DecorationImage(
-            //         image: AssetImage('assets/img2.png'), fit: BoxFit.cover),
-            //   ),
-            // ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 11),
               child: Column(
@@ -90,7 +80,8 @@ class CardProductStore extends StatelessWidget {
                   Text(
                     product.name,
                     overflow: TextOverflow.ellipsis,
-                    style: blackTextStyle.copyWith(fontSize: 16),
+                    style: blackTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 16),
                   ),
                   const SizedBox(
                     height: 5,
@@ -101,11 +92,6 @@ class CardProductStore extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: 5,
-                  ),
-                  Text(
-                    product.market!.nameStore,
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
                   ),
                 ],
               ),

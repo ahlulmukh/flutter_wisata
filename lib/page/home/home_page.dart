@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/page/all_product_page.dart';
+import 'package:flutter_tugas_akhir/page/get_search_product_page.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_home.dart';
+import 'package:flutter_tugas_akhir/widget/card_product.dart';
 import 'package:flutter_tugas_akhir/widget/card_store_home.dart';
 import 'package:flutter_tugas_akhir/widget/category_item.dart';
 import 'package:get/get.dart';
@@ -173,48 +174,55 @@ class _HomePageState extends State<HomePage> {
 
     Widget header() {
       return Container(
-        color: whiteColor,
+        color: primaryColor,
         height: 70,
         padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Container(
+              decoration: BoxDecoration(
+                color: lightColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(defaultRadius),
+                  topLeft: Radius.circular(defaultRadius),
+                ),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: GestureDetector(
+                onTap: () {
+                  Get.to(
+                    () => GetSearchProduct(
+                      data: seachController.text,
+                    ),
+                  )!
+                      .then(
+                    (value) => seachController.clear(),
+                  );
+                },
+                child: Icon(
+                  Icons.search,
+                  color: whiteColor,
+                ),
+              ),
+            ),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.only(right: 20),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                 decoration: BoxDecoration(
                     color: whiteColor,
-                    border: Border.all(color: greyColor, width: 2),
-                    borderRadius: BorderRadius.circular(defaultRadius)),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(
-                          () => AllProductPage(
-                            data: seachController.text,
-                          ),
-                        )!
-                            .then((value) => seachController.clear());
-                      },
-                      child: Icon(
-                        Icons.search,
-                        color: greyColor,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 11),
-                      width: MediaQuery.of(context).size.width * 0.55,
-                      child: TextFormField(
-                        controller: seachController,
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Cari produk...",
-                            hintStyle: greyTextStyle.copyWith(
-                                fontSize: 14, fontWeight: semiBold)),
-                      ),
-                    ),
-                  ],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(defaultRadius),
+                      bottomRight: Radius.circular(defaultRadius),
+                    )),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 9.5),
+                child: TextFormField(
+                  controller: seachController,
+                  decoration: InputDecoration.collapsed(
+                      hintText: "Cari produk...",
+                      hintStyle: greyTextStyle.copyWith(
+                          fontSize: 14, fontWeight: semiBold)),
                 ),
               ),
             ),
@@ -225,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                 child: const Icon(
                   Icons.shopping_cart_outlined,
                   size: 25,
-                  color: Colors.grey,
+                  color: Colors.white,
                 ))
           ],
         ),
@@ -345,9 +353,9 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 16, fontWeight: semiBold),
                 ),
                 GestureDetector(
-                  // onTap: () {
-                  //   Get.off ('/all-product');
-                  // },
+                  onTap: () {
+                    Get.toNamed('/all-product');
+                  },
                   child: Text(
                     'Semua Produk',
                     style: blackTextStyle.copyWith(fontSize: 12),
@@ -364,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                   ? Row(children: List.generate(4, (_) => shimmerProduct()))
                   : Row(
                       children: productProvider.product
-                          .map((product) => CardProductHome(
+                          .map((product) => CardProduct(
                                 product: product!,
                               ))
                           .toList(),

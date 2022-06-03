@@ -5,7 +5,8 @@ import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_store.dart';
+import 'package:flutter_tugas_akhir/widget/card_product_all.dart';
+import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
 import 'package:provider/provider.dart';
 
 class DetailStorePage extends StatefulWidget {
@@ -39,7 +40,6 @@ class _DetailStorePageState extends State<DetailStorePage> {
   Widget build(BuildContext context) {
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
     TokoModel? toko = tokoProvider.toko;
-    ProductProvider productProvider = Provider.of<ProductProvider>(context);
 
     Widget header() {
       return AppBar(
@@ -101,14 +101,14 @@ class _DetailStorePageState extends State<DetailStorePage> {
                       : 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 16,
-              mainAxisExtent: 260, // here set custom Height You Want
+              mainAxisExtent: 235, // here set custom Height You Want
             ),
             itemCount: tokoProvider.toko!.products.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return CardProductStore(
-                  product: productProvider.product[index] as ProductModel);
+              return CardProductCategory(
+                  product: tokoProvider.toko!.products[index] as ProductModel);
             },
           ),
         );

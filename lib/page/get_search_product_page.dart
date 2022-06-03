@@ -1,36 +1,34 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
-import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
-import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_all.dart';
+import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
+import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class AllProductPage extends StatefulWidget {
-  const AllProductPage({Key? key}) : super(key: key);
+class GetSearchProduct extends StatefulWidget {
+  final String data;
+  const GetSearchProduct({Key? key, required this.data}) : super(key: key);
 
   @override
-  State<AllProductPage> createState() => _AllProductPageState();
+  State<GetSearchProduct> createState() => _GetSearchProductState();
 }
 
-class _AllProductPageState extends State<AllProductPage> {
+class _GetSearchProductState extends State<GetSearchProduct> {
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      getAllProduct();
-    });
+    getSeachBarProduct();
   }
 
-  getAllProduct() async {
+  getSeachBarProduct() async {
     ProductProvider productProvider = Provider.of(context, listen: false);
-    await productProvider.getProducts();
+    await productProvider.getProductSeacrh(data: widget.data);
     setState(() {
       isLoading = false;
     });
@@ -42,10 +40,13 @@ class _AllProductPageState extends State<AllProductPage> {
 
     Widget header() {
       return Container(
-        height: 70,
+        height: 110,
         color: whiteColor,
-        padding:
-            EdgeInsets.only(top: 8, bottom: 8, right: defaultMargin, left: 10),
+        padding: EdgeInsets.only(
+          top: 8,
+          bottom: 8,
+          right: defaultMargin,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -58,25 +59,21 @@ class _AllProductPageState extends State<AllProductPage> {
               ),
             ),
             const SizedBox(
-              width: 5,
+              width: 2,
             ),
             Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(right: 20),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                decoration: BoxDecoration(
-                    color: whiteColor,
-                    border: Border.all(color: greyColor, width: 2),
-                    borderRadius: BorderRadius.circular(defaultRadius)),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: greyColor,
-                    ),
-                    Container(
+              child: Column(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                    decoration: BoxDecoration(
+                        color: whiteColor,
+                        border: Border.all(color: greyColor, width: 2),
+                        borderRadius: BorderRadius.circular(defaultRadius)),
+                    child: Container(
                       margin: const EdgeInsets.only(left: 11),
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      width: double.infinity,
                       child: TextFormField(
                         decoration: InputDecoration.collapsed(
                             hintText: "Cari produk.....",
@@ -84,19 +81,18 @@ class _AllProductPageState extends State<AllProductPage> {
                                 fontWeight: semiBold, fontSize: 14)),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  CustomButton(
+                    title: 'Cari Produk',
+                    height: 43,
+                    onPressed: () {},
+                  ),
+                ],
               ),
             ),
-            GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/cart-page');
-                },
-                child: const Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 25,
-                  color: Colors.grey,
-                ))
           ],
         ),
       );
@@ -137,13 +133,13 @@ class _AllProductPageState extends State<AllProductPage> {
                       : 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 16,
-              mainAxisExtent: 260, // here set custom Height You Want
+              mainAxisExtent: 235, // here set custom Height You Want
             ),
             itemCount: productProvider.product.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return CardProductAll(
+              return CardProductCategory(
                   product: productProvider.product[index] as ProductModel);
             },
           ),
@@ -159,6 +155,24 @@ class _AllProductPageState extends State<AllProductPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                        text: 'Hasil pencarian produk ',
+                        style: blackTextStyle.copyWith(
+                            fontSize: 16, fontWeight: medium)),
+                    TextSpan(
+                        text: widget.data,
+                        style: blackTextStyle.copyWith(
+                            fontSize: 17, fontWeight: bold)),
+                  ]),
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
               getGridViewProduct(),
             ]),
       );

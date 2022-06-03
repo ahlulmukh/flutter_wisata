@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
+import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -134,7 +136,9 @@ class _AccountPageState extends State<AccountPage> {
                   onPressed: () {
                     // ignore: unnecessary_null_comparison
                     user.toko != null
-                        ? Get.toNamed('/store-page')
+                        ? Get.to(
+                            () => StorePage(toko: user.toko as TokoModel),
+                          )
                         : Get.toNamed('/registration-store');
                   }),
               MenuItem(

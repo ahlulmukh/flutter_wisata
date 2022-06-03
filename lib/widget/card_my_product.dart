@@ -35,7 +35,7 @@ class CardMyProduct extends StatelessWidget {
               ),
             ),
             // ignore: unnecessary_null_comparison
-            child: product.image.toString() == null || product.image!.isEmpty
+            child: product.image.toString() == null || product.image.isEmpty
                 ? Image.asset(
                     'assets/images/not_product.jpeg',
                     height: 150,
@@ -72,19 +72,14 @@ class CardMyProduct extends StatelessWidget {
                 Text(
                   product.name,
                   overflow: TextOverflow.ellipsis,
-                  style: blackTextStyle.copyWith(fontWeight: medium),
+                  style:
+                      blackTextStyle.copyWith(fontWeight: bold, fontSize: 16),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Text(
                   currencyFormatter.format(product.price),
-                  style: greyTextStyle.copyWith(fontWeight: medium),
-                ),
-                const SizedBox(height: 9),
-                Text(
-                  product.category!.name.toString(),
-                  overflow: TextOverflow.ellipsis,
                   style: greyTextStyle.copyWith(fontWeight: medium),
                 ),
               ],

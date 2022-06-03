@@ -5,6 +5,28 @@ import 'package:flutter_tugas_akhir/services/service.dart';
 class ProductService {
   var dio = Dio();
 
+  Future<List<ProductModel>> getProductSeacrh({required String data}) async {
+    try {
+      var response = await dio.get(
+        Service.apiUrl + '/search/$data',
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+        ),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return (response.data['data'] as List)
+            .map((products) => ProductModel.formJson(products))
+            .toList();
+      } else {
+        throw Exception('Data tidak ditemukan');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<List<ProductModel>> getProducts() async {
     try {
       var response = await dio.get(

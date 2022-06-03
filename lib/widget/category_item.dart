@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/category_model.dart';
 import 'package:flutter_tugas_akhir/page/category_page.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:get/get.dart';
 
 class CategoryItem extends StatelessWidget {
   final CategoryModel categories;
@@ -12,11 +13,7 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CategoryPage(category: categories),
-            ));
+        Get.to(() => CategoryPage(id: categories.id));
       },
       child: Container(
         height: 40,

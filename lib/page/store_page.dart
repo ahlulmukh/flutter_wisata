@@ -11,7 +11,9 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class StorePage extends StatefulWidget {
-  const StorePage({Key? key}) : super(key: key);
+  final TokoModel toko;
+
+  const StorePage({Key? key, required this.toko}) : super(key: key);
 
   @override
   State<StorePage> createState() => _StorePageState();
@@ -29,11 +31,8 @@ class _StorePageState extends State<StorePage> {
   }
 
   fetchMarket() async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
     TokoProvider tokoProvider = Provider.of(context, listen: false);
-    UserModel? idToko = authProvider.user;
-    tokoProvider.fetchToko(id: idToko!.toko!.id);
+    await tokoProvider.fetchToko(id: widget.toko.id);
     setState(() {
       isLoading = false;
     });
@@ -164,7 +163,7 @@ class _StorePageState extends State<StorePage> {
                         MenuItem(
                             title: 'Produk Saya',
                             onPressed: () {
-                              Get.off(() => MyProductPage(toko: toko),
+                              Get.to(() => MyProductPage(toko: toko),
                                   arguments: toko.products);
                             }),
                         // MenuItem(

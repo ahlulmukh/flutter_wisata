@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tugas_akhir/models/category_model.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
-import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_store.dart';
+import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatefulWidget {
-  final CategoryModel category;
+  final int id;
   const CategoryPage({
     Key? key,
-    required this.category,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -34,7 +32,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   fetchCategory() async {
     CategoryProvider categoryProvider = Provider.of(context, listen: false);
-    await categoryProvider.getCategory(id: widget.category.id);
+    await categoryProvider.getCategory(id: widget.id);
     setState(() {
       isLoading = false;
     });
@@ -43,8 +41,6 @@ class _CategoryPageState extends State<CategoryPage> {
   @override
   Widget build(BuildContext context) {
     CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
-    CategoryModel? category = categoryProvider.category;
-    ProductProvider productProvider = Provider.of<ProductProvider>(context);
 
     Widget header() {
       return Container(
@@ -143,14 +139,15 @@ class _CategoryPageState extends State<CategoryPage> {
                       : 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 16,
-              mainAxisExtent: 260, // here set custom Height You Want
+              mainAxisExtent: 230, // here set custom Height You Want
             ),
-            itemCount: categoryProvider.category?.products.length,
+            itemCount: categoryProvider.category!.products.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return CardProductStore(
-                  product: productProvider.product[index] as ProductModel);
+              return CardProductCategory(
+                  product: categoryProvider.category!.products[index]
+                      as ProductModel);
             },
           ),
         );
@@ -174,7 +171,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  'Kategori ' + category!.name,
+                  'Kategori ' + categoryProvider.category!.name,
                   textAlign: TextAlign.center,
                   style: greyTextStyle.copyWith(
                       fontWeight: semiBold, fontSize: 14),

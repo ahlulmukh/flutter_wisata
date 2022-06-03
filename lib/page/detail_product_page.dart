@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
-import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
+import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailProductPage extends StatefulWidget {
   final ProductModel product;
@@ -39,6 +40,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
     ProductModel? product = productProvider.getProduct;
 
@@ -47,7 +49,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
         height: MediaQuery.of(context).orientation == Orientation.landscape
             ? MediaQuery.of(context).size.height * 0.6
             : 338,
-        child: product?.image == null || product!.image!.isEmpty
+        child: product?.image == null || product!.image.isEmpty
             ? Image.asset(
                 'assets/images/not_product.jpeg',
                 fit: BoxFit.cover,
@@ -118,7 +120,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                 Text(
                   product!.name,
                   style:
-                      blackTextStyle.copyWith(fontSize: 18, fontWeight: medium),
+                      blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 ),
                 Row(
                   children: [
@@ -156,47 +158,34 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       blackTextStyle.copyWith(fontSize: 18, fontWeight: medium),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isWishlist = !isWishlist;
-                    });
-
-                    if (!isWishlist) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: dangerColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusDirectional.circular(20),
+                  onTap: () async {
+                    wishlistProvider.setProduct(widget.product);
+                    if (wishlistProvider.isWishlist(widget.product)) {
+                      Get.snackbar('', '',
+                          backgroundColor: secondaryColor.withOpacity(0.8),
+                          titleText: Text(
+                            'Sukses',
+                            style: whiteTextStyle.copyWith(
+                                fontWeight: semiBold, fontSize: 17),
                           ),
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 2),
-                          content: Text(
-                            'Berhasil dihapus dari wishlist',
-                            textAlign: TextAlign.center,
-                            style: whiteTextStyle.copyWith(fontWeight: bold),
-                          ),
-                        ),
-                      );
+                          messageText: Text('Berhasil ditambah ke wishlist',
+                              style: whiteTextStyle.copyWith(fontSize: 14)),
+                          colorText: Colors.white);
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusDirectional.circular(20),
+                      Get.snackbar('', '',
+                          backgroundColor: dangerColor.withOpacity(0.8),
+                          titleText: Text(
+                            'Berhasil',
+                            style: whiteTextStyle.copyWith(
+                                fontWeight: semiBold, fontSize: 17),
                           ),
-                          backgroundColor: backgroundColor2,
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 2),
-                          content: Text(
-                            'Berhasil ditambah ke wishlist',
-                            textAlign: TextAlign.center,
-                            style: whiteTextStyle.copyWith(fontWeight: bold),
-                          ),
-                        ),
-                      );
+                          messageText: Text('Berhasil dihapus dari wishlist',
+                              style: whiteTextStyle.copyWith(fontSize: 14)),
+                          colorText: Colors.white);
                     }
                   },
                   child: Image.asset(
-                    isWishlist
+                    wishlistProvider.isWishlist(widget.product)
                         ? 'assets/icon_love_on.png'
                         : 'assets/icon_love_off.png',
                     width: 50,
@@ -233,11 +222,11 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.market!.nameStore.toString(),
+                      product.market.nameStore.toString(),
                       style: blackTextStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      product.market!.village.toString(),
+                      product.market.village.toString(),
                       style: blackTextStyle.copyWith(
                           fontSize: 16, fontWeight: semiBold),
                     ),
@@ -257,8 +246,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailStorePage(
-                                  toko: product.market as TokoModel),
+                              builder: (context) =>
+                                  DetailStorePage(toko: product.market),
                             ));
                       },
                       child: Text('Kunjungi Toko',

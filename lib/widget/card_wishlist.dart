@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CardWishlist extends StatelessWidget {
-  const CardWishlist({Key? key}) : super(key: key);
+  final ProductModel product;
+  const CardWishlist({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter = NumberFormat.compact(locale: 'ID');
+    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       width: double.infinity,
@@ -27,9 +35,10 @@ class CardWishlist extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/img2.png',
+                child: Image.network(
+                  product.image,
                   width: 75,
+                  height: 70,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -39,14 +48,14 @@ class CardWishlist extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Apel Manis',
+                      product.name,
                       style: blackTextStyle.copyWith(fontWeight: semiBold),
                     ),
                     const SizedBox(
                       height: 4,
                     ),
                     Text(
-                      'Rp. 10.000',
+                      currencyFormatter.format(product.price),
                       style: greenTextStyle.copyWith(fontWeight: semiBold),
                     ),
                     const SizedBox(
@@ -59,10 +68,15 @@ class CardWishlist extends StatelessWidget {
                   ],
                 ),
               ),
-              Image.asset(
-                'assets/icon_delete.png',
-                width: 25,
-                color: greyColor,
+              GestureDetector(
+                onTap: () {
+                  wishlistProvider.setProduct(product);
+                },
+                child: Image.asset(
+                  'assets/icon_delete.png',
+                  width: 25,
+                  color: greyColor,
+                ),
               )
             ],
           ),

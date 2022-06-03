@@ -5,7 +5,6 @@ import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_my_product.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_store.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +20,6 @@ class _MyProductPageState extends State<MyProductPage> {
   @override
   Widget build(BuildContext context) {
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
-    ProductProvider productProvider = Provider.of<ProductProvider>(context);
 
     Widget header() {
       return AppBar(
@@ -61,14 +59,14 @@ class _MyProductPageState extends State<MyProductPage> {
                       : 2,
               crossAxisSpacing: 5,
               mainAxisSpacing: 10,
-              mainAxisExtent: 223, // here set custom Height You Want
+              mainAxisExtent: 210, // here set custom Height You Want
             ),
             itemCount: tokoProvider.toko!.products.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return CardMyProduct(
-                  product: productProvider.product[index] as ProductModel);
+                  product: tokoProvider.toko!.products[index] as ProductModel);
             },
           ),
         ),

@@ -9,8 +9,8 @@ class CategoryModel {
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
       products: json['products'] != null
           ? List.from(json['products'])
               .map((products) => ProductModel.formJson(products))

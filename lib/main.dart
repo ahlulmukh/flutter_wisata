@@ -17,6 +17,7 @@ import 'package:flutter_tugas_akhir/provider/district_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
+import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +49,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => DistrictProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => WishlistProvider(),
+        ),
       ],
       child: GetMaterialApp(
         home: const SplashPage(),
@@ -62,26 +66,13 @@ class MyApp extends StatelessWidget {
           GetPage(
               name: '/registration-store',
               page: () => const RegistrationStorePage()),
-          GetPage(name: '/store-page', page: () => const StorePage()),
           GetPage(name: '/edit-store', page: () => const EditStorePage()),
           GetPage(
               name: '/information-store',
               page: () => const StoreInformationPage()),
           GetPage(name: '/wishlist-page', page: () => const WishlistPage()),
           GetPage(name: '/cart-page', page: () => const CartPage()),
-          // '/sign-in': (context) => const SignInPage(),
-          // '/sign-up': (context) => const SignUpPage(),
-          // '/main-page': (context) => const MainPage(),
-          // '/edit-profile': (context) => const EditProfilPage(),
-          // '/registration-store': (context) => const RegistrationStorePage(),
-          // '/store-page': (context) => const StorePage(),
-          // '/edit-store': (context) => const EditStorePage(),
-          // '/information-store': (context) => const StoreInformationPage(),
-          // '/my-product': (context) => const MyProductPage(),
-          // '/wishlist-page': (context) => const WishlistPage(),
-          // '/cart-page': (context) => const CartPage(),
-          // '/all-product': (context) => const AllProductPage(),
-          // '/detail-store-page': (context) => const DetailStorePage(),
+          GetPage(name: '/all-product', page: () => const AllProductPage()),
         ],
       ),
     );

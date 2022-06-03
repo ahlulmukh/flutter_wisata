@@ -406,19 +406,6 @@ class _EditStorePageState extends State<EditStorePage> {
             //           ),
             //   ),
             // ),
-            Container(
-              height: 130,
-              width: 130,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  image: const DecorationImage(
-                      image: AssetImage('assets/images/photo_border.png'))),
-            ),
-            Text(
-              'Edit Foto',
-              style: blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
-            ),
             inputNameStore(),
             inputVillageStore(),
             inputAddressStore(),

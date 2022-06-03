@@ -28,6 +28,16 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
+  Future<void> getProductSeacrh({required String data}) async {
+    try {
+      List<ProductModel> product =
+          await ProductService().getProductSeacrh(data: data);
+      _product = product;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<bool> getProductId({required int id}) async {
     try {
       ProductModel getProduct = await ProductService().getProduct(id: id);

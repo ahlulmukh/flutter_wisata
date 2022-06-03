@@ -6,10 +6,10 @@ import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class CardProductHome extends StatelessWidget {
+class CardProduct extends StatelessWidget {
   final ProductModel product;
 
-  const CardProductHome({Key? key, required this.product}) : super(key: key);
+  const CardProduct({Key? key, required this.product}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final currencyFormatter = NumberFormat.currency(locale: 'ID');
@@ -22,7 +22,7 @@ class CardProductHome extends StatelessWidget {
         width: MediaQuery.of(context).orientation == Orientation.landscape
             ? 181
             : MediaQuery.of(context).size.width * 0.5,
-        height: 260,
+        height: 270,
         margin: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
             border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
@@ -38,7 +38,7 @@ class CardProductHome extends StatelessWidget {
                 ),
               ),
               // ignore: unnecessary_null_comparison
-              child: product.image.toString() == null || product.image!.isEmpty
+              child: product.image.toString() == null || product.image.isEmpty
                   ? Image.asset(
                       'assets/images/not_product.jpeg',
                       fit: BoxFit.cover,
@@ -75,7 +75,8 @@ class CardProductHome extends StatelessWidget {
                   Text(
                     product.name,
                     overflow: TextOverflow.ellipsis,
-                    style: blackTextStyle.copyWith(fontSize: 16),
+                    style:
+                        blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
                   ),
                   const SizedBox(
                     height: 5,
@@ -88,7 +89,7 @@ class CardProductHome extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    product.market!.nameStore.toString(),
+                    product.market.nameStore.toString(),
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),

@@ -27,13 +27,13 @@ class TokoModel {
   factory TokoModel.fromJson(Map<String, dynamic> object) {
     return TokoModel(
       id: object['id'] ?? 0,
-      usersId: int.parse(object['users_id'].toString()),
-      nameStore: object['name_store'],
-      village: object['village'],
-      address: object['address'],
-      description: object['description'],
-      accountName: object['account_name'],
-      accountNumber: int.parse(object['account_number'].toString()),
+      usersId: object['users_id'] ?? 0,
+      nameStore: object['name_store'] ?? '',
+      village: object['village'] ?? '',
+      address: object['address'] ?? '',
+      description: object['description'] ?? '',
+      accountName: object['account_name'] ?? '',
+      accountNumber: object['account_number'] ?? 0,
       // ignore: unnecessary_null_comparison
       image: object != null ? object['image'] : null,
       products: object['products'] != null

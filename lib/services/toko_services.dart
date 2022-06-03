@@ -1,23 +1,23 @@
-// ignore_for_file: unnecessary_null_comparison, unused_local_variable
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
-import 'package:http/http.dart' as http;
 
 class TokoService {
   var dio = Dio();
 
   Future<TokoModel> fetchProfileToko({required int id}) async {
     try {
-      var response = await http.get(Uri.parse(Service.apiUrl + '/market/$id'));
-      print(response.body);
+      var response = await dio.get(Service.apiUrl + '/market/$id',
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+          ));
+      print(response.data);
       print(response.statusCode);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body)['data'];
-        return TokoModel.fromJson(data);
+        return TokoModel.fromJson(response.data['data']);
       } else {
         throw Exception('Gagal ambil data');
       }
@@ -64,21 +64,20 @@ class TokoService {
   }
 
   Future<dynamic> uploadPhotoMarket(
-      {required File file, required TokoModel tokoModel}) async {
+      {required File file, required int id}) async {
     try {
       if (file == null) return;
       String filename = file.path.split('/').last;
       FormData formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(file.path, filename: filename)
       });
-      var response =
-          await dio.post(Service.apiUrl + '/uploadPhotoMarket/${tokoModel.id}',
-              options: Options(
-                headers: {"Accept": "application/json;utf-8"},
-                followRedirects: false,
-                validateStatus: (status) => true,
-              ),
-              data: formData);
+      var response = await dio.post(Service.apiUrl + '/uploadPhotoMarket/$id',
+          options: Options(
+            headers: {"Accept": "application/json;utf-8"},
+            followRedirects: false,
+            validateStatus: (status) => true,
+          ),
+          data: formData);
       if (response.statusCode == 200) {
         return TokoModel.fromJson(response.data['data']['image']);
       }

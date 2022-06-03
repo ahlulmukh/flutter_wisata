@@ -7,10 +7,10 @@ class ProductModel {
   double weight;
   int stock;
   int price;
-  String? image;
+  String image;
   String description;
-  TokoModel? market;
-  CategoryModel? category;
+  TokoModel market;
+  CategoryModel category;
 
   ProductModel({
     required this.id,
@@ -34,11 +34,12 @@ class ProductModel {
       // ignore: unnecessary_null_in_if_null_operators, unnecessary_null_comparison
       image: object != null ? object['image'] : null,
       description: object['description'],
-      market:
-          object['store'] != null ? TokoModel.fromJson(object['store']) : null,
+      market: object['store'] != null
+          ? TokoModel.fromJson(object['store'])
+          : TokoModel.fromJson({}),
       category: object['category'] != null
           ? CategoryModel.fromJson(object['category'])
-          : null,
+          : CategoryModel.fromJson({}),
     );
   }
 
