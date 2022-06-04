@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/services/toko_services.dart';
@@ -54,15 +56,15 @@ class TokoProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> createToko({
-    required int usersId,
-    required String nameStore,
-    required String village,
-    required String address,
-    required String description,
-    required String accountName,
-    required int accountNumber,
-  }) async {
+  Future<bool> createToko(
+      {required int usersId,
+      required String nameStore,
+      required String village,
+      required String address,
+      required String description,
+      required String accountName,
+      required int accountNumber,
+      required File image}) async {
     try {
       TokoModel toko = await TokoService().createToko(
         usersId: usersId,
@@ -72,6 +74,7 @@ class TokoProvider with ChangeNotifier {
         description: description,
         accountName: accountName,
         accountNumber: accountNumber,
+        image: image,
       );
       _toko = toko;
       return true;

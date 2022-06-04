@@ -11,9 +11,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class StorePage extends StatefulWidget {
-  final TokoModel toko;
-
-  const StorePage({Key? key, required this.toko}) : super(key: key);
+  const StorePage({Key? key}) : super(key: key);
 
   @override
   State<StorePage> createState() => _StorePageState();
@@ -32,7 +30,7 @@ class _StorePageState extends State<StorePage> {
 
   fetchMarket() async {
     TokoProvider tokoProvider = Provider.of(context, listen: false);
-    await tokoProvider.fetchToko(id: widget.toko.id);
+    await tokoProvider.fetchToko(id: tokoProvider.toko!.id);
     setState(() {
       isLoading = false;
     });

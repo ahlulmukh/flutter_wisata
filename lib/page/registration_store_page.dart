@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/district_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
+import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/district_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../models/toko_model.dart';
 
 class RegistrationStorePage extends StatefulWidget {
   const RegistrationStorePage({Key? key}) : super(key: key);
@@ -17,6 +24,8 @@ class RegistrationStorePage extends StatefulWidget {
 }
 
 class _RegistrationStorePageState extends State<RegistrationStorePage> {
+  File? file;
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +42,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
 
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    UserModel? usersId = authProvider.user;
+    UserModel? user = authProvider.user;
 
     TextEditingController nameStoreController = TextEditingController(text: '');
     TextEditingController nameVillageController =
@@ -47,16 +56,18 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
 
     handleCreateToko() async {
       if (await tokoProvider.createToko(
-        usersId: usersId!.id,
-        nameStore: nameStoreController.text,
-        village: nameVillageController.text,
-        address: addressController.text,
-        description: descStoreController.text,
-        accountName: nameAccountController.text,
-        accountNumber: int.parse(numberAccountController.text).toInt(),
-      )) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/store-page', (route) => false);
+          usersId: user!.id,
+          nameStore: nameStoreController.text,
+          village: nameVillageController.text,
+          address: addressController.text,
+          description: descStoreController.text,
+          accountName: nameAccountController.text,
+          accountNumber: int.parse(numberAccountController.text).toInt(),
+          image: file!)) {
+        Get.to(
+          () => const StorePage(),
+          arguments: user.toko,
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -92,6 +103,41 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
         title: Text(
           'Registrasi Toko',
           style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 20),
+        ),
+      );
+    }
+
+    Widget addPhoto() {
+      return GestureDetector(
+        onTap: () async {
+          XFile? pickedFile =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+          if (pickedFile != null) {
+            file = File(pickedFile.path);
+            setState(() {});
+          }
+        },
+        child: Container(
+          width: 130,
+          height: 130,
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/photo_border.png'))),
+          child: (file != null)
+              ? Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: FileImage(file!), fit: BoxFit.cover)),
+                )
+              : Container(
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/photo.png'),
+                          fit: BoxFit.cover)),
+                ),
         ),
       );
     }
@@ -375,6 +421,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
         padding: EdgeInsets.symmetric(horizontal: defaultMargin),
         child: Column(
           children: [
+            addPhoto(),
             inputNameStore(),
             inputNameVillage(),
             // dropdownVillage(),
