@@ -1,6 +1,9 @@
+// ignore_for_file: unnecessary_cast
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
@@ -26,7 +29,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
   fetchProduct() async {
     ProductProvider productProvider = Provider.of(context, listen: false);
-    await productProvider.getProductId(id: widget.product.id);
+    await productProvider.getProductId(id: widget.product.id!.toInt());
     setState(() {
       isLoading = false;
     });
@@ -49,24 +52,21 @@ class _DetailProductPageState extends State<DetailProductPage> {
         height: MediaQuery.of(context).orientation == Orientation.landscape
             ? MediaQuery.of(context).size.height * 0.6
             : 338,
-        child: product?.image == null || product!.image.isEmpty
+        child: product?.image == null || product!.image!.isEmpty
             ? Image.asset(
                 'assets/images/not_product.jpeg',
                 fit: BoxFit.cover,
               )
-            : Hero(
-                tag: widget.product.image.toString(),
-                child: CachedNetworkImage(
+            : CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: widget.product.image.toString(),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Image(
+                  width: double.infinity,
                   fit: BoxFit.cover,
-                  imageUrl: widget.product.image.toString(),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Image(
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      'assets/images/not_product.jpeg',
-                    ),
+                  image: AssetImage(
+                    'assets/images/not_product.jpeg',
                   ),
                 ),
               ),
@@ -118,7 +118,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  product!.name,
+                  product!.name.toString(),
                   style:
                       blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 ),
@@ -197,7 +197,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               height: 22,
             ),
             Text(
-              product.description,
+              product.description.toString(),
               textAlign: TextAlign.justify,
               style: blackTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             ),
@@ -222,11 +222,11 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.market.nameStore.toString(),
+                      product.market!.nameStore.toString(),
                       style: blackTextStyle.copyWith(fontSize: 16),
                     ),
                     Text(
-                      product.market.village.toString(),
+                      product.market!.village.toString(),
                       style: blackTextStyle.copyWith(
                           fontSize: 16, fontWeight: semiBold),
                     ),
@@ -243,12 +243,10 @@ class _DetailProductPageState extends State<DetailProductPage> {
                             horizontal: 10,
                           )),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailStorePage(toko: product.market),
-                            ));
+                        Get.to(
+                          () => DetailStorePage(
+                              toko: product.market as TokoModel),
+                        );
                       },
                       child: Text('Kunjungi Toko',
                           style: whiteTextStyle.copyWith(fontWeight: bold)),

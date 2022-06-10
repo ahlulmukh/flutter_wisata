@@ -1,14 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
+import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:get/get.dart';
 
-class CardStoreHome extends StatelessWidget {
-  const CardStoreHome({Key? key}) : super(key: key);
+class CardMarket extends StatelessWidget {
+  final TokoModel toko;
+  const CardMarket({Key? key, required this.toko}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail-store-page');
+        Get.to(
+          () => DetailStorePage(toko: toko),
+        );
       },
       child: Container(
         width: MediaQuery.of(context).orientation == Orientation.landscape
@@ -29,17 +36,29 @@ class CardStoreHome extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 120,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadiusDirectional.vertical(
-                  top: Radius.circular(12),
-                ),
-                image: DecorationImage(
-                    image: AssetImage('assets/img_store.png'),
-                    fit: BoxFit.cover),
-              ),
-            ),
+            toko.image == null
+                ? Image.asset(
+                    'assets/images/not_product.jpeg',
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(defaultRadius)),
+                    child: CachedNetworkImage(
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      imageUrl: toko.image.toString(),
+                      placeholder: (context, url) => const Icon(Icons.image),
+                      errorWidget: (context, url, error) => const Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage(
+                            'assets/images/not_product.jpeg',
+                          )),
+                    ),
+                  ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 11),
               child: Column(
@@ -49,14 +68,14 @@ class CardStoreHome extends StatelessWidget {
                     height: 13,
                   ),
                   Text(
-                    'Toko Buah Manis',
+                    toko.nameStore.toString(),
                     style: blackTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    'Baktiya',
+                    toko.village.toString(),
                     style: blackTextStyle.copyWith(fontWeight: bold),
                   ),
                 ],

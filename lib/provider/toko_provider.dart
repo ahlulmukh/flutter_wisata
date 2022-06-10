@@ -6,12 +6,28 @@ import 'package:flutter_tugas_akhir/services/toko_services.dart';
 
 class TokoProvider with ChangeNotifier {
   TokoModel? _toko;
+  List<TokoModel?> _markets = [];
 
   TokoModel? get toko => _toko;
+  List<TokoModel?> get markets => _markets;
+
+  set markets(List<TokoModel?> markets) {
+    _markets = markets;
+    notifyListeners();
+  }
 
   set toko(TokoModel? toko) {
     _toko = toko;
     notifyListeners();
+  }
+
+  Future<void> getMarketsLimit() async {
+    try {
+      List<TokoModel> markets = await TokoService().getMarketLimits();
+      _markets = markets;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future<bool> fetchToko({required int id}) async {

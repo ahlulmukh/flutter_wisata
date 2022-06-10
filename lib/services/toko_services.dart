@@ -8,18 +8,36 @@ import 'package:http_parser/http_parser.dart';
 
 class TokoService {
   var dio = Dio();
-  File? file;
 
-  Future<TokoModel> fetchProfileToko({required int id}) async {
+  Future<List<TokoModel>> getMarketLimits() async {
     try {
-      var response = await dio.get(Service.apiUrl + '/market/$id',
+      var response = await dio.get(Service.apiUrl + '/limitsMarket',
           options: Options(
             followRedirects: false,
             validateStatus: (status) => true,
           ));
       print(response.data);
-      print(response.statusCode);
       if (response.statusCode == 200) {
+        return (response.data['data'] as List)
+            .map((market) => TokoModel.fromJson(market))
+            .toList();
+      } else {
+        throw Exception('Gagal ambil data');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<TokoModel> fetchProfileToko({required int id}) async {
+    try {
+      Response response = await dio.get(Service.apiUrl + '/market/$id',
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+          ));
+      if (response.statusCode == 200) {
+        print(response.statusCode);
         return TokoModel.fromJson(response.data['data']);
       } else {
         throw Exception('Gagal ambil data');
@@ -65,29 +83,6 @@ class TokoService {
       throw Exception(e);
     }
   }
-
-  // Future<dynamic> uploadPhotoMarket(
-  //     {required File file, required int id}) async {
-  //   try {
-  //     if (file == null) return;
-  //     String filename = file.path.split('/').last;
-  //     FormData formData = FormData.fromMap({
-  //       'file': await MultipartFile.fromFile(file.path, filename: filename)
-  //     });
-  //     var response = await dio.post(Service.apiUrl + '/uploadPhotoMarket/$id',
-  //         options: Options(
-  //           headers: {"Accept": "application/json;utf-8"},
-  //           followRedirects: false,
-  //           validateStatus: (status) => true,
-  //         ),
-  //         data: formData);
-  //     if (response.statusCode == 200) {
-  //       return TokoModel.fromJson(response.data['data']['image']);
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e);
-  //   }
-  // }
 
   Future<TokoModel> createToko({
     required int usersId,

@@ -81,7 +81,7 @@ class AuthService {
           data['store'] != null ? TokoModel.fromJson(data['store']) : null;
       UserModel user = UserModel.fromJson(data['user']);
       user.token = 'Bearer ' + data['access_token'];
-      prefs.setString('token', user.token);
+      prefs.setString('token', user.token.toString());
       print(prefs.getString('token'));
       return user;
     } else {

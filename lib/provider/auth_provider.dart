@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/services/auth_services.dart';
@@ -13,15 +15,20 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> updateProfile({
-    required int id,
-    required String name,
-    required String username,
-    required String email,
-  }) async {
+  Future<bool> updateProfile(
+      {required int id,
+      required String name,
+      required String username,
+      required String email,
+      required File profilePhotoPath}) async {
     try {
-      UserModel user = await UserService()
-          .updateProfil(id: id, name: name, username: username, email: email);
+      UserModel user = await UserService().updateProfil(
+        id: id,
+        name: name,
+        username: username,
+        email: email,
+        profilePhotoPath: profilePhotoPath,
+      );
       _user = user;
       return true;
     } catch (e) {

@@ -1,12 +1,14 @@
+// ignore_for_file: unnecessary_null_in_if_null_operators
+
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 
 class UserModel {
   int id;
-  String name;
-  String username;
-  String email;
-  String profilePhotoUrl;
-  String token;
+  String? name;
+  String? username;
+  String? email;
+  String? profilePhotoPath;
+  String? token;
   TokoModel? toko;
 
   UserModel(
@@ -14,19 +16,21 @@ class UserModel {
       required this.name,
       required this.username,
       required this.email,
-      required this.profilePhotoUrl,
+      required this.profilePhotoPath,
       required this.token,
       required this.toko});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] ?? 0,
+      id: json['id'],
       name: json['name'] ?? '',
       username: json['username'] ?? '',
       email: json['email'] ?? '',
-      profilePhotoUrl: json['profile_photo_url'] ?? '',
+      profilePhotoPath: json['profile_photo_path'],
       token: json['token'].toString(),
-      toko: json['store'] != null ? TokoModel.fromJson(json['store']) : null,
+      toko: json['store'] != null
+          ? TokoModel.fromJson(json['store'])
+          : TokoModel.fromJson({}),
     );
   }
 
@@ -36,7 +40,7 @@ class UserModel {
       'name': name,
       'username': username,
       'email': email,
-      'profile_photo_url': profilePhotoUrl,
+      'profile_photo_path': profilePhotoPath,
       'token': token,
       'store': toko,
     };

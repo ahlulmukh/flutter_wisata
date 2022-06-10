@@ -25,28 +25,28 @@ class _AccountPageState extends State<AccountPage> {
   void initState() {
     super.initState();
     getProfil();
-    fetchMarket();
+    // fetchMarket();
   }
 
-  fetchMarket() async {
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    TokoProvider tokoProvider = Provider.of(context, listen: false);
-    UserModel? idToko = authProvider.user;
-    if (authProvider.user!.toko != null) {
-      tokoProvider.fetchToko(id: idToko!.toko!.id);
-      setState(() {});
-    } else {
-      null;
-    }
-  }
+  // fetchMarket() async {
+  //   AuthProvider authProvider =
+  //       Provider.of<AuthProvider>(context, listen: false);
+  //   TokoProvider tokoProvider = Provider.of(context, listen: false);
+  //   UserModel? idToko = authProvider.user;
+  //   if (authProvider.user!.toko != null) {
+  //     tokoProvider.fetchToko(id: idToko!.toko!.id);
+  //     setState(() {});
+  //   } else {
+  //     null;
+  //   }
+  // }
 
   getProfil() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.getString('token');
     AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    authProvider.getProfile();
+    await authProvider.getProfile();
     setState(() {
       isLoading = false;
     });
@@ -88,16 +88,22 @@ class _AccountPageState extends State<AccountPage> {
           child: Column(
             children: [
               Container(
-                height: 124,
-                width: 124,
-                margin: const EdgeInsets.only(bottom: 20),
+                height: 130,
+                width: 130,
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/photo_border.png'),
+                  ),
+                ),
+                margin: const EdgeInsets.only(bottom: 20, top: 20),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: CachedNetworkImage(
                     height: 160,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    imageUrl: user!.profilePhotoUrl,
+                    imageUrl: user!.profilePhotoPath.toString(),
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Image(
@@ -110,12 +116,12 @@ class _AccountPageState extends State<AccountPage> {
               ),
               Column(children: [
                 Text(
-                  user.name,
+                  user.name.toString(),
                   style: blackTextStyle.copyWith(
                       fontSize: 16, fontWeight: semiBold),
                 ),
                 Text(
-                  user.email,
+                  user.email.toString(),
                   style: blackTextStyle.copyWith(
                       fontSize: 16, fontWeight: semiBold),
                 ),
@@ -131,13 +137,16 @@ class _AccountPageState extends State<AccountPage> {
               MenuItem(title: 'Transaksi', onPressed: () {}),
               MenuItem(
                   // ignore: unrelated_type_equality_checks, unnecessary_null_comparison
-                  title: user.toko != null ? 'Toko Saya' : "Registrasi Toko",
+                  title:
+                      user.toko!.id != null ? 'Toko Saya' : "Registrasi Toko",
                   // title: user.toko == null ? 'Registrasi Toko' : 'Toko Saya',
                   onPressed: () {
                     // ignore: unnecessary_null_comparison
-                    user.toko != null
+                    user.toko!.id != null
                         ? Get.to(
-                            () => StorePage(toko: user.toko as TokoModel),
+                            () => StorePage(
+                              toko: user.toko as TokoModel,
+                            ),
                           )
                         : Get.toNamed('/registration-store');
                   }),
@@ -166,7 +175,11 @@ class _AccountPageState extends State<AccountPage> {
     return Scaffold(
         backgroundColor: backgroundColor1,
         body: isLoading
-            ? const CircularProgressIndicator()
+            ? Center(
+                child: CircularProgressIndicator(
+                color: secondaryColor,
+                strokeWidth: 8.0,
+              ))
             : ListView(
                 children: [
                   header(),

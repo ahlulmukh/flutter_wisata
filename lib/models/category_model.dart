@@ -13,7 +13,7 @@ class CategoryModel {
       name: json['name'] ?? '',
       products: json['products'] != null
           ? List.from(json['products'])
-              .map((products) => ProductModel.formJson(products))
+              .map((products) => ProductModel.fromJson(products))
               .toList()
           : [],
     );

@@ -1,12 +1,22 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class EditProfilPage extends StatelessWidget {
+class EditProfilPage extends StatefulWidget {
   const EditProfilPage({Key? key}) : super(key: key);
+
+  @override
+  State<EditProfilPage> createState() => _EditProfilPageState();
+}
+
+class _EditProfilPageState extends State<EditProfilPage> {
+  File? filePhoto;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +32,11 @@ class EditProfilPage extends StatelessWidget {
 
     handleUpdateProfile() async {
       if (await userProvider.updateProfile(
-        id: user.id,
+        id: user.id.toInt(),
         name: controllerName.text,
         username: controllerUsername.text,
         email: controllerEmail.text,
+        profilePhotoPath: filePhoto!,
       )) {
         Navigator.pushNamedAndRemoveUntil(
             context, '/main-page', (route) => false);
@@ -197,26 +208,41 @@ class EditProfilPage extends StatelessWidget {
         decoration: BoxDecoration(color: whiteColor),
         child: Column(
           children: [
-            Container(
-              height: 124,
-              width: 124,
-              margin: const EdgeInsets.only(bottom: 20, top: 20),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: CachedNetworkImage(
-                  height: 160,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  imageUrl: user.profilePhotoUrl,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        'assets/images/user.png',
-                      )),
-                ),
-              ),
+            GestureDetector(
+              onTap: () async {
+                XFile? photo =
+                    await ImagePicker().pickImage(source: ImageSource.gallery);
+                if (photo != null) {
+                  filePhoto = File(photo.path);
+                  setState(() {});
+                }
+              },
+              child: Container(
+                  height: 130,
+                  width: 130,
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/photo_border.png'),
+                    ),
+                  ),
+                  margin: const EdgeInsets.only(bottom: 20, top: 20),
+                  child: (filePhoto != null)
+                      ? Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: FileImage(filePhoto!),
+                                  fit: BoxFit.cover)),
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      user.profilePhotoPath.toString()),
+                                  fit: BoxFit.cover)),
+                        )),
             ),
             inputName(),
             inputUsername(),

@@ -1,20 +1,22 @@
-import 'dart:io';
+// ignore_for_file: unused_local_variable
 
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/district_model.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
-import 'package:flutter_tugas_akhir/provider/district_provider.dart';
+import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
+import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-import '../models/toko_model.dart';
 
 class RegistrationStorePage extends StatefulWidget {
   const RegistrationStorePage({Key? key}) : super(key: key);
@@ -25,28 +27,16 @@ class RegistrationStorePage extends StatefulWidget {
 
 class _RegistrationStorePageState extends State<RegistrationStorePage> {
   File? file;
-
-  @override
-  void initState() {
-    super.initState();
-    getDistrict();
-  }
-
-  Future<void> getDistrict() async {
-    Provider.of<DistrictProvider>(context, listen: false).getdistricts();
-  }
+  String? desa;
 
   @override
   Widget build(BuildContext context) {
-    DistrictProvider districtProvider = Provider.of<DistrictProvider>(context);
-
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    PageProvider pageProvider = Provider.of<PageProvider>(context);
     UserModel? user = authProvider.user;
 
     TextEditingController nameStoreController = TextEditingController(text: '');
-    TextEditingController nameVillageController =
-        TextEditingController(text: '');
     TextEditingController addressController = TextEditingController(text: '');
     TextEditingController descStoreController = TextEditingController(text: '');
     TextEditingController nameAccountController =
@@ -58,16 +48,13 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
       if (await tokoProvider.createToko(
           usersId: user!.id,
           nameStore: nameStoreController.text,
-          village: nameVillageController.text,
+          village: desa.toString(),
           address: addressController.text,
           description: descStoreController.text,
           accountName: nameAccountController.text,
           accountNumber: int.parse(numberAccountController.text).toInt(),
           image: file!)) {
-        Get.to(
-          () => const StorePage(),
-          arguments: user.toko,
-        );
+        Get.off(() => StorePage(toko: user.toko as TokoModel));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -90,7 +77,8 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Get.offNamed('/main-page',
+                  arguments: pageProvider.currentIndex = 3);
             },
             icon: const Icon(
               Icons.chevron_left,
@@ -179,44 +167,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
       );
     }
 
-    Widget inputNameVillage() {
-      return Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 19),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Nama Desa',
-              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  controller: nameVillageController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Nama Desa',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
-                ),
-              ),
-            )
-          ],
-        ),
-      );
-    }
-
-    // Widget dropdownVillage() {
+    // Widget inputNameVillage() {
     //   return Container(
     //     width: double.infinity,
     //     margin: const EdgeInsets.only(bottom: 19),
@@ -224,37 +175,99 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     //       crossAxisAlignment: CrossAxisAlignment.start,
     //       children: [
     //         Text(
-    //           'Desa',
+    //           'Nama Desa',
     //           style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
     //         ),
     //         const SizedBox(
     //           height: 6,
     //         ),
     //         Container(
-    //             padding: const EdgeInsets.symmetric(horizontal: 14),
-    //             decoration: BoxDecoration(
-    //                 borderRadius: BorderRadius.circular(defaultRadius),
-    //                 border: Border.all(width: 2.0),
-    //                 color: whiteColor),
-    //             child: Consumer<DistrictProvider>(
-    //               builder: (context, provider, child) {
-    //                 return DropdownButton(
-    //                     value: provider.district,
-    //                     items: provider.district.map((item) {
-    //                       return DropdownMenuItem(
-    //                           value: item, child: Text(item!.nama));
-    //                     }).toList(),
-    //                     onChanged: (value) {
-    //                       setState(() {
-
-    //                       });
-    //                     });
-    //               },
-    //             )),
+    //           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+    //           decoration: BoxDecoration(
+    //               border: Border.all(color: blackColor, width: 2.0),
+    //               color: whiteColor,
+    //               borderRadius: BorderRadius.circular(defaultRadius)),
+    //           height: 50,
+    //           child: Center(
+    //             child: TextFormField(
+    //               controller: nameVillageController,
+    //               keyboardType: TextInputType.text,
+    //               decoration: InputDecoration.collapsed(
+    //                   hintText: 'Masukan Nama Desa',
+    //                   hintStyle: greyTextStyle.copyWith(
+    //                       fontWeight: semiBold, fontSize: 13)),
+    //             ),
+    //           ),
+    //         )
     //       ],
     //     ),
     //   );
     // }
+
+    Widget dropdownVillage() {
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 19),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Desa',
+              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(defaultRadius),
+                  border: Border.all(width: 2.0),
+                  color: whiteColor),
+              child: DropdownSearch<DistrictModel>(
+                onChanged: (DistrictModel? district) {
+                  desa = district!.nama;
+                },
+                dropdownBuilder: (context, select) => select != null
+                    ? Text(
+                        select.nama,
+                        style: blackTextStyle.copyWith(fontWeight: medium),
+                      )
+                    : Text(
+                        'Belum memilih desa',
+                        style: greyTextStyle.copyWith(fontWeight: semiBold),
+                      ),
+                popupItemBuilder: (context, item, isSelected) => ListTile(
+                  title: Text(
+                    item.nama,
+                    style: blackTextStyle.copyWith(fontWeight: medium),
+                  ),
+                ),
+                onFind: (String? filter) async {
+                  List<DistrictModel> districts = [];
+                  var response = await Dio().get(Service.apiUrl + '/districts',
+                      queryParameters: {"filter": filter});
+                  if (response.statusCode == 200) {
+                    List allDistrictsBaktiya = response.data['data'];
+                    for (var element in allDistrictsBaktiya) {
+                      districts.add(
+                        DistrictModel(
+                          id: element['id'],
+                          nama: element['nama'],
+                        ),
+                      );
+                    }
+                  } else {
+                    throw Exception('Gagal ambil data');
+                  }
+
+                  return districts;
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    }
 
     Widget inputAddressStore() {
       return Container(
@@ -423,8 +436,8 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
           children: [
             addPhoto(),
             inputNameStore(),
-            inputNameVillage(),
-            // dropdownVillage(),
+            // inputNameVillage(),
+            dropdownVillage(),
             inputAddressStore(),
             inputDescStore(),
             inputNameBank(),

@@ -13,7 +13,9 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => CategoryPage(id: categories.id));
+        Get.to(() => CategoryPage(
+              category: categories.id,
+            ));
       },
       child: Container(
         height: 40,

@@ -23,7 +23,7 @@ class CardProduct extends StatelessWidget {
             ? 181
             : MediaQuery.of(context).size.width * 0.5,
         height: 270,
-        margin: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
             border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
             color: whiteColor,
@@ -38,7 +38,7 @@ class CardProduct extends StatelessWidget {
                 ),
               ),
               // ignore: unnecessary_null_comparison
-              child: product.image.toString() == null || product.image.isEmpty
+              child: product.image.toString() == null || product.image!.isEmpty
                   ? Image.asset(
                       'assets/images/not_product.jpeg',
                       fit: BoxFit.cover,
@@ -46,21 +46,17 @@ class CardProduct extends StatelessWidget {
                   : ClipRRect(
                       borderRadius: BorderRadius.vertical(
                           top: Radius.circular(defaultRadius)),
-                      child: Hero(
-                        tag: product.image.toString(),
-                        child: CachedNetworkImage(
-                          height: 160,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          imageUrl: product.image.toString(),
-                          placeholder: (context, url) =>
-                              const Icon(Icons.image),
-                          errorWidget: (context, url, error) => const Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                'assets/images/not_product.jpeg',
-                              )),
-                        ),
+                      child: CachedNetworkImage(
+                        height: 160,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        imageUrl: product.image.toString(),
+                        placeholder: (context, url) => const Icon(Icons.image),
+                        errorWidget: (context, url, error) => const Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/images/not_product.jpeg',
+                            )),
                       ),
                     ),
             ),
@@ -73,7 +69,7 @@ class CardProduct extends StatelessWidget {
                     height: 13,
                   ),
                   Text(
-                    product.name,
+                    product.name.toString(),
                     overflow: TextOverflow.ellipsis,
                     style:
                         blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
@@ -89,7 +85,7 @@ class CardProduct extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    product.market.nameStore.toString(),
+                    product.market!.nameStore.toString(),
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),

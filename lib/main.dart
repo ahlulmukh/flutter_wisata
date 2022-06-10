@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/page/all_product_page.dart';
+import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/page/edit_profil_page.dart';
 import 'package:flutter_tugas_akhir/page/edit_store_page.dart';
 import 'package:flutter_tugas_akhir/page/home/cart_page.dart';
@@ -58,21 +59,50 @@ class MyApp extends StatelessWidget {
         home: const SplashPage(),
         debugShowCheckedModeBanner: false,
         getPages: [
-          GetPage(name: '/', page: () => const SplashPage()),
-          GetPage(name: '/sign-in', page: () => const SignInPage()),
-          GetPage(name: '/sign-up', page: () => const SignUpPage()),
-          GetPage(name: '/main-page', page: () => const MainPage()),
-          GetPage(name: '/edit-profile', page: () => const EditProfilPage()),
           GetPage(
-              name: '/registration-store',
-              page: () => const RegistrationStorePage()),
-          GetPage(name: '/edit-store', page: () => const EditStorePage()),
+            name: '/',
+            page: () => const SplashPage(),
+          ),
           GetPage(
-              name: '/information-store',
-              page: () => const StoreInformationPage()),
-          GetPage(name: '/wishlist-page', page: () => const WishlistPage()),
-          GetPage(name: '/cart-page', page: () => const CartPage()),
-          GetPage(name: '/all-product', page: () => const AllProductPage()),
+            name: '/sign-in',
+            page: () => const SignInPage(),
+          ),
+          GetPage(
+            name: '/sign-up',
+            page: () => const SignUpPage(),
+          ),
+          GetPage(
+            name: '/main-page',
+            page: () => const MainPage(),
+          ),
+          GetPage(
+            name: '/edit-profile',
+            page: () => const EditProfilPage(),
+          ),
+          GetPage(
+            name: '/registration-store',
+            page: () => const RegistrationStorePage(),
+          ),
+          GetPage(
+            name: '/edit-store',
+            page: () => const EditStorePage(),
+          ),
+          GetPage(
+            name: '/information-store',
+            page: () => const StoreInformationPage(),
+          ),
+          GetPage(
+            name: '/wishlist-page',
+            page: () => const WishlistPage(),
+          ),
+          GetPage(
+            name: '/cart-page',
+            page: () => const CartPage(),
+          ),
+          GetPage(
+            name: '/all-product',
+            page: () => const AllProductPage(),
+          ),
         ],
       ),
     );
