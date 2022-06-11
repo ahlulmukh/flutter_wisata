@@ -6,7 +6,6 @@ import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class DetailStorePage extends StatefulWidget {

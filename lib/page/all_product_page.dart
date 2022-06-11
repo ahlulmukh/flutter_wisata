@@ -1,10 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
-import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
-import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_all.dart';
 import 'package:get/get.dart';

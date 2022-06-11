@@ -1,14 +1,16 @@
+// ignore_for_file: prefer_if_null_operators
+
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 
 class TokoModel {
-  int id;
-  int usersId;
-  String nameStore;
-  String village;
-  String address;
-  String description;
-  String accountName;
-  int accountNumber;
+  int? id;
+  String? usersId;
+  String? nameStore;
+  String? village;
+  String? address;
+  String? description;
+  String? accountName;
+  String? accountNumber;
   String? image;
   List<ProductModel?> products;
 
@@ -26,19 +28,19 @@ class TokoModel {
 
   factory TokoModel.fromJson(Map<String, dynamic> object) {
     return TokoModel(
-      id: object['id'] ?? 0,
-      usersId: int.parse(object['users_id'].toString()),
+      id: object['id'],
+      usersId: object['users_id'].toString(),
       nameStore: object['name_store'] ?? '',
       village: object['village'] ?? '',
       address: object['address'] ?? '',
       description: object['description'] ?? '',
       accountName: object['account_name'] ?? '',
-      accountNumber: int.parse(object['account_number'].toString()),
+      accountNumber: object['account_number'].toString(),
       // ignore: unnecessary_null_comparison
       image: object != null ? object['image'] : null,
       products: object['products'] != null
           ? List.from(object['products'])
-              .map((products) => ProductModel.formJson(products))
+              .map((products) => ProductModel.fromJson(products))
               .toList()
           : [],
     );

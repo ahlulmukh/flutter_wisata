@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
@@ -49,17 +48,19 @@ class TokoService {
 
   Future<TokoModel> updateProfileToko({
     required int id,
-    required int usersId,
+    required String usersId,
     required String nameStore,
     required String village,
     required String address,
     required String description,
     required String accountName,
-    required int accountNumber,
-    // required File image,
+    required String accountNumber,
+    required File image,
   }) async {
     try {
-      var body = jsonEncode(
+      final mimeTypeData =
+          lookupMimeType(image.path, headerBytes: [0xFF, 0xD8])?.split('/');
+      FormData formData = FormData.fromMap(
         {
           'users_id': usersId,
           'name_store': nameStore,
@@ -67,12 +68,21 @@ class TokoService {
           'address': address,
           'description': description,
           'account_name': accountName,
-          'account_number': accountNumber
+          'account_number': accountNumber,
+          'image': await MultipartFile.fromFile(image.path,
+              contentType: MediaType(mimeTypeData![0], mimeTypeData[1])),
         },
       );
-      var response =
-          await dio.put(Service.apiUrl + '/updateMarket/$id', data: body);
-      print(response.statusCode);
+      var response = await dio.post(Service.apiUrl + '/updateMarket/$id',
+          data: formData,
+          options: Options(
+            headers: {
+              "Accept": "application/json;utf-8",
+              "Content-Type": "multipart/form-data",
+            },
+            followRedirects: false,
+            validateStatus: (status) => true,
+          ));
       print(response.data);
       if (response.statusCode == 200) {
         return TokoModel.fromJson(response.data['data']);
@@ -91,7 +101,7 @@ class TokoService {
     required String address,
     required String description,
     required String accountName,
-    required int accountNumber,
+    required String accountNumber,
     required File image,
   }) async {
     try {

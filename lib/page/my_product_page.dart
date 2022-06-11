@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
-import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_my_product.dart';
@@ -47,30 +47,60 @@ class _MyProductPageState extends State<MyProductPage> {
     }
 
     Widget content() {
-      return Container(
-        margin:
-            EdgeInsets.only(top: 40, left: defaultMargin, right: defaultMargin),
-        child: SizedBox(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount:
-                  MediaQuery.of(context).orientation == Orientation.landscape
-                      ? 3
-                      : 2,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 210, // here set custom Height You Want
-            ),
-            itemCount: tokoProvider.toko!.products.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return CardMyProduct(
-                  product: tokoProvider.toko!.products[index] as ProductModel);
-            },
+      if (tokoProvider.toko!.products.isEmpty) {
+        return Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              SvgPicture.asset(
+                'assets/images/no_box.svg',
+                width:
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? MediaQuery.of(context).size.width * 0.6
+                        : MediaQuery.of(context).size.width * 0.8,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Tidak ada produk',
+                style:
+                    greyTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
+              )
+            ],
           ),
-        ),
-      );
+        );
+      } else {
+        return Container(
+          margin: EdgeInsets.only(
+              top: 40, left: defaultMargin, right: defaultMargin),
+          child: SizedBox(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount:
+                    MediaQuery.of(context).orientation == Orientation.landscape
+                        ? 3
+                        : 2,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 10,
+                mainAxisExtent: 210, // here set custom Height You Want
+              ),
+              itemCount: tokoProvider.toko!.products.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return CardMyProduct(
+                    product:
+                        tokoProvider.toko!.products[index] as ProductModel);
+              },
+            ),
+          ),
+        );
+      }
     }
 
     return Scaffold(

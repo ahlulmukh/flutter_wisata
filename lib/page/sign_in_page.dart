@@ -39,7 +39,9 @@ class _SignInPageState extends State<SignInPage> {
     handleSignIn() async {
       if (_formKey.currentState!.validate()) {
         if (await authProvider.login(
-            email: emailCon.text, password: passCon.text)) {
+          email: emailCon.text,
+          password: passCon.text,
+        )) {
           Get.offAllNamed('/main-page',
               arguments: pageProvider.currentIndex = 0);
         } else {
@@ -71,39 +73,42 @@ class _SignInPageState extends State<SignInPage> {
         width: double.infinity,
         margin: EdgeInsets.only(
             left: defaultMargin, right: defaultMargin, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Email',
-              style: whiteTextStyle.copyWith(fontWeight: medium),
+        child: TextFormField(
+          controller: emailCon,
+          style: whiteTextStyle.copyWith(fontSize: 14),
+          showCursor: true,
+          validator: (value) => value!.isEmpty ? 'Isikan Email' : null,
+          keyboardType: TextInputType.emailAddress,
+          cursorColor: Colors.white,
+          decoration: InputDecoration(
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 4),
+              borderRadius: BorderRadius.circular(15),
             ),
-            const SizedBox(
-              height: 6,
+            errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(14)),
+            errorStyle: whiteTextStyle.copyWith(
+                fontWeight: bold, fontSize: 14, color: Colors.red),
+            labelText: 'Email',
+            hintText: "Masukan Email",
+            hintStyle: whiteTextStyle,
+            labelStyle:
+                whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            prefixIcon: const Icon(
+              Icons.email_rounded,
+              color: Colors.white,
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  validator: ((value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Silahkan masukan email';
-                    }
-                    return null;
-                  }),
-                  keyboardType: TextInputType.emailAddress,
-                  controller: emailCon,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Email',
-                      hintStyle: greyTextStyle.copyWith(fontSize: 12)),
-                ),
-              ),
-            )
-          ],
+            enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white, width: 2),
+                borderRadius: BorderRadius.circular(14)),
+            floatingLabelStyle:
+                whiteTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: whiteColor, width: 2),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
         ),
       );
     }
@@ -113,39 +118,43 @@ class _SignInPageState extends State<SignInPage> {
         width: double.infinity,
         margin: EdgeInsets.only(
             left: defaultMargin, right: defaultMargin, bottom: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Password',
-              style: whiteTextStyle.copyWith(fontWeight: medium),
+        child: TextFormField(
+          controller: passCon,
+          style: whiteTextStyle,
+          showCursor: true,
+          validator: (value) => value!.isEmpty ? 'Isikan Password' : null,
+          obscureText: true,
+          keyboardType: TextInputType.visiblePassword,
+          cursorColor: Colors.white,
+          decoration: InputDecoration(
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 4),
+              borderRadius: BorderRadius.circular(15),
             ),
-            const SizedBox(
-              height: 6,
+            errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(14)),
+            errorStyle: whiteTextStyle.copyWith(
+                fontWeight: bold, fontSize: 14, color: Colors.red),
+            labelText: 'Password',
+            hintText: "Masukan Password",
+            hintStyle: whiteTextStyle.copyWith(fontSize: 14),
+            labelStyle:
+                whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+            prefixIcon: const Icon(
+              Icons.key,
+              color: Colors.white,
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Silahkan masukan password';
-                    }
-                    return null;
-                  },
-                  controller: passCon,
-                  obscureText: true,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Password',
-                      hintStyle: greyTextStyle.copyWith(fontSize: 12)),
-                ),
-              ),
-            )
-          ],
+            enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.white, width: 2),
+                borderRadius: BorderRadius.circular(14)),
+            floatingLabelStyle:
+                whiteTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: whiteColor, width: 2),
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
         ),
       );
     }
@@ -193,6 +202,9 @@ class _SignInPageState extends State<SignInPage> {
             const Spacer(),
             header(),
             inputEmail(),
+            const SizedBox(
+              height: 10,
+            ),
             inputPassword(),
             submitButton(),
             const Spacer(),

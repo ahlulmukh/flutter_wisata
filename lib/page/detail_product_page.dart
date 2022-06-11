@@ -11,7 +11,6 @@ import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailProductPage extends StatefulWidget {
   final ProductModel product;

@@ -1,28 +1,36 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/district_model.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
-import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
+import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
+import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditStorePage extends StatefulWidget {
-  const EditStorePage({Key? key}) : super(key: key);
+  final TokoModel toko;
+  const EditStorePage({Key? key, required this.toko}) : super(key: key);
 
   @override
   State<EditStorePage> createState() => _EditStorePageState();
 }
 
 class _EditStorePageState extends State<EditStorePage> {
+  File? file;
+  String? desa;
+
   @override
   Widget build(BuildContext context) {
-    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
-    TokoModel? toko = authProvider.user!.toko;
+    TokoModel? toko = tokoProvider.toko;
 
     TextEditingController nameStoreController =
         TextEditingController(text: toko!.nameStore);
-    TextEditingController nameVillageStore =
-        TextEditingController(text: toko.village);
     TextEditingController addressStore =
         TextEditingController(text: toko.address);
     TextEditingController descStore =
@@ -34,16 +42,18 @@ class _EditStorePageState extends State<EditStorePage> {
 
     submitUpdateToko() async {
       if (await tokoProvider.updateProfileToko(
-          id: toko.id,
-          usersId: toko.usersId,
+          id: toko.id!.toInt(),
+          usersId: toko.usersId.toString(),
           nameStore: nameStoreController.text,
-          village: nameVillageStore.text,
+          village: desa.toString(),
           address: addressStore.text,
           description: descStore.text,
           accountName: nameAccount.text,
-          accountNumber: int.parse(numberAccount.text).toInt())) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/store-page', (route) => false);
+          image: file!,
+          accountNumber: numberAccount.text.toString())) {
+        Get.to(
+          () => StorePage(toko: toko),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -93,6 +103,42 @@ class _EditStorePageState extends State<EditStorePage> {
       );
     }
 
+    Widget editPhoto() {
+      return GestureDetector(
+        onTap: () async {
+          XFile? photo =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+          if (photo == null) return;
+          file = File(photo.path);
+          setState(() {});
+        },
+        child: Container(
+            height: 130,
+            width: 130,
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/photo_border.png'),
+              ),
+            ),
+            margin: const EdgeInsets.only(bottom: 20, top: 20),
+            child: (file != null)
+                ? Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: FileImage(file!), fit: BoxFit.cover)),
+                  )
+                : Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/photo.png'),
+                            fit: BoxFit.cover)),
+                  )),
+      );
+    }
+
     Widget inputNameStore() {
       return Container(
         width: double.infinity,
@@ -131,86 +177,70 @@ class _EditStorePageState extends State<EditStorePage> {
       );
     }
 
-    Widget inputVillageStore() {
+    Widget dropdownVillage() {
       return Container(
         width: double.infinity,
         margin: EdgeInsets.only(
-            left: defaultMargin, right: defaultMargin, bottom: 19),
+            bottom: 19, left: defaultMargin, right: defaultMargin),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Nama Desa',
+              'Desa',
               style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
             ),
             const SizedBox(
               height: 6,
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  controller: nameVillageStore,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Nama Desa',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
+                  borderRadius: BorderRadius.circular(defaultRadius),
+                  border: Border.all(width: 2.0),
+                  color: whiteColor),
+              child: DropdownSearch<DistrictModel>(
+                onChanged: (DistrictModel? district) {
+                  desa = district!.nama;
+                },
+                dropdownBuilder: (context, select) => select != null
+                    ? Text(
+                        select.nama,
+                        style: blackTextStyle.copyWith(fontWeight: medium),
+                      )
+                    : Text(
+                        'Belum memilih desa',
+                        style: greyTextStyle.copyWith(fontWeight: semiBold),
+                      ),
+                popupItemBuilder: (context, item, isSelected) => ListTile(
+                  title: Text(
+                    item.nama,
+                    style: blackTextStyle.copyWith(fontWeight: medium),
+                  ),
                 ),
+                onFind: (String? filter) async {
+                  List<DistrictModel> districts = [];
+                  var response = await Dio().get(Service.apiUrl + '/districts',
+                      queryParameters: {"filter": filter});
+                  if (response.statusCode == 200) {
+                    List allDistrictsBaktiya = response.data['data'];
+                    for (var element in allDistrictsBaktiya) {
+                      districts.add(
+                        DistrictModel(
+                          id: element['id'],
+                          nama: element['nama'],
+                        ),
+                      );
+                    }
+                  } else {
+                    throw Exception('Gagal ambil data');
+                  }
+                  return districts;
+                },
               ),
             )
           ],
         ),
       );
     }
-
-    // Widget dropdownVillage() {
-    //   return Container(
-    //     width: double.infinity,
-    //     margin: EdgeInsets.only(
-    //         bottom: 19, left: defaultMargin, right: defaultMargin),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         Text(
-    //           'Desa',
-    //           style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-    //         ),
-    //         const SizedBox(
-    //           height: 6,
-    //         ),
-    //         Container(
-    //           padding: const EdgeInsets.symmetric(horizontal: 14),
-    //           decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(defaultRadius),
-    //               border: Border.all(width: 2.0),
-    //               color: whiteColor),
-    //           child: DropdownSearch<String>(
-    //               dropdownSearchDecoration: InputDecoration.collapsed(
-    //                   hintText: '', hintStyle: greyTextStyle),
-    //               mode: Mode.MENU,
-    //               dropDownButton: const SizedBox(
-    //                   width: 10,
-    //                   child: Icon(Icons.keyboard_arrow_down, size: 30)),
-    //               items: const [
-    //                 "Brazil",
-    //                 "Italia (Disabled)",
-    //                 "Tunisia",
-    //                 'Canada'
-    //               ],
-    //               popupItemDisabled: (String s) => s.startsWith('I'),
-    //               onChanged: print,
-    //               selectedItem: "Pilih Desa"),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
 
     Widget inputAddressStore() {
       return Container(
@@ -372,42 +402,9 @@ class _EditStorePageState extends State<EditStorePage> {
         ),
         child: Column(
           children: [
-            // GestureDetector(
-            //   onTap: () async {
-            //     PickedFile pickedFile =
-            //         await ImagePicker().getImage(source: ImageSource.gallery);
-            //     if (pickedFile != null) {
-            //       pictureFile = File(pickedFile.path);
-            //       setState(() {});
-            //     }
-            //   },
-            //   child: Container(
-            //     width: 110,
-            //     height: 110,
-            //     margin: const EdgeInsets.only(top: 26),
-            //     padding: const EdgeInsets.all(10),
-            //     decoration: BoxDecoration(
-            //         image: DecorationImage(
-            //             image: AssetImage('assets/photo_border.png'))),
-            //     child: (pictureFile != null)
-            //         ? Container(
-            //             decoration: BoxDecoration(
-            //                 shape: BoxShape.circle,
-            //                 image: DecorationImage(
-            //                     image: FileImage(pictureFile),
-            //                     fit: BoxFit.cover)),
-            //           )
-            //         : Container(
-            //             decoration: BoxDecoration(
-            //                 shape: BoxShape.circle,
-            //                 image: DecorationImage(
-            //                     image: AssetImage('assets/photo.png'),
-            //                     fit: BoxFit.cover)),
-            //           ),
-            //   ),
-            // ),
+            editPhoto(),
             inputNameStore(),
-            inputVillageStore(),
+            dropdownVillage(),
             inputAddressStore(),
             inputDescStore(),
             inputNameAccount(),

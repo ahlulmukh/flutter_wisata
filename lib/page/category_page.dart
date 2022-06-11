@@ -7,11 +7,8 @@ import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatefulWidget {
-  final int id;
-  const CategoryPage({
-    Key? key,
-    required this.id,
-  }) : super(key: key);
+  final int category;
+  const CategoryPage({Key? key, required this.category}) : super(key: key);
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
@@ -32,7 +29,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   fetchCategory() async {
     CategoryProvider categoryProvider = Provider.of(context, listen: false);
-    await categoryProvider.getCategory(id: widget.id);
+    await categoryProvider.getCategory(id: widget.category);
     setState(() {
       isLoading = false;
     });

@@ -4,7 +4,6 @@ import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
-import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/menu_item.dart';
 import 'package:provider/provider.dart';
@@ -27,19 +26,6 @@ class _AccountPageState extends State<AccountPage> {
     getProfil();
     // fetchMarket();
   }
-
-  // fetchMarket() async {
-  //   AuthProvider authProvider =
-  //       Provider.of<AuthProvider>(context, listen: false);
-  //   TokoProvider tokoProvider = Provider.of(context, listen: false);
-  //   UserModel? idToko = authProvider.user;
-  //   if (authProvider.user!.toko != null) {
-  //     tokoProvider.fetchToko(id: idToko!.toko!.id);
-  //     setState(() {});
-  //   } else {
-  //     null;
-  //   }
-  // }
 
   getProfil() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -97,26 +83,28 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                 ),
                 margin: const EdgeInsets.only(bottom: 20, top: 20),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: CachedNetworkImage(
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    imageUrl: user!.profilePhotoPath.toString(),
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Image(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          'assets/images/user.png',
-                        )),
-                  ),
-                ),
+                child: user?.profilePhotoPath == null
+                    ? Image.asset('assets/images/user.png')
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          height: 160,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          imageUrl: user!.profilePhotoPath.toString(),
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                'assets/images/user.png',
+                              )),
+                        ),
+                      ),
               ),
               Column(children: [
                 Text(
-                  user.name.toString(),
+                  user!.name.toString(),
                   style: blackTextStyle.copyWith(
                       fontSize: 16, fontWeight: semiBold),
                 ),

@@ -1,9 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
-import 'package:flutter_tugas_akhir/models/user_model.dart';
-import 'package:flutter_tugas_akhir/page/home/main_page.dart';
+import 'package:flutter_tugas_akhir/page/edit_store_page.dart';
 import 'package:flutter_tugas_akhir/page/my_product_page.dart';
-import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/menu_item.dart';
@@ -11,7 +10,12 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class StorePage extends StatefulWidget {
-  const StorePage({Key? key}) : super(key: key);
+  final TokoModel toko;
+
+  const StorePage({
+    Key? key,
+    required this.toko,
+  }) : super(key: key);
 
   @override
   State<StorePage> createState() => _StorePageState();
@@ -23,14 +27,12 @@ class _StorePageState extends State<StorePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      fetchMarket();
-    });
+    fetchMarket();
   }
 
   fetchMarket() async {
     TokoProvider tokoProvider = Provider.of(context, listen: false);
-    await tokoProvider.fetchToko(id: tokoProvider.toko!.id);
+    await tokoProvider.fetchToko(id: tokoProvider.toko!.id!.toInt());
     setState(() {
       isLoading = false;
     });
@@ -49,12 +51,7 @@ class _StorePageState extends State<StorePage> {
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainPage(),
-                  ),
-                  (route) => false);
+              Get.offNamedUntil('/main-page', (route) => false);
             },
             icon: const Icon(
               Icons.chevron_left,
@@ -98,15 +95,42 @@ class _StorePageState extends State<StorePage> {
                             margin: const EdgeInsets.only(top: 20),
                             width: 130,
                             height: 130,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadiusDirectional.circular(100),
-                              image: const DecorationImage(
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/photo_border.png'),
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CachedNetworkImage(
                                 fit: BoxFit.cover,
-                                image: AssetImage('assets/img_store.png'),
+                                imageUrl: toko!.image.toString(),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Image(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          'assets/images/user.png',
+                                        )),
                               ),
                             ),
                           ),
+                          // Container(
+                          //   margin: const EdgeInsets.only(top: 20),
+                          //   width: 130,
+                          //   height: 130,
+                          //   decoration: BoxDecoration(
+                          //     borderRadius:
+                          //         BorderRadiusDirectional.circular(100),
+                          //     image: const DecorationImage(
+                          //       fit: BoxFit.cover,
+                          //       image: AssetImage('assets/img_store.png'),
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                         const SizedBox(
                           width: 10,
@@ -119,7 +143,7 @@ class _StorePageState extends State<StorePage> {
                                 height: 10,
                               ),
                               Text(
-                                toko!.nameStore.toString(),
+                                toko.nameStore.toString(),
                                 style: blackTextStyle.copyWith(
                                   fontWeight: semiBold,
                                   fontSize: 23,
@@ -164,16 +188,13 @@ class _StorePageState extends State<StorePage> {
                               Get.to(() => MyProductPage(toko: toko),
                                   arguments: toko.products);
                             }),
-                        // MenuItem(
-                        //     title: 'Tambah Produk',
-                        //     onPressed: () {
-                        //       Navigator.pushNamed(context, '/add-product');
-                        //     }),
                         MenuItem(title: 'Pesanan Baru', onPressed: () {}),
                         MenuItem(
                             title: 'Edit Toko',
                             onPressed: () {
-                              Navigator.pushNamed(context, '/edit-store');
+                              Get.to(
+                                () => EditStorePage(toko: toko),
+                              );
                             }),
                       ],
                     ),

@@ -52,7 +52,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
           address: addressController.text,
           description: descStoreController.text,
           accountName: nameAccountController.text,
-          accountNumber: int.parse(numberAccountController.text).toInt(),
+          accountNumber: numberAccountController.text,
           image: file!)) {
         Get.off(() => StorePage(toko: user.toko as TokoModel));
       } else {
@@ -166,43 +166,6 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
         ),
       );
     }
-
-    // Widget inputNameVillage() {
-    //   return Container(
-    //     width: double.infinity,
-    //     margin: const EdgeInsets.only(bottom: 19),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         Text(
-    //           'Nama Desa',
-    //           style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-    //         ),
-    //         const SizedBox(
-    //           height: 6,
-    //         ),
-    //         Container(
-    //           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-    //           decoration: BoxDecoration(
-    //               border: Border.all(color: blackColor, width: 2.0),
-    //               color: whiteColor,
-    //               borderRadius: BorderRadius.circular(defaultRadius)),
-    //           height: 50,
-    //           child: Center(
-    //             child: TextFormField(
-    //               controller: nameVillageController,
-    //               keyboardType: TextInputType.text,
-    //               decoration: InputDecoration.collapsed(
-    //                   hintText: 'Masukan Nama Desa',
-    //                   hintStyle: greyTextStyle.copyWith(
-    //                       fontWeight: semiBold, fontSize: 13)),
-    //             ),
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   );
-    // }
 
     Widget dropdownVillage() {
       return Container(

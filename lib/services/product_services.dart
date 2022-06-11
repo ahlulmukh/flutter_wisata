@@ -17,7 +17,7 @@ class ProductService {
       print(response.statusCode);
       if (response.statusCode == 200) {
         return (response.data['data'] as List)
-            .map((products) => ProductModel.formJson(products))
+            .map((products) => ProductModel.fromJson(products))
             .toList();
       } else {
         throw Exception('Data tidak ditemukan');
@@ -38,7 +38,7 @@ class ProductService {
       );
       print(response.data);
       return (response.data['data'] as List)
-          .map((products) => ProductModel.formJson(products))
+          .map((products) => ProductModel.fromJson(products))
           .toList();
     } catch (e) {
       throw Exception(e);
@@ -56,7 +56,7 @@ class ProductService {
       );
       print(response.data);
       if (response.statusCode == 200) {
-        return ProductModel.formJson(response.data['data']);
+        return ProductModel.fromJson(response.data['data']);
       } else {
         throw Exception('Gagal ambil data');
       }
@@ -76,7 +76,7 @@ class ProductService {
       );
       print(response.data);
       return (response.data['data'] as List)
-          .map((product) => ProductModel.formJson(product))
+          .map((product) => ProductModel.fromJson(product))
           .toList();
     } catch (e) {
       throw Exception(e);

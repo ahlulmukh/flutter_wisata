@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/page/all_product_page.dart';
-import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/page/edit_profil_page.dart';
-import 'package:flutter_tugas_akhir/page/edit_store_page.dart';
 import 'package:flutter_tugas_akhir/page/home/cart_page.dart';
 import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/page/registration_store_page.dart';
@@ -10,11 +8,9 @@ import 'package:flutter_tugas_akhir/page/sign_in_page.dart';
 import 'package:flutter_tugas_akhir/page/sign_up_page.dart';
 import 'package:flutter_tugas_akhir/page/splash_page.dart';
 import 'package:flutter_tugas_akhir/page/store_information_page.dart';
-import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/page/wishlist_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
-import 'package:flutter_tugas_akhir/provider/district_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
@@ -49,9 +45,6 @@ class MyApp extends StatelessWidget {
           create: (context) => CategoryProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => DistrictProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (context) => WishlistProvider(),
         ),
       ],
@@ -82,10 +75,6 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/registration-store',
             page: () => const RegistrationStorePage(),
-          ),
-          GetPage(
-            name: '/edit-store',
-            page: () => const EditStorePage(),
           ),
           GetPage(
             name: '/information-store',

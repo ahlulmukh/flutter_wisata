@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tugas_akhir/page/all_product_page.dart';
 import 'package:flutter_tugas_akhir/page/get_search_product_page.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
+import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_tugas_akhir/widget/card_product.dart';
-import 'package:flutter_tugas_akhir/widget/card_store_home.dart';
+import 'package:flutter_tugas_akhir/widget/card_market.dart';
 import 'package:flutter_tugas_akhir/widget/category_item.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   bool isLoading = true;
+  bool isDisabled = true;
   final seachController = TextEditingController();
 
   List imageCaraousel = [
@@ -38,11 +39,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(), () {
-      getProductLimit();
-      getCategories();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      Future.delayed(const Duration(), () {
+        getProductLimit();
+        getCategories();
+        getMarketLimits();
+      });
     });
-    // WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {});
   }
 
   Future<void> getProductLimit() async {
@@ -53,15 +56,94 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> getMarketLimits() async {
+    await Provider.of<TokoProvider>(context, listen: false).getMarketsLimit();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   Future<void> getCategories() async {
     await Provider.of<CategoryProvider>(context, listen: false).getCategories();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     ProductProvider? productProvider = Provider.of<ProductProvider>(context);
-    CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
+    CategoryProvider? categoryProvider = Provider.of<CategoryProvider>(context);
+    TokoProvider? tokoProvider = Provider.of<TokoProvider>(context);
     int index = -1;
+
+    Widget shimmerMarket() {
+      return Container(
+        width: MediaQuery.of(context).orientation == Orientation.landscape
+            ? 181
+            : MediaQuery.of(context).size.width * 0.4,
+        height: 200,
+        margin: const EdgeInsets.only(right: 5, left: 5),
+        decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(defaultRadius)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(
+                width: double.infinity,
+                height: 120,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadiusDirectional.vertical(
+                    top: Radius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 11),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 13,
+                  ),
+                  Shimmer.fromColors(
+                    child: Container(
+                      width: double.infinity,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: whiteColor),
+                    ),
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Shimmer.fromColors(
+                    child: Container(
+                      width: double.infinity,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: whiteColor),
+                    ),
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    }
 
     Widget shimmerProduct() {
       return Container(
@@ -218,6 +300,7 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 9.5),
                 child: TextFormField(
+                  readOnly: true,
                   controller: seachController,
                   decoration: InputDecoration.collapsed(
                       hintText: "Cari produk...",
@@ -386,41 +469,45 @@ class _HomePageState extends State<HomePage> {
     Widget store() {
       return Container(
           margin: const EdgeInsets.only(top: 16, bottom: 15),
-          child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Toko',
-                  style: blackTextStyle.copyWith(
-                      fontSize: 16, fontWeight: semiBold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/category-page');
-                  },
-                  child: Text(
-                    'Semua Toko',
-                    style: blackTextStyle.copyWith(fontSize: 12),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Toko',
+                    style: blackTextStyle.copyWith(
+                        fontSize: 16, fontWeight: semiBold),
                   ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: const [
-                  CardStoreHome(),
-                  CardStoreHome(),
-                  CardStoreHome()
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/category-page');
+                    },
+                    child: Text(
+                      'Semua Toko',
+                      style: blackTextStyle.copyWith(fontSize: 12),
+                    ),
+                  )
                 ],
               ),
-            )
-          ]));
+              const SizedBox(
+                height: 15,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: isLoading
+                    ? Row(children: List.generate(4, (_) => shimmerMarket()))
+                    : Row(
+                        children: tokoProvider.markets
+                            .map((market) => CardMarket(
+                                  toko: market!,
+                                ))
+                            .toList(),
+                      ),
+              ),
+            ],
+          ));
     }
 
     Widget content() {

@@ -35,7 +35,7 @@ class CardMyProduct extends StatelessWidget {
               ),
             ),
             // ignore: unnecessary_null_comparison
-            child: product.image.toString() == null || product.image.isEmpty
+            child: product.image.toString() == null || product.image!.isEmpty
                 ? Image.asset(
                     'assets/images/not_product.jpeg',
                     height: 150,
@@ -70,7 +70,7 @@ class CardMyProduct extends StatelessWidget {
                   height: 13,
                 ),
                 Text(
-                  product.name,
+                  product.name.toString(),
                   overflow: TextOverflow.ellipsis,
                   style:
                       blackTextStyle.copyWith(fontWeight: bold, fontSize: 16),

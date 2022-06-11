@@ -43,14 +43,14 @@ class TokoProvider with ChangeNotifier {
 
   Future<bool> updateProfileToko({
     required int id,
-    required int usersId,
+    required String usersId,
     required String nameStore,
     required String village,
     required String address,
     required String description,
     required String accountName,
-    required int accountNumber,
-    // required File image,
+    required String accountNumber,
+    required File image,
   }) async {
     try {
       TokoModel toko = await TokoService().updateProfileToko(
@@ -62,7 +62,7 @@ class TokoProvider with ChangeNotifier {
         description: description,
         accountName: accountName,
         accountNumber: accountNumber,
-        // image: image,
+        image: image,
       );
       _toko = toko;
       return true;
@@ -79,7 +79,7 @@ class TokoProvider with ChangeNotifier {
       required String address,
       required String description,
       required String accountName,
-      required int accountNumber,
+      required String accountNumber,
       required File image}) async {
     try {
       TokoModel toko = await TokoService().createToko(
