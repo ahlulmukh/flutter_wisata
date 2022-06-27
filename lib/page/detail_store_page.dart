@@ -141,7 +141,6 @@ class _DetailStorePageState extends State<DetailStorePage> {
                 child: toko?.image == null
                     ? Image.asset(
                         'assets/images/not_product.jpeg',
-                        height: 120,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       )
@@ -184,7 +183,7 @@ class _DetailStorePageState extends State<DetailStorePage> {
                     height: 7,
                   ),
                   Text(
-                    toko.village.toString(),
+                    'Desa ' + toko.village.toString(),
                     style: blackTextStyle.copyWith(fontWeight: medium),
                   )
                 ],
@@ -192,6 +191,21 @@ class _DetailStorePageState extends State<DetailStorePage> {
             ),
             const SizedBox(
               height: 30,
+            ),
+            Text(
+              'Alamat',
+              style: blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Text(
+              toko.address.toString(),
+              textAlign: TextAlign.justify,
+              style: blackTextStyle.copyWith(fontWeight: medium),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Text(
               'Deskripsi',
@@ -206,10 +220,10 @@ class _DetailStorePageState extends State<DetailStorePage> {
               style: blackTextStyle.copyWith(fontWeight: medium),
             ),
             const SizedBox(
-              height: 50,
+              height: 40,
             ),
             Text(
-              'Produk',
+              'Produk Toko',
               style: blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
             ),
             const SizedBox(

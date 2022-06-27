@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:flutter_tugas_akhir/widget/button_loading.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,16 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+  TextEditingController emailCon = TextEditingController(text: '');
+  TextEditingController passCon = TextEditingController(text: '');
+
+  @override
+  void dispose() {
+    emailCon.clear();
+    passCon.clear();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -32,11 +43,13 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
-    TextEditingController emailCon = TextEditingController(text: '');
-    TextEditingController passCon = TextEditingController(text: '');
     PageProvider pageProvider = Provider.of<PageProvider>(context);
 
     handleSignIn() async {
+      setState(() {
+        isLoading = true;
+      });
+
       if (_formKey.currentState!.validate()) {
         if (await authProvider.login(
           email: emailCon.text,
@@ -47,7 +60,7 @@ class _SignInPageState extends State<SignInPage> {
         } else {
           Get.snackbar('Gagal Login', "Silahkan isi dengan benar",
               colorText: Colors.white,
-              backgroundColor: Colors.red[900],
+              backgroundColor: Colors.red[900]!.withOpacity(0.8),
               icon: const Icon(
                 Icons.error,
                 size: 25,
@@ -55,6 +68,10 @@ class _SignInPageState extends State<SignInPage> {
               ));
         }
       }
+
+      setState(() {
+        isLoading = false;
+      });
     }
 
     Widget header() {
@@ -73,40 +90,42 @@ class _SignInPageState extends State<SignInPage> {
         width: double.infinity,
         margin: EdgeInsets.only(
             left: defaultMargin, right: defaultMargin, bottom: 10),
-        child: TextFormField(
-          controller: emailCon,
-          style: whiteTextStyle.copyWith(fontSize: 14),
-          showCursor: true,
-          validator: (value) => value!.isEmpty ? 'Isikan Email' : null,
-          keyboardType: TextInputType.emailAddress,
-          cursorColor: Colors.white,
-          decoration: InputDecoration(
-            focusedErrorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.red, width: 4),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            errorBorder: OutlineInputBorder(
+        child: Center(
+          child: TextFormField(
+            controller: emailCon,
+            style: whiteTextStyle.copyWith(fontSize: 14),
+            showCursor: true,
+            validator: (value) => value!.isEmpty ? 'Isikan Email' : null,
+            keyboardType: TextInputType.emailAddress,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.red, width: 4),
-                borderRadius: BorderRadius.circular(14)),
-            errorStyle: whiteTextStyle.copyWith(
-                fontWeight: bold, fontSize: 14, color: Colors.red),
-            labelText: 'Email',
-            hintText: "Masukan Email",
-            hintStyle: whiteTextStyle,
-            labelStyle:
-                whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-            prefixIcon: const Icon(
-              Icons.email_rounded,
-              color: Colors.white,
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(14)),
-            floatingLabelStyle:
-                whiteTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: whiteColor, width: 2),
-              borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 4),
+                  borderRadius: BorderRadius.circular(14)),
+              errorStyle: whiteTextStyle.copyWith(
+                  fontWeight: bold, fontSize: 14, color: Colors.red),
+              labelText: 'Email',
+              hintText: "Masukan Email",
+              hintStyle: whiteTextStyle,
+              labelStyle:
+                  whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              prefixIcon: const Icon(
+                Icons.email_rounded,
+                color: Colors.white,
+              ),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(14)),
+              floatingLabelStyle:
+                  whiteTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: whiteColor, width: 2),
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
           ),
         ),
@@ -206,7 +225,7 @@ class _SignInPageState extends State<SignInPage> {
               height: 10,
             ),
             inputPassword(),
-            submitButton(),
+            isLoading == true ? const ButtonLoading() : submitButton(),
             const Spacer(),
             footer(),
             const SizedBox(

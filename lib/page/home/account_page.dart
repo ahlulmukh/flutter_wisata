@@ -133,9 +133,9 @@ class _AccountPageState extends State<AccountPage> {
                     user.toko!.id != null
                         ? Get.to(
                             () => StorePage(
-                              toko: user.toko as TokoModel,
-                            ),
-                          )
+                                  toko: user.toko as TokoModel,
+                                ),
+                            arguments: user.toko?.id)
                         : Get.toNamed('/registration-store');
                   }),
               MenuItem(

@@ -30,7 +30,7 @@ class _EditProfilPageState extends State<EditProfilPage> {
 
     handleUpdateProfile() async {
       if (await userProvider.updateProfile(
-        id: user.id.toInt(),
+        id: user.id!.toInt(),
         name: controllerName.text,
         username: controllerUsername.text,
         email: controllerEmail.text,
@@ -234,11 +234,10 @@ class _EditProfilPageState extends State<EditProfilPage> {
                                   fit: BoxFit.cover)),
                         )
                       : Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage(
-                                      user.profilePhotoPath.toString()),
+                                  image: AssetImage('assets/images/photo.png'),
                                   fit: BoxFit.cover)),
                         )),
             ),

@@ -3,8 +3,8 @@ import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/services/product_services.dart';
 
 class ProductProvider with ChangeNotifier {
-  List<ProductModel?> _product = [];
-  ProductModel? _getProduct;
+  List<ProductModel?> _product = []; // LIST
+  ProductModel? _getProduct; // MAPPING
 
   ProductModel? get getProduct => _getProduct;
   List<ProductModel?> get product => _product;

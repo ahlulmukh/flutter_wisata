@@ -3,7 +3,7 @@
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 
 class UserModel {
-  int id;
+  int? id;
   String? name;
   String? username;
   String? email;
@@ -22,7 +22,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
+      id: json['id'] ?? null,
       name: json['name'] ?? '',
       username: json['username'] ?? '',
       email: json['email'] ?? '',

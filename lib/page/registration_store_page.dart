@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -28,6 +26,23 @@ class RegistrationStorePage extends StatefulWidget {
 class _RegistrationStorePageState extends State<RegistrationStorePage> {
   File? file;
   String? desa;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController nameStoreController = TextEditingController(text: '');
+  TextEditingController addressController = TextEditingController(text: '');
+  TextEditingController descStoreController = TextEditingController(text: '');
+  TextEditingController nameAccountController = TextEditingController(text: '');
+  TextEditingController numberAccountController =
+      TextEditingController(text: '');
+
+  @override
+  void dispose() {
+    nameStoreController.clear();
+    addressController.clear();
+    descStoreController.clear();
+    nameAccountController.clear();
+    numberAccountController.clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,36 +51,30 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     PageProvider pageProvider = Provider.of<PageProvider>(context);
     UserModel? user = authProvider.user;
 
-    TextEditingController nameStoreController = TextEditingController(text: '');
-    TextEditingController addressController = TextEditingController(text: '');
-    TextEditingController descStoreController = TextEditingController(text: '');
-    TextEditingController nameAccountController =
-        TextEditingController(text: '');
-    TextEditingController numberAccountController =
-        TextEditingController(text: '');
-
     handleCreateToko() async {
-      if (await tokoProvider.createToko(
-          usersId: user!.id,
-          nameStore: nameStoreController.text,
-          village: desa.toString(),
-          address: addressController.text,
-          description: descStoreController.text,
-          accountName: nameAccountController.text,
-          accountNumber: numberAccountController.text,
-          image: file!)) {
-        Get.off(() => StorePage(toko: user.toko as TokoModel));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: dangerColor,
-            content: Text(
-              'Gagal Buat Toko',
-              style: whiteTextStyle.copyWith(fontWeight: bold),
-              textAlign: TextAlign.center,
+      if (_formKey.currentState!.validate()) {
+        if (await tokoProvider.createToko(
+            usersId: user!.id!.toInt(),
+            nameStore: nameStoreController.text,
+            village: desa.toString(),
+            address: addressController.text,
+            description: descStoreController.text,
+            accountName: nameAccountController.text,
+            accountNumber: numberAccountController.text,
+            image: file!)) {
+          Get.off(() => StorePage(toko: user.toko as TokoModel));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Gagal Buat Toko',
+                style: whiteTextStyle.copyWith(fontWeight: bold),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
 
@@ -133,37 +142,48 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     Widget inputNameStore() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 19),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Nama Toko',
-              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  controller: nameStoreController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Nama Toko',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
-                ),
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Nama Toko',
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          TextFormField(
+            controller: nameStoreController,
+            style: blackTextStyle.copyWith(fontSize: 14),
+            showCursor: true,
+            validator: (value) => value!.isEmpty ? 'Isikan Nama Toko' : null,
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(15),
               ),
-            )
-          ],
-        ),
+              errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 4),
+                  borderRadius: BorderRadius.circular(14)),
+              errorStyle: whiteTextStyle.copyWith(
+                  fontWeight: bold, fontSize: 14, color: Colors.red),
+              hintText: "Masukan Nama Toko",
+              hintStyle: greyTextStyle,
+              labelStyle:
+                  blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(10)),
+              floatingLabelStyle:
+                  blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blackColor, width: 3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ]),
       );
     }
 
@@ -181,12 +201,9 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             const SizedBox(
               height: 6,
             ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(defaultRadius),
-                  border: Border.all(width: 2.0),
-                  color: whiteColor),
+            SizedBox(
               child: DropdownSearch<DistrictModel>(
+                validator: (value) => value!.nama.isEmpty ? 'Pilih Desa' : null,
                 onChanged: (DistrictModel? district) {
                   desa = district!.nama;
                 },
@@ -203,6 +220,30 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
                   title: Text(
                     item.nama,
                     style: blackTextStyle.copyWith(fontWeight: medium),
+                  ),
+                ),
+                dropdownSearchDecoration: InputDecoration(
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.red, width: 4),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red, width: 4),
+                      borderRadius: BorderRadius.circular(14)),
+                  errorStyle: whiteTextStyle.copyWith(
+                      fontWeight: bold, fontSize: 14, color: Colors.red),
+                  hintStyle: greyTextStyle,
+                  labelStyle:
+                      blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 3),
+                      borderRadius: BorderRadius.circular(10)),
+                  floatingLabelStyle: blackTextStyle.copyWith(
+                      fontSize: 18, fontWeight: semiBold),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: blackColor, width: 3),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onFind: (String? filter) async {
@@ -235,148 +276,197 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     Widget inputAddressStore() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 19),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Alamat Lengkap',
-              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              child: Center(
-                child: TextFormField(
-                  controller: addressController,
-                  keyboardType: TextInputType.text,
-                  maxLines: 3,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Alamat Lengkap',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
-                ),
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Alamat Lengkap',
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          TextFormField(
+            controller: addressController,
+            style: blackTextStyle.copyWith(fontSize: 14),
+            showCursor: true,
+            validator: (value) => value!.isEmpty ? 'Isikan Alamat Toko' : null,
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.white,
+            maxLines: 3,
+            decoration: InputDecoration(
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(15),
               ),
-            )
-          ],
-        ),
+              errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 4),
+                  borderRadius: BorderRadius.circular(14)),
+              errorStyle: whiteTextStyle.copyWith(
+                  fontWeight: bold, fontSize: 14, color: Colors.red),
+              hintText: "Masukan Alamat Toko",
+              hintStyle: greyTextStyle,
+              labelStyle:
+                  blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(10)),
+              floatingLabelStyle:
+                  blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blackColor, width: 3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ]),
       );
     }
 
     Widget inputDescStore() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 19),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Deskripsi Toko',
-              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              child: Center(
-                child: TextFormField(
-                  controller: descStoreController,
-                  keyboardType: TextInputType.text,
-                  maxLines: 3,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Deskripsi Toko',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
-                ),
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Deskripsi Toko',
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          TextFormField(
+            controller: descStoreController,
+            style: blackTextStyle.copyWith(fontSize: 14),
+            showCursor: true,
+            maxLines: 3,
+            validator: (value) =>
+                value!.isEmpty ? 'Isikan Deskripsi Toko' : null,
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(15),
               ),
-            )
-          ],
-        ),
+              errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 4),
+                  borderRadius: BorderRadius.circular(14)),
+              errorStyle: whiteTextStyle.copyWith(
+                  fontWeight: bold, fontSize: 14, color: Colors.red),
+              hintText: "Masukan Deskripsi Toko",
+              hintStyle: greyTextStyle,
+              labelStyle:
+                  blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(10)),
+              floatingLabelStyle:
+                  blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blackColor, width: 3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ]),
       );
     }
 
     Widget inputNameBank() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 19),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Nama Rekening',
-              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  controller: nameAccountController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Nama Rekening',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
-                ),
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Nama Rekening',
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          TextFormField(
+            controller: nameAccountController,
+            style: blackTextStyle.copyWith(fontSize: 14),
+            showCursor: true,
+            validator: (value) =>
+                value!.isEmpty ? 'Isikan Nama Rekening' : null,
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(15),
               ),
-            )
-          ],
-        ),
+              errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 4),
+                  borderRadius: BorderRadius.circular(14)),
+              errorStyle: whiteTextStyle.copyWith(
+                  fontWeight: bold, fontSize: 14, color: Colors.red),
+              hintText: "Masukan Deskripsi Toko",
+              hintStyle: greyTextStyle,
+              labelStyle:
+                  blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(10)),
+              floatingLabelStyle:
+                  blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blackColor, width: 3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ]),
       );
     }
 
     Widget inputNumberBank() {
       return Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 19),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Nomor Rekening',
-              style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(defaultRadius)),
-              height: 50,
-              child: Center(
-                child: TextFormField(
-                  controller: numberAccountController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(
-                      hintText: 'Masukan Nomor Rekening',
-                      hintStyle: greyTextStyle.copyWith(
-                          fontWeight: semiBold, fontSize: 13)),
-                ),
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'Nomor Rekening',
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          TextFormField(
+            controller: numberAccountController,
+            style: blackTextStyle.copyWith(fontSize: 14),
+            showCursor: true,
+            validator: (value) =>
+                value!.isEmpty ? 'Isikan Nomor Rekening' : null,
+            keyboardType: TextInputType.number,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 4),
+                borderRadius: BorderRadius.circular(15),
               ),
-            )
-          ],
-        ),
+              errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 4),
+                  borderRadius: BorderRadius.circular(14)),
+              errorStyle: whiteTextStyle.copyWith(
+                  fontWeight: bold, fontSize: 14, color: Colors.red),
+              hintText: "Masukan Nomor Rekening",
+              hintStyle: greyTextStyle,
+              labelStyle:
+                  blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(10)),
+              floatingLabelStyle:
+                  blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: blackColor, width: 3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ]),
       );
     }
 
@@ -399,7 +489,6 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
           children: [
             addPhoto(),
             inputNameStore(),
-            // inputNameVillage(),
             dropdownVillage(),
             inputAddressStore(),
             inputDescStore(),
@@ -414,11 +503,14 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColor1,
-        body: ListView(
-          children: [
-            header(),
-            content(),
-          ],
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              header(),
+              content(),
+            ],
+          ),
         ),
       ),
     );

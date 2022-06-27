@@ -32,7 +32,8 @@ class _StorePageState extends State<StorePage> {
 
   fetchMarket() async {
     TokoProvider tokoProvider = Provider.of(context, listen: false);
-    await tokoProvider.fetchToko(id: tokoProvider.toko!.id!.toInt());
+    await tokoProvider.fetchToko(
+        id: Get.arguments ?? tokoProvider.toko?.id?.toInt());
     setState(() {
       isLoading = false;
     });

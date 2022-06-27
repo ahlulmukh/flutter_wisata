@@ -1,16 +1,21 @@
-// ignore_for_file: unnecessary_cast
+// ignore_for_file: unnecessary_cast, unnecessary_null_comparison
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
+import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
+import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
+import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
+import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailProductPage extends StatefulWidget {
   final ProductModel product;
@@ -24,6 +29,7 @@ class DetailProductPage extends StatefulWidget {
 class _DetailProductPageState extends State<DetailProductPage> {
   bool isWishlist = false;
   bool isLoading = true;
+  dynamic quantity = 1;
   final currencyFormatter = NumberFormat.currency(locale: 'ID');
 
   fetchProduct() async {
@@ -34,17 +40,30 @@ class _DetailProductPageState extends State<DetailProductPage> {
     });
   }
 
+  fetchUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.getString('token');
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.getProfile();
+  }
+
   @override
   void initState() {
     super.initState();
     fetchProduct();
+    fetchUser();
   }
 
   @override
   Widget build(BuildContext context) {
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
+    PageProvider pageProvider = Provider.of<PageProvider>(context);
     ProductModel? product = productProvider.getProduct;
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel? user = authProvider.user;
 
     Widget detailImage() {
       return SizedBox(
@@ -58,6 +77,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               )
             : CachedNetworkImage(
                 fit: BoxFit.cover,
+                width: double.infinity,
                 imageUrl: widget.product.image.toString(),
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
@@ -80,7 +100,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Get.back();
+                Get.offNamedUntil('/main-page', (route) => false,
+                    arguments: pageProvider.currentIndex == 0);
               },
               child: CircleAvatar(
                 backgroundColor: greyColor.withOpacity(0.4),
@@ -121,28 +142,59 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   style:
                       blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 ),
-                Row(
-                  children: [
-                    Image.asset(
-                      'assets/icon_pengurangan.png',
-                      width: 26,
+                GestureDetector(
+                  onTap: () {
+                    cartProvider
+                        .addtoCart(
+                            userId: user!.id.toString(),
+                            productId: product.id!.toString(),
+                            quantity: quantity)
+                        .then(
+                          (value) => Get.snackbar('', '',
+                              backgroundColor: secondaryColor.withOpacity(0.8),
+                              titleText: Text(
+                                'Berhasil',
+                                style: whiteTextStyle.copyWith(
+                                    fontWeight: semiBold, fontSize: 17),
+                              ),
+                              mainButton: TextButton(
+                                  onPressed: () {
+                                    Get.toNamed('/cart-page');
+                                  },
+                                  child: Text(
+                                    'Lihat',
+                                    style: whiteTextStyle.copyWith(
+                                        fontWeight: semiBold),
+                                  )),
+                              messageText: Text(
+                                  'Berhasil ditambah ke keranjang',
+                                  style: whiteTextStyle.copyWith(fontSize: 14)),
+                              colorText: Colors.white),
+                        );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: primaryColor,
                     ),
-                    const SizedBox(
-                      width: 15,
+                    width: 150,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: whiteColor,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Keranjang',
+                          style: whiteTextStyle.copyWith(fontWeight: semiBold),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '1',
-                      style: blackTextStyle.copyWith(fontSize: 16),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Image.asset(
-                      'assets/icon_penambahan.png',
-                      width: 26,
-                    ),
-                  ],
-                ),
+                  ),
+                )
               ],
             ),
             const SizedBox(
@@ -193,8 +245,96 @@ class _DetailProductPageState extends State<DetailProductPage> {
               ],
             ),
             const SizedBox(
-              height: 22,
+              height: 30,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Kategori',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      product.category!.name.toString(),
+                      style: blackTextStyle.copyWith(
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Stok',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      product.stock.toString(),
+                      style: blackTextStyle.copyWith(
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Berat',
+                      style: blackTextStyle.copyWith(
+                        fontSize: 16,
+                        fontWeight: semiBold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      product.weight.toString() + ' Kg',
+                      style: blackTextStyle.copyWith(
+                        fontWeight: medium,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Deskripsi Produk',
+              style: blackTextStyle.copyWith(
+                fontSize: 16,
+                fontWeight: semiBold,
+              ),
+            ),
+            const SizedBox(height: 10),
             Text(
               product.description.toString(),
               textAlign: TextAlign.justify,
@@ -208,11 +348,19 @@ class _DetailProductPageState extends State<DetailProductPage> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(defaultRadius),
-                  child: Image.asset(
-                    "assets/img_store.png",
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
+                  child: product.market?.image == null
+                      ? Image.asset(
+                          'assets/images/not_product.jpeg',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          product.market!.image.toString(),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 const SizedBox(
                   width: 13,
@@ -222,24 +370,35 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   children: [
                     Text(
                       product.market!.nameStore.toString(),
-                      style: blackTextStyle.copyWith(fontSize: 16),
-                    ),
-                    Text(
-                      product.market!.village.toString(),
                       style: blackTextStyle.copyWith(
                           fontSize: 16, fontWeight: semiBold),
                     ),
                     const SizedBox(
-                      height: 8,
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.map_outlined),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          product.market!.village.toString(),
+                          style: blackTextStyle.copyWith(fontWeight: medium),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadiusDirectional.circular(10)),
-                          backgroundColor: backgroundColor3,
+                          backgroundColor: primaryColor,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
+                            horizontal: 16,
                           )),
                       onPressed: () {
                         Get.to(
@@ -260,27 +419,6 @@ class _DetailProductPageState extends State<DetailProductPage> {
               thickness: 4.0,
             ),
             const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  'Rp. 30.000',
-                  style: greyTextStyle.copyWith(fontSize: 16, fontWeight: bold),
-                ),
-                const Spacer(),
-                TextButton(
-                    style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: defaultMargin, vertical: 8),
-                        backgroundColor: backgroundColor3),
-                    onPressed: () {},
-                    child: Text(
-                      'Tambah dalam keranjang',
-                      style: whiteTextStyle.copyWith(fontWeight: bold),
-                    ))
-              ],
-            )
           ],
         ),
       );
