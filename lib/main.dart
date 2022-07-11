@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/page/all_market_page.dart';
 import 'package:flutter_tugas_akhir/page/all_product_page.dart';
+import 'package:flutter_tugas_akhir/page/checkout_page.dart';
+import 'package:flutter_tugas_akhir/page/checkout_success_page.dart';
 import 'package:flutter_tugas_akhir/page/edit_profil_page.dart';
-import 'package:flutter_tugas_akhir/page/home/cart_page.dart';
+import 'package:flutter_tugas_akhir/page/cart_page.dart';
 import 'package:flutter_tugas_akhir/page/home/main_page.dart';
+import 'package:flutter_tugas_akhir/page/new_order_page.dart';
 import 'package:flutter_tugas_akhir/page/registration_store_page.dart';
 import 'package:flutter_tugas_akhir/page/sign_in_page.dart';
 import 'package:flutter_tugas_akhir/page/sign_up_page.dart';
 import 'package:flutter_tugas_akhir/page/splash_page.dart';
 import 'package:flutter_tugas_akhir/page/store_information_page.dart';
-import 'package:flutter_tugas_akhir/page/wishlist_page.dart';
+import 'package:flutter_tugas_akhir/page/home/wishlist_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
+import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
+import 'package:flutter_tugas_akhir/provider/checkout_provider.dart';
+import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
@@ -46,6 +53,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => WishlistProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CartProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CheckoutProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(),
         ),
       ],
       child: GetMaterialApp(
@@ -91,6 +107,22 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/all-product',
             page: () => const AllProductPage(),
+          ),
+          GetPage(
+            name: '/all-market',
+            page: () => const AllMarketPage(),
+          ),
+          GetPage(
+            name: '/checkout',
+            page: () => const CheckoutPage(),
+          ),
+          GetPage(
+            name: '/checkout-success',
+            page: () => const CheckoutSuccessPage(),
+          ),
+          GetPage(
+            name: '/newOrder-page',
+            page: () => const NewOrderPage(),
           ),
         ],
       ),

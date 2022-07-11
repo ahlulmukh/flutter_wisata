@@ -16,7 +16,8 @@ class CardProductCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
     return GestureDetector(
       onTap: () {
@@ -42,7 +43,7 @@ class CardProductCategory extends StatelessWidget {
                 ),
               ),
               // ignore: unnecessary_null_comparison
-              child: product.image.toString() == null || product.image.isEmpty
+              child: product.image.toString() == null || product.image!.isEmpty
                   ? Image.asset(
                       'assets/images/not_product.jpeg',
                       height: 150,
@@ -51,21 +52,17 @@ class CardProductCategory extends StatelessWidget {
                   : ClipRRect(
                       borderRadius: BorderRadius.vertical(
                           top: Radius.circular(defaultRadius)),
-                      child: Hero(
-                        tag: product.image.toString(),
-                        child: CachedNetworkImage(
-                          height: 150,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          imageUrl: product.image.toString(),
-                          placeholder: (context, url) =>
-                              const Icon(Icons.image),
-                          errorWidget: (context, url, error) => const Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                'assets/images/not_product.jpeg',
-                              )),
-                        ),
+                      child: CachedNetworkImage(
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        imageUrl: product.image.toString(),
+                        placeholder: (context, url) => const Icon(Icons.image),
+                        errorWidget: (context, url, error) => const Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/images/not_product.jpeg',
+                            )),
                       ),
                     ),
             ),
@@ -78,7 +75,7 @@ class CardProductCategory extends StatelessWidget {
                     height: 13,
                   ),
                   Text(
-                    product.name,
+                    product.name.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: blackTextStyle.copyWith(
                         fontWeight: semiBold, fontSize: 16),

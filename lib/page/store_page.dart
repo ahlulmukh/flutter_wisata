@@ -46,7 +46,7 @@ class _StorePageState extends State<StorePage> {
 
     Widget header() {
       return AppBar(
-        toolbarHeight: 70.0,
+        toolbarHeight: 60.0,
         centerTitle: true,
         backgroundColor: whiteColor,
         leading: Builder(
@@ -119,19 +119,6 @@ class _StorePageState extends State<StorePage> {
                               ),
                             ),
                           ),
-                          // Container(
-                          //   margin: const EdgeInsets.only(top: 20),
-                          //   width: 130,
-                          //   height: 130,
-                          //   decoration: BoxDecoration(
-                          //     borderRadius:
-                          //         BorderRadiusDirectional.circular(100),
-                          //     image: const DecorationImage(
-                          //       fit: BoxFit.cover,
-                          //       image: AssetImage('assets/img_store.png'),
-                          //     ),
-                          //   ),
-                          // ),
                         ),
                         const SizedBox(
                           width: 10,
@@ -184,13 +171,20 @@ class _StorePageState extends State<StorePage> {
                           height: 60,
                         ),
                         MenuItem(
+                            icons: Icons.shopping_bag_outlined,
                             title: 'Produk Saya',
                             onPressed: () {
                               Get.to(() => MyProductPage(toko: toko),
                                   arguments: toko.products);
                             }),
-                        MenuItem(title: 'Pesanan Baru', onPressed: () {}),
                         MenuItem(
+                            icons: Icons.card_travel_outlined,
+                            title: 'Pesanan Baru',
+                            onPressed: () {
+                              Get.toNamed('/newOrder-page');
+                            }),
+                        MenuItem(
+                            icons: Icons.store_outlined,
                             title: 'Edit Toko',
                             onPressed: () {
                               Get.to(
@@ -204,16 +198,5 @@ class _StorePageState extends State<StorePage> {
               ],
             ),
     );
-
-    // return SafeArea(
-    //   child: Scaffold(
-    //       backgroundColor: backgroundColor1,
-    //       body: ListView(
-    //         children: [
-    //           header(),
-    //           content(),
-    //         ],
-    //       )),
-    // );
   }
 }

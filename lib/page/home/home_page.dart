@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_is_empty, avoid_returning_null_for_void
+
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/page/get_search_product_page.dart';
+import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
@@ -44,8 +48,18 @@ class _HomePageState extends State<HomePage> {
         getProductLimit();
         getCategories();
         getMarketLimits();
+        fetchCart();
+        // getProfil();
       });
     });
+  }
+
+  Future<void> fetchCart() async {
+    await Provider.of<CartProvider>(context, listen: false).getCartList();
+    CartProvider cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
+    // await cartProvider.getCartList();
+    print(cartProvider.cartList!.length);
   }
 
   Future<void> getProductLimit() async {
@@ -75,6 +89,7 @@ class _HomePageState extends State<HomePage> {
     ProductProvider? productProvider = Provider.of<ProductProvider>(context);
     CategoryProvider? categoryProvider = Provider.of<CategoryProvider>(context);
     TokoProvider? tokoProvider = Provider.of<TokoProvider>(context);
+    CartProvider? cartProvider = Provider.of<CartProvider>(context);
     int index = -1;
 
     Widget shimmerMarket() {
@@ -148,7 +163,9 @@ class _HomePageState extends State<HomePage> {
     Widget shimmerProduct() {
       return Container(
         height: 260,
-        width: MediaQuery.of(context).size.width * 0.5,
+        width: MediaQuery.of(context).orientation == Orientation.landscape
+            ? MediaQuery.of(context).size.width * 0.3
+            : MediaQuery.of(context).size.width * 0.5,
         margin: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
             color: whiteColor,
@@ -257,30 +274,33 @@ class _HomePageState extends State<HomePage> {
     Widget header() {
       return Container(
         color: primaryColor,
-        height: 70,
+        height: 50,
         padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               decoration: BoxDecoration(
-                color: lightColor,
+                color: secondaryColor,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(defaultRadius),
                   topLeft: Radius.circular(defaultRadius),
                 ),
               ),
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(
-                    () => GetSearchProduct(
-                      data: seachController.text,
-                    ),
-                  )!
-                      .then(
-                    (value) => seachController.clear(),
-                  );
+                  if (seachController.text.length > 0) {
+                    Get.to(
+                      () => GetSearchProduct(
+                        data: seachController.text,
+                      ),
+                    )!
+                        .then(
+                      (value) => seachController.clear(),
+                    );
+                  }
+                  return null;
                 },
                 child: Icon(
                   Icons.search,
@@ -290,7 +310,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: Container(
-                margin: const EdgeInsets.only(right: 20),
+                margin: const EdgeInsets.only(right: 14),
                 decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.only(
@@ -298,14 +318,13 @@ class _HomePageState extends State<HomePage> {
                       bottomRight: Radius.circular(defaultRadius),
                     )),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 9.5),
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 7.5),
                 child: TextFormField(
-                  readOnly: true,
                   controller: seachController,
                   decoration: InputDecoration.collapsed(
                       hintText: "Cari produk...",
                       hintStyle: greyTextStyle.copyWith(
-                          fontSize: 14, fontWeight: semiBold)),
+                          fontSize: 12, fontWeight: semiBold)),
                 ),
               ),
             ),
@@ -313,11 +332,28 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   Navigator.pushNamed(context, '/cart-page');
                 },
-                child: const Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 25,
-                  color: Colors.white,
-                ))
+                child: cartProvider.cartList!.length == 0
+                    ? const Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 25,
+                        color: Colors.white,
+                      )
+                    : Badge(
+                        animationType: BadgeAnimationType.slide,
+                        animationDuration: const Duration(seconds: 2),
+                        badgeColor: dangerColor,
+                        padding: const EdgeInsets.all(6),
+                        position: const BadgePosition(bottom: 9.0, start: 12.0),
+                        badgeContent: Text(
+                            cartProvider.cartList!.length.toString(),
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 14, fontWeight: semiBold)),
+                        child: const Icon(
+                          Icons.shopping_cart_outlined,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      ))
           ],
         ),
       );
@@ -354,18 +390,18 @@ class _HomePageState extends State<HomePage> {
                     items: imageCaraousel
                         .map(
                           (item) => ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(10),
                             child: Image.asset(
                               item,
                               fit: BoxFit.cover,
                               width: MediaQuery.of(context).size.width,
-                              height: 150,
+                              height: 190,
                             ),
                           ),
                         )
                         .toList(),
                     options: CarouselOptions(
-                      aspectRatio: 2.5,
+                      aspectRatio: 2.2,
                       viewportFraction: 1,
                       initialPage: 0,
                       onPageChanged: (index, reason) {
@@ -383,7 +419,7 @@ class _HomePageState extends State<HomePage> {
 
     Widget category() {
       return Container(
-        margin: const EdgeInsets.only(top: 18),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -423,7 +459,7 @@ class _HomePageState extends State<HomePage> {
 
     Widget product() {
       return Container(
-        margin: const EdgeInsets.only(top: 16),
+        margin: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
             Row(
@@ -482,7 +518,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/category-page');
+                      Get.toNamed('/all-market');
                     },
                     child: Text(
                       'Semua Toko',
@@ -512,7 +548,7 @@ class _HomePageState extends State<HomePage> {
 
     Widget content() {
       return Container(
-          margin: const EdgeInsets.only(top: 38),
+          margin: const EdgeInsets.only(top: 20),
           padding: EdgeInsets.symmetric(horizontal: defaultMargin),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

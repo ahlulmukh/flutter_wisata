@@ -14,7 +14,7 @@ class ProductService {
           validateStatus: (status) => true,
         ),
       );
-      print(response.statusCode);
+      print(response.data);
       if (response.statusCode == 200) {
         return (response.data['data'] as List)
             .map((products) => ProductModel.fromJson(products))
@@ -74,7 +74,7 @@ class ProductService {
           validateStatus: (status) => true,
         ),
       );
-      print(response.data);
+      print(response.statusCode);
       return (response.data['data'] as List)
           .map((product) => ProductModel.fromJson(product))
           .toList();

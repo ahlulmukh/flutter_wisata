@@ -51,7 +51,7 @@ class _AccountPageState extends State<AccountPage> {
     Widget header() {
       return AppBar(
         centerTitle: true,
-        toolbarHeight: 70.0,
+        toolbarHeight: 60.0,
         backgroundColor: whiteColor,
         automaticallyImplyLeading: false,
         elevation: 0,
@@ -115,18 +115,18 @@ class _AccountPageState extends State<AccountPage> {
                 ),
               ]),
               const SizedBox(
-                height: 60,
+                height: 40,
               ),
               MenuItem(
+                  icons: Icons.account_circle_outlined,
                   title: 'Edit Profil',
                   onPressed: () {
                     Get.toNamed('/edit-profile');
                   }),
-              MenuItem(title: 'Transaksi', onPressed: () {}),
               MenuItem(
+                  icons: Icons.store,
                   // ignore: unrelated_type_equality_checks, unnecessary_null_comparison
-                  title:
-                      user.toko!.id != null ? 'Toko Saya' : "Registrasi Toko",
+                  title: user.toko!.id != null ? 'Toko Saya' : "Buka Toko",
                   // title: user.toko == null ? 'Registrasi Toko' : 'Toko Saya',
                   onPressed: () {
                     // ignore: unnecessary_null_comparison
@@ -139,21 +139,35 @@ class _AccountPageState extends State<AccountPage> {
                         : Get.toNamed('/registration-store');
                   }),
               MenuItem(
+                  icons: Icons.perm_device_information_sharp,
                   title: 'Informasi',
                   onPressed: () {
                     Get.toNamed('/information-store');
                   }),
-              GestureDetector(
-                onTap: handleLogout,
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Logout',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: bold, color: dangerColor),
+              Row(
+                children: [
+                  Icon(
+                    Icons.exit_to_app,
+                    color: dangerColor,
                   ),
-                ),
-              )
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  GestureDetector(
+                    onTap: handleLogout,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Logout',
+                        style: blackTextStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: semiBold,
+                            color: dangerColor),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -172,6 +186,9 @@ class _AccountPageState extends State<AccountPage> {
                 children: [
                   header(),
                   content(),
+                  const SizedBox(
+                    height: 20,
+                  )
                 ],
               ));
   }

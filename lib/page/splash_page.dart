@@ -44,15 +44,10 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/icon_leaf.png',
-              width: 150,
-              height: 150,
+              'assets/logo.png',
+              width: 300,
+              height: 300,
             ),
-            Text(
-              'MARKETTANI',
-              style: whiteTextStyle.copyWith(
-                  fontSize: 36, letterSpacing: 7.2, fontWeight: bold),
-            )
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -42,15 +44,15 @@ class _EditStorePageState extends State<EditStorePage> {
 
     submitUpdateToko() async {
       if (await tokoProvider.updateProfileToko(
-          id: toko.id!.toInt(),
-          usersId: toko.usersId.toString(),
-          nameStore: nameStoreController.text,
-          village: desa.toString(),
-          address: addressStore.text,
-          description: descStore.text,
-          accountName: nameAccount.text,
-          image: file!,
-          accountNumber: numberAccount.text.toString())) {
+          toko.id!.toInt(),
+          toko.usersId.toString(),
+          nameStoreController.text,
+          desa.toString(),
+          addressStore.text,
+          descStore.text,
+          nameAccount.text,
+          numberAccount.text.toString(),
+          image: file!)) {
         Get.to(
           () => StorePage(toko: toko),
         );
@@ -109,6 +111,9 @@ class _EditStorePageState extends State<EditStorePage> {
           XFile? photo =
               await ImagePicker().pickImage(source: ImageSource.gallery);
           if (photo == null) return;
+          if (photo.path == null) {
+            return;
+          }
           file = File(photo.path);
           setState(() {});
         },
@@ -130,10 +135,10 @@ class _EditStorePageState extends State<EditStorePage> {
                             image: FileImage(file!), fit: BoxFit.cover)),
                   )
                 : Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: AssetImage('assets/images/photo.png'),
+                            image: NetworkImage(toko.image.toString()),
                             fit: BoxFit.cover)),
                   )),
       );
@@ -207,7 +212,7 @@ class _EditStorePageState extends State<EditStorePage> {
                         style: blackTextStyle.copyWith(fontWeight: medium),
                       )
                     : Text(
-                        'Belum memilih desa',
+                        toko.village.toString(),
                         style: greyTextStyle.copyWith(fontWeight: semiBold),
                       ),
                 popupItemBuilder: (context, item, isSelected) => ListTile(

@@ -36,8 +36,7 @@ class TokoModel {
       description: object['description'] ?? '',
       accountName: object['account_name'] ?? '',
       accountNumber: object['account_number'].toString(),
-      // ignore: unnecessary_null_comparison
-      image: object != null ? object['image'] : null,
+      image: object['image'] ?? '',
       products: object['products'] != null
           ? List.from(object['products'])
               .map((products) => ProductModel.fromJson(products))

@@ -18,18 +18,17 @@ class CategoryItem extends StatelessWidget {
             ));
       },
       child: Container(
-        height: 40,
         margin: const EdgeInsets.only(right: 10, bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         decoration: BoxDecoration(
           color: backgroundColor3,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
           children: [
             Text(
               categories.name,
-              style: whiteTextStyle.copyWith(fontWeight: bold, fontSize: 14),
+              style: whiteTextStyle.copyWith(fontWeight: semiBold),
             ),
           ],
         ),

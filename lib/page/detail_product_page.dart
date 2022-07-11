@@ -30,7 +30,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
   bool isWishlist = false;
   bool isLoading = true;
   dynamic quantity = 1;
-  final currencyFormatter = NumberFormat.currency(locale: 'ID');
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
   fetchProduct() async {
     ProductProvider productProvider = Provider.of(context, listen: false);
@@ -65,6 +66,86 @@ class _DetailProductPageState extends State<DetailProductPage> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     UserModel? user = authProvider.user;
 
+    Future<void> showSuccessDialog() async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => SizedBox(
+          width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+          child: AlertDialog(
+            backgroundColor: backgroundColor3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: whiteColor,
+                      ),
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/icon_success.png',
+                    width: 100,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Berhasil',
+                    style: whiteTextStyle.copyWith(
+                      fontSize: 18,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Berhasil ditambahkan\n ke keranjang',
+                    textAlign: TextAlign.center,
+                    style: whiteTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: 154,
+                    height: 44,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.toNamed('/cart-page');
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Lihat Keranjang',
+                        style: whiteTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: semiBold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget detailImage() {
       return SizedBox(
         height: MediaQuery.of(context).orientation == Orientation.landscape
@@ -78,7 +159,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
             : CachedNetworkImage(
                 fit: BoxFit.cover,
                 width: double.infinity,
-                imageUrl: widget.product.image.toString(),
+                imageUrl: product.image.toString(),
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Image(
@@ -104,7 +185,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     arguments: pageProvider.currentIndex == 0);
               },
               child: CircleAvatar(
-                backgroundColor: greyColor.withOpacity(0.4),
+                backgroundColor: greyColor.withOpacity(0.7),
                 child: Icon(
                   Icons.chevron_left,
                   color: whiteColor,
@@ -144,39 +225,17 @@ class _DetailProductPageState extends State<DetailProductPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    cartProvider
-                        .addtoCart(
-                            userId: user!.id.toString(),
-                            productId: product.id!.toString(),
-                            quantity: quantity)
-                        .then(
-                          (value) => Get.snackbar('', '',
-                              backgroundColor: secondaryColor.withOpacity(0.8),
-                              titleText: Text(
-                                'Berhasil',
-                                style: whiteTextStyle.copyWith(
-                                    fontWeight: semiBold, fontSize: 17),
-                              ),
-                              mainButton: TextButton(
-                                  onPressed: () {
-                                    Get.toNamed('/cart-page');
-                                  },
-                                  child: Text(
-                                    'Lihat',
-                                    style: whiteTextStyle.copyWith(
-                                        fontWeight: semiBold),
-                                  )),
-                              messageText: Text(
-                                  'Berhasil ditambah ke keranjang',
-                                  style: whiteTextStyle.copyWith(fontSize: 14)),
-                              colorText: Colors.white),
-                        );
+                    cartProvider.addtoCart(
+                        userId: user!.id.toString(),
+                        productId: product.id!.toString(),
+                        quantity: quantity);
+                    showSuccessDialog();
                   },
                   child: Container(
                     padding: const EdgeInsets.all(7),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: primaryColor,
+                      color: secondaryColor,
                     ),
                     width: 150,
                     child: Row(
@@ -396,7 +455,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadiusDirectional.circular(10)),
-                          backgroundColor: primaryColor,
+                          backgroundColor: secondaryColor,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
                           )),

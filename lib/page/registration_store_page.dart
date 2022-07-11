@@ -11,6 +11,7 @@ import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:flutter_tugas_akhir/widget/button_loading.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +25,7 @@ class RegistrationStorePage extends StatefulWidget {
 }
 
 class _RegistrationStorePageState extends State<RegistrationStorePage> {
+  bool isLoading = false;
   File? file;
   String? desa;
   final _formKey = GlobalKey<FormState>();
@@ -52,6 +54,9 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     UserModel? user = authProvider.user;
 
     handleCreateToko() async {
+      setState(() {
+        isLoading = true;
+      });
       if (_formKey.currentState!.validate()) {
         if (await tokoProvider.createToko(
             usersId: user!.id!.toInt(),
@@ -76,11 +81,14 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
           );
         }
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     Widget header() {
       return AppBar(
-        toolbarHeight: 70.0,
+        toolbarHeight: 60.0,
         centerTitle: true,
         backgroundColor: whiteColor,
         leading: Builder(
@@ -494,23 +502,21 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             inputDescStore(),
             inputNameBank(),
             inputNumberBank(),
-            submitButton(),
+            isLoading == true ? const ButtonLoading() : submitButton(),
           ],
         ),
       );
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: backgroundColor1,
-        body: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              header(),
-              content(),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: backgroundColor1,
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: [
+            header(),
+            content(),
+          ],
         ),
       ),
     );

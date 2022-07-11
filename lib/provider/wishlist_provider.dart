@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class WishlistProvider with ChangeNotifier {
   List<ProductModel?> _wishlist = [];

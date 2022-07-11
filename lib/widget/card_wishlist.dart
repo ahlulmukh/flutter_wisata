@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/models/user_model.dart';
+import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
+import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +15,13 @@ class CardWishlist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.compact(locale: 'ID');
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
+
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel? user = authProvider.user;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
@@ -31,14 +40,14 @@ class CardWishlist extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  product.image,
-                  width: 75,
-                  height: 70,
+                  product.image.toString(),
+                  width: 80,
+                  height: 80,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -48,7 +57,7 @@ class CardWishlist extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.name,
+                      product.name.toString(),
                       style: blackTextStyle.copyWith(fontWeight: semiBold),
                     ),
                     const SizedBox(
@@ -56,46 +65,87 @@ class CardWishlist extends StatelessWidget {
                     ),
                     Text(
                       currencyFormatter.format(product.price),
-                      style: greenTextStyle.copyWith(fontWeight: semiBold),
+                      style: greyTextStyle.copyWith(fontWeight: medium),
                     ),
                     const SizedBox(
                       height: 4,
                     ),
                     Text(
-                      '1x',
-                      style: blackTextStyle,
+                      product.market!.nameStore.toString(),
+                      style: blackTextStyle.copyWith(
+                          fontSize: 16, fontWeight: semiBold),
                     )
                   ],
                 ),
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   wishlistProvider.setProduct(product);
+                  if (wishlistProvider.isWishlist(product)) {
+                    Get.snackbar('', '',
+                        backgroundColor: secondaryColor.withOpacity(0.8),
+                        titleText: Text(
+                          'Sukses',
+                          style: whiteTextStyle.copyWith(
+                              fontWeight: semiBold, fontSize: 17),
+                        ),
+                        messageText: Text('Berhasil ditambah ke wishlist',
+                            style: whiteTextStyle.copyWith(fontSize: 14)),
+                        colorText: Colors.white);
+                  } else {
+                    Get.snackbar('', '',
+                        backgroundColor: dangerColor.withOpacity(0.8),
+                        titleText: Text(
+                          'Berhasil',
+                          style: whiteTextStyle.copyWith(
+                              fontWeight: semiBold, fontSize: 17),
+                        ),
+                        messageText: Text('Berhasil dihapus dari wishlist',
+                            style: whiteTextStyle.copyWith(fontSize: 14)),
+                        colorText: Colors.white);
+                  }
                 },
                 child: Image.asset(
-                  'assets/icon_delete.png',
-                  width: 25,
-                  color: greyColor,
+                  wishlistProvider.isWishlist(product)
+                      ? 'assets/icon_love_on.png'
+                      : 'assets/icon_love_off.png',
+                  width: 50,
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              cartProvider.addtoCart(
+                  userId: user!.id.toString(),
+                  productId: product.id.toString(),
+                  quantity: 1);
+              wishlistProvider.setProduct(product);
+              Get.snackbar('', '',
+                  backgroundColor: secondaryColor.withOpacity(0.8),
+                  titleText: Text(
+                    'Berhasil',
+                    style: whiteTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 17),
+                  ),
+                  messageText: Text('Berhasil ditambah ke keranjang',
+                      style: whiteTextStyle.copyWith(fontSize: 14)),
+                  colorText: Colors.white);
+            },
             child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(
-                color: lightColor,
-                borderRadius: BorderRadiusDirectional.circular(5),
-              ),
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(6)),
               child: Text(
-                'Tambah dalam keranjang',
+                'Tambah keranjang',
                 textAlign: TextAlign.center,
-                style: whiteTextStyle.copyWith(fontWeight: bold),
+                style:
+                    whiteTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
               ),
             ),
           )

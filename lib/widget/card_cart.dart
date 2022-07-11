@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/cart_model.dart';
+import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
+import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CardCart extends StatelessWidget {
-  const CardCart({Key? key}) : super(key: key);
+  final CartModel cart;
+  const CardCart({Key? key, required this.cart}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -23,13 +33,17 @@ class CardCart extends StatelessWidget {
           ]),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              'assets/img2.png',
-              width: 80,
-              fit: BoxFit.cover,
-            ),
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    Service.urlImage + cart.product!.image.toString(),
+                  ),
+                  fit: BoxFit.cover,
+                )),
           ),
           const SizedBox(
             width: 10,
@@ -40,15 +54,22 @@ class CardCart extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Apel Manis',
-                  style: blackTextStyle.copyWith(fontWeight: medium),
+                  cart.product!.name.toString(),
+                  style: blackTextStyle.copyWith(fontWeight: semiBold),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Text(
-                  'Rp. 10.000',
-                  style: greenTextStyle.copyWith(fontWeight: bold),
+                  currencyFormatter.format(cart.product!.price),
+                  style: greyTextStyle.copyWith(fontWeight: medium),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  cart.product!.market!.nameStore.toString(),
+                  style: greyTextStyle.copyWith(fontWeight: semiBold),
                 )
               ],
             ),
@@ -56,31 +77,52 @@ class CardCart extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Icon(
-                Icons.close,
-                size: 20,
-                color: greyColor,
+              GestureDetector(
+                onTap: () {
+                  cartProvider.removeCart(cart.id.toInt());
+                },
+                child: CircleAvatar(
+                  radius: 16.0,
+                  backgroundColor: dangerColor,
+                  child: Center(
+                    child: Icon(
+                      Icons.delete,
+                      size: 23,
+                      color: whiteColor,
+                    ),
+                  ),
+                ),
               ),
               const Spacer(),
               Row(
                 children: [
-                  Image.asset(
-                    'assets/icon_pengurangan.png',
-                    width: 26,
+                  GestureDetector(
+                    onTap: () {
+                      cartProvider.reduceQuantity(cart.id, cart.quantity - 1);
+                    },
+                    child: Image.asset(
+                      'assets/icon_pengurangan.png',
+                      width: 26,
+                    ),
                   ),
                   const SizedBox(
                     width: 15,
                   ),
                   Text(
-                    '1',
+                    cart.quantity.toString(),
                     style: blackTextStyle.copyWith(fontSize: 16),
                   ),
                   const SizedBox(
                     width: 15,
                   ),
-                  Image.asset(
-                    'assets/icon_penambahan.png',
-                    width: 26,
+                  GestureDetector(
+                    onTap: () {
+                      cartProvider.addQuantity(cart.id, cart.quantity + 1);
+                    },
+                    child: Image.asset(
+                      'assets/icon_penambahan.png',
+                      width: 26,
+                    ),
                   ),
                 ],
               ),

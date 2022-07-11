@@ -69,6 +69,7 @@ class CardMarket extends StatelessWidget {
                   ),
                   Text(
                     toko.nameStore.toString(),
+                    overflow: TextOverflow.ellipsis,
                     style: blackTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(
@@ -77,6 +78,7 @@ class CardMarket extends StatelessWidget {
                   Text(
                     toko.village.toString(),
                     style: blackTextStyle.copyWith(fontWeight: bold),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

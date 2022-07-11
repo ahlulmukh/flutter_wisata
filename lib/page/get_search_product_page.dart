@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_all.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
@@ -27,8 +27,13 @@ class _GetSearchProductState extends State<GetSearchProduct> {
   }
 
   getSeachBarProduct() async {
-    ProductProvider productProvider = Provider.of(context, listen: false);
-    await productProvider.getProductSeacrh(data: widget.data);
+    ProductProvider productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
+    PageProvider pageProvider =
+        Provider.of<PageProvider>(context, listen: false);
+    await productProvider.getProductSeacrh(data: widget.data).catchError(
+        (value) => Get.toNamed('/main-page',
+            arguments: pageProvider.currentIndex = 0));
     setState(() {
       isLoading = false;
     });
@@ -40,7 +45,7 @@ class _GetSearchProductState extends State<GetSearchProduct> {
 
     Widget header() {
       return Container(
-        height: 110,
+        height: 70,
         color: whiteColor,
         padding: EdgeInsets.only(
           top: 8,
@@ -58,41 +63,12 @@ class _GetSearchProductState extends State<GetSearchProduct> {
                 color: greyColor,
               ),
             ),
-            const SizedBox(
-              width: 2,
-            ),
             Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                    decoration: BoxDecoration(
-                        color: whiteColor,
-                        border: Border.all(color: greyColor, width: 2),
-                        borderRadius: BorderRadius.circular(defaultRadius)),
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 11),
-                      width: double.infinity,
-                      child: TextFormField(
-                        decoration: InputDecoration.collapsed(
-                            hintText: "Cari produk.....",
-                            hintStyle: greyTextStyle.copyWith(
-                                fontWeight: semiBold, fontSize: 14)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  CustomButton(
-                    title: 'Cari Produk',
-                    height: 43,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
+                child: Center(
+                    child: Text(
+              'Hasil Pencarian Produk',
+              style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+            )))
           ],
         ),
       );
@@ -105,6 +81,9 @@ class _GetSearchProductState extends State<GetSearchProduct> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+              ),
               SvgPicture.asset(
                 'assets/images/no_box.svg',
                 width:

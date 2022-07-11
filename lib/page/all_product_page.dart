@@ -1,11 +1,15 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
+import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_all.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AllProductPage extends StatefulWidget {
   const AllProductPage({Key? key}) : super(key: key);
@@ -22,7 +26,22 @@ class _AllProductPageState extends State<AllProductPage> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       getAllProduct();
+      // getAllMarket();
     });
+  }
+
+  Future<void> fetchCart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.getString('token');
+    await Provider.of<CartProvider>(context, listen: false).getCartList();
+    CartProvider cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
+    print(cartProvider.cartList?.length);
+    if (mounted) {
+      setState(() {
+        cartProvider.cartList;
+      });
+    }
   }
 
   getAllProduct() async {
@@ -36,6 +55,7 @@ class _AllProductPageState extends State<AllProductPage> {
   @override
   Widget build(BuildContext context) {
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
 
     Widget header() {
       return Container(
@@ -89,11 +109,28 @@ class _AllProductPageState extends State<AllProductPage> {
                 onTap: () {
                   Navigator.pushNamed(context, '/cart-page');
                 },
-                child: const Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 25,
-                  color: Colors.grey,
-                ))
+                child: cartProvider.cartList!.length == 0
+                    ? const Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 28,
+                        color: Colors.grey,
+                      )
+                    : Badge(
+                        animationType: BadgeAnimationType.slide,
+                        animationDuration: const Duration(seconds: 2),
+                        badgeColor: dangerColor,
+                        padding: const EdgeInsets.all(6),
+                        position: const BadgePosition(bottom: 9.0, start: 12.0),
+                        badgeContent: Text(
+                            cartProvider.cartList!.length.toString(),
+                            style: whiteTextStyle.copyWith(
+                                fontSize: 14, fontWeight: semiBold)),
+                        child: const Icon(
+                          Icons.shopping_cart_outlined,
+                          size: 28,
+                          color: Colors.grey,
+                        ),
+                      ))
           ],
         ),
       );

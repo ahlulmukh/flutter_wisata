@@ -14,7 +14,7 @@ class CategoryServices {
           validateStatus: ((status) => true),
         ),
       );
-      print(response.data);
+      print(response.statusCode);
       return (response.data['data'] as List)
           .map((categories) => CategoryModel.fromJson(categories))
           .toList();

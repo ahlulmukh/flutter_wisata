@@ -1,30 +1,33 @@
+// ignore_for_file: prefer_is_empty
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/order_model.dart';
-import 'package:flutter_tugas_akhir/models/user_model.dart';
-import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/provider/order_provider.dart';
+import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/order_list.dart';
+import 'package:flutter_tugas_akhir/widget/order_market.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class TransactionPage extends StatefulWidget {
-  const TransactionPage({Key? key}) : super(key: key);
+class NewOrderPage extends StatefulWidget {
+  const NewOrderPage({Key? key}) : super(key: key);
 
   @override
-  State<TransactionPage> createState() => _TransactionPageState();
+  State<NewOrderPage> createState() => _NewOrderPageState();
 }
 
-class _TransactionPageState extends State<TransactionPage> {
+class _NewOrderPageState extends State<NewOrderPage> {
   int currentIndex = 0;
   bool isLoading = true;
 
-  Future orderUser() async {
+  Future<void> orderMarket() async {
     OrderProvider orderProvider =
         Provider.of<OrderProvider>(context, listen: false);
-    AuthProvider authProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    UserModel? user = authProvider.user;
-    await orderProvider.orderUser(id: user!.id!.toInt());
+    TokoProvider tokoProvider =
+        Provider.of<TokoProvider>(context, listen: false);
+    TokoModel? toko = tokoProvider.toko;
+    await orderProvider.orderMarket(id: toko!.id!.toInt());
     setState(() {
       isLoading = false;
     });
@@ -33,29 +36,27 @@ class _TransactionPageState extends State<TransactionPage> {
   @override
   void initState() {
     super.initState();
-    orderUser();
+    orderMarket();
   }
 
   @override
   Widget build(BuildContext context) {
-    OrderProvider orderProvider = Provider.of(context);
+    OrderProvider orderProvider = Provider.of<OrderProvider>(context);
 
     TabBar myTab = TabBar(
-      indicatorWeight: 3.0,
-      unselectedLabelColor: greyColor,
-      labelColor: lightColor,
       indicatorColor: secondaryColor,
+      indicatorWeight: 3.0,
       tabs: <Widget>[
         Tab(
           child: Text(
-            'In Progress',
-            style: TextStyle(fontSize: 16, fontWeight: semiBold),
+            'Order',
+            style: greyTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
           ),
         ),
         Tab(
           child: Text(
             'Completed',
-            style: TextStyle(fontSize: 16, fontWeight: semiBold),
+            style: greyTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),
           ),
         ),
       ],
@@ -69,11 +70,23 @@ class _TransactionPageState extends State<TransactionPage> {
         appBar: AppBar(
           centerTitle: true,
           toolbarHeight: 60.0,
+          leading: Builder(
+            builder: (context) => IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: const Icon(
+                Icons.chevron_left,
+                size: 30,
+                color: Colors.black,
+              ),
+            ),
+          ),
           backgroundColor: whiteColor,
           automaticallyImplyLeading: false,
           elevation: 0,
           title: Text(
-            'Transaksi',
+            'Pesanan Baru',
             style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 20),
           ),
           bottom: PreferredSize(
@@ -106,7 +119,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           height: 10,
                         ),
                         Text(
-                          'Belum ada transaksi',
+                          'Belum ada pesanan',
                           textAlign: TextAlign.center,
                           style: greyTextStyle.copyWith(
                               fontSize: 22, fontWeight: semiBold),
@@ -114,7 +127,7 @@ class _TransactionPageState extends State<TransactionPage> {
                       ],
                     )
                   : RefreshIndicator(
-                      onRefresh: orderUser,
+                      onRefresh: orderMarket,
                       child: ListView(
                           children: orderProvider.orders!
                               .where(
@@ -125,7 +138,7 @@ class _TransactionPageState extends State<TransactionPage> {
                                   orderStatus.status == OrderStatus.progress ||
                                   orderStatus.status == OrderStatus.delivery)
                               .toList()
-                              .map((order) => OrderList(order: order))
+                              .map((order) => OrderToMarket(order: order))
                               .toList()),
                     ),
           orderProvider.orders!.isEmpty
@@ -143,7 +156,7 @@ class _TransactionPageState extends State<TransactionPage> {
                       height: 10,
                     ),
                     Text(
-                      'Belum ada transaksi',
+                      'Belum ada pesanan',
                       textAlign: TextAlign.center,
                       style: greyTextStyle.copyWith(
                           fontSize: 22, fontWeight: semiBold),
@@ -156,7 +169,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           orderStatus.status == OrderStatus.cancel ||
                           orderStatus.status == OrderStatus.success)
                       .toList()
-                      .map((order) => OrderList(order: order))
+                      .map((order) => OrderToMarket(order: order))
                       .toList()),
         ]),
       ),

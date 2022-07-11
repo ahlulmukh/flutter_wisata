@@ -8,6 +8,27 @@ import 'package:http_parser/http_parser.dart';
 class TokoService {
   var dio = Dio();
 
+  Future<List<TokoModel>> getMarkets() async {
+    try {
+      var response = await dio.get(Service.apiUrl + '/markets',
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+          ));
+      print(response.data);
+      if (response.statusCode == 200) {
+        List data = response.data['data'] ?? [];
+        List<TokoModel> markets =
+            data.map((market) => TokoModel.fromJson(market)).toList();
+        return markets;
+      } else {
+        throw Exception('Tidak ada toko ditampilkan');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<List<TokoModel>> getMarketLimits() async {
     try {
       var response = await dio.get(Service.apiUrl + '/limitsMarket',
@@ -15,7 +36,7 @@ class TokoService {
             followRedirects: false,
             validateStatus: (status) => true,
           ));
-      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         return (response.data['data'] as List)
             .map((market) => TokoModel.fromJson(market))
@@ -36,7 +57,7 @@ class TokoService {
             validateStatus: (status) => true,
           ));
       if (response.statusCode == 200) {
-        print(response.statusCode);
+        print(response.data);
         return TokoModel.fromJson(response.data['data']);
       } else {
         throw Exception('Gagal ambil data');
@@ -46,17 +67,17 @@ class TokoService {
     }
   }
 
-  Future<TokoModel> updateProfileToko({
-    required int id,
-    required String usersId,
-    required String nameStore,
-    required String village,
-    required String address,
-    required String description,
-    required String accountName,
-    required String accountNumber,
-    required File image,
-  }) async {
+  Future<TokoModel> updateProfileToko(
+    int id,
+    String usersId,
+    String nameStore,
+    String village,
+    String address,
+    String description,
+    String accountName,
+    String accountNumber,
+    File image,
+  ) async {
     try {
       final mimeTypeData =
           lookupMimeType(image.path, headerBytes: [0xFF, 0xD8])?.split('/');
@@ -69,8 +90,13 @@ class TokoService {
           'description': description,
           'account_name': accountName,
           'account_number': accountNumber,
-          'image': await MultipartFile.fromFile(image.path,
-              contentType: MediaType(mimeTypeData![0], mimeTypeData[1])),
+          'image': await MultipartFile.fromFile(
+            image.path,
+            contentType: MediaType(
+              mimeTypeData![0],
+              mimeTypeData[1],
+            ),
+          ),
         },
       );
       var response = await dio.post(Service.apiUrl + '/updateMarket/$id',
@@ -83,7 +109,7 @@ class TokoService {
             followRedirects: false,
             validateStatus: (status) => true,
           ));
-      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         return TokoModel.fromJson(response.data['data']);
       } else {

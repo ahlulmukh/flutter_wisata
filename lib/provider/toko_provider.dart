@@ -30,6 +30,15 @@ class TokoProvider with ChangeNotifier {
     }
   }
 
+  Future<void> getMarkets() async {
+    try {
+      List<TokoModel> markets = await TokoService().getMarkets();
+      _markets = markets;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<bool> fetchToko({required int id}) async {
     try {
       TokoModel toko = await TokoService().fetchProfileToko(id: id);
@@ -41,28 +50,27 @@ class TokoProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updateProfileToko({
-    required int id,
-    required String usersId,
-    required String nameStore,
-    required String village,
-    required String address,
-    required String description,
-    required String accountName,
-    required String accountNumber,
-    required File image,
-  }) async {
+  Future<bool> updateProfileToko(
+      int id,
+      String usersId,
+      String nameStore,
+      String village,
+      String address,
+      String description,
+      String accountName,
+      String accountNumber,
+      {required File image}) async {
     try {
       TokoModel toko = await TokoService().updateProfileToko(
-        id: id,
-        usersId: usersId,
-        nameStore: nameStore,
-        village: village,
-        address: address,
-        description: description,
-        accountName: accountName,
-        accountNumber: accountNumber,
-        image: image,
+        id,
+        usersId,
+        nameStore,
+        village,
+        address,
+        description,
+        accountName,
+        accountNumber,
+        image,
       );
       _toko = toko;
       return true;

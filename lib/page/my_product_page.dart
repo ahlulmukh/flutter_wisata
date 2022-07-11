@@ -24,7 +24,7 @@ class _MyProductPageState extends State<MyProductPage> {
     Widget header() {
       return AppBar(
         centerTitle: true,
-        toolbarHeight: 70.0,
+        toolbarHeight: 60.0,
         backgroundColor: whiteColor,
         leading: Builder(
           builder: (context) => IconButton(
@@ -53,8 +53,8 @@ class _MyProductPageState extends State<MyProductPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 30,
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
               ),
               SvgPicture.asset(
                 'assets/images/no_box.svg',

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/button_loading.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -29,18 +30,6 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   @override
-  void initState() {
-    checkToken();
-    super.initState();
-  }
-
-  checkToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.getString('token');
-    print(prefs.getString('token'));
-  }
-
-  @override
   Widget build(BuildContext context) {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     PageProvider pageProvider = Provider.of<PageProvider>(context);
@@ -55,8 +44,16 @@ class _SignInPageState extends State<SignInPage> {
           email: emailCon.text,
           password: passCon.text,
         )) {
-          Get.offAllNamed('/main-page',
-              arguments: pageProvider.currentIndex = 0);
+          Navigator.push(
+              context,
+              PageTransition(
+                  child: const MainPage(),
+                  type: PageTransitionType.rightToLeft,
+                  curve: Curves.easeIn,
+                  settings:
+                      RouteSettings(arguments: pageProvider.currentIndex = 0)));
+          // Get.offAllNamed('/main-page',
+          //     arguments: pageProvider.currentIndex = 0);
         } else {
           Get.snackbar('Gagal Login', "Silahkan isi dengan benar",
               colorText: Colors.white,
@@ -68,7 +65,6 @@ class _SignInPageState extends State<SignInPage> {
               ));
         }
       }
-
       setState(() {
         isLoading = false;
       });
@@ -80,7 +76,7 @@ class _SignInPageState extends State<SignInPage> {
         child: Text(
           'MARKETTANI',
           style: whiteTextStyle.copyWith(
-              fontSize: 36, letterSpacing: 7.2, fontWeight: bold),
+              fontSize: 40, letterSpacing: 8.2, fontWeight: bold),
         ),
       );
     }

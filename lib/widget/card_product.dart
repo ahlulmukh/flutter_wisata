@@ -10,9 +10,11 @@ class CardProduct extends StatelessWidget {
   final ProductModel product;
 
   const CardProduct({Key? key, required this.product}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
     return GestureDetector(
       onTap: () {
@@ -21,8 +23,8 @@ class CardProduct extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).orientation == Orientation.landscape
             ? 181
-            : MediaQuery.of(context).size.width * 0.5,
-        height: 270,
+            : MediaQuery.of(context).size.width * 0.45,
+        height: 220,
         margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
             border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
@@ -47,7 +49,7 @@ class CardProduct extends StatelessWidget {
                       borderRadius: BorderRadius.vertical(
                           top: Radius.circular(defaultRadius)),
                       child: CachedNetworkImage(
-                        height: 160,
+                        height: 120,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         imageUrl: product.image.toString(),
@@ -66,13 +68,13 @@ class CardProduct extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 13,
+                    height: 9,
                   ),
                   Text(
                     product.name.toString(),
                     overflow: TextOverflow.ellipsis,
                     style:
-                        blackTextStyle.copyWith(fontSize: 16, fontWeight: bold),
+                        blackTextStyle.copyWith(fontSize: 15, fontWeight: bold),
                   ),
                   const SizedBox(
                     height: 5,
@@ -86,8 +88,9 @@ class CardProduct extends StatelessWidget {
                   ),
                   Text(
                     product.market!.nameStore.toString(),
+                    overflow: TextOverflow.ellipsis,
                     style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
+                        fontSize: 15, fontWeight: semiBold),
                   ),
                 ],
               ),

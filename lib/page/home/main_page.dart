@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/page/home/account_page.dart';
 import 'package:flutter_tugas_akhir/page/home/home_page.dart';
 import 'package:flutter_tugas_akhir/page/home/transaction_page.dart';
-import 'package:flutter_tugas_akhir/page/wishlist_page.dart';
+import 'package:flutter_tugas_akhir/page/home/wishlist_page.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
     Widget customNavigationBar() {
       return Container(
         decoration: BoxDecoration(
-          color: backgroundColor2,
+          color: primaryColor,
           borderRadius: const BorderRadius.vertical(
             top: Radius.circular(14),
           ),

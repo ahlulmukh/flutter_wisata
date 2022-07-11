@@ -4,11 +4,13 @@ import 'package:flutter_tugas_akhir/theme.dart';
 class MenuItem extends StatelessWidget {
   final String title;
   final Function() onPressed;
+  final IconData icons;
 
   const MenuItem({
     Key? key,
     required this.title,
     required this.onPressed,
+    required this.icons,
   }) : super(key: key);
 
   @override
@@ -19,12 +21,16 @@ class MenuItem extends StatelessWidget {
           width: double.infinity,
           margin: const EdgeInsets.only(bottom: 20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style:
-                    blackTextStyle.copyWith(fontWeight: medium, fontSize: 15),
+              Icon(icons),
+              const SizedBox(
+                width: 12,
+              ),
+              Expanded(
+                child: Text(
+                  title,
+                  style: blackTextStyle.copyWith(fontWeight: semiBold),
+                ),
               ),
               const Icon(
                 Icons.chevron_right,

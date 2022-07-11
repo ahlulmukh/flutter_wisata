@@ -1,48 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_tugas_akhir/models/product_model.dart';
-import 'package:flutter_tugas_akhir/provider/category_provider.dart';
+import 'package:flutter_tugas_akhir/models/toko_model.dart';
+import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
+import 'package:flutter_tugas_akhir/widget/card_market.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class CategoryPage extends StatefulWidget {
-  final int category;
-  const CategoryPage({Key? key, required this.category}) : super(key: key);
+class AllMarketPage extends StatefulWidget {
+  const AllMarketPage({Key? key}) : super(key: key);
 
   @override
-  State<CategoryPage> createState() => _CategoryPageState();
+  State<AllMarketPage> createState() => _AllMarketPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
+class _AllMarketPageState extends State<AllMarketPage> {
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback(
-      (timeStamp) {
-        fetchCategory();
-      },
-    );
-  }
-
-  fetchCategory() async {
-    CategoryProvider categoryProvider = Provider.of(context, listen: false);
-    await categoryProvider.getCategory(id: widget.category);
+  getAllMarket() async {
+    TokoProvider tokoProvider = Provider.of(context, listen: false);
+    await tokoProvider.getMarkets();
     setState(() {
       isLoading = false;
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    getAllMarket();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
+    TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
 
     Widget header() {
       return AppBar(
-        toolbarHeight: 60.0,
+        toolbarHeight: 70.0,
         centerTitle: true,
         backgroundColor: whiteColor,
         leading: Builder(
@@ -53,27 +48,25 @@ class _CategoryPageState extends State<CategoryPage> {
             icon: const Icon(
               Icons.chevron_left,
               size: 30,
-              color: Colors.grey,
+              color: Colors.black,
             ),
           ),
         ),
         elevation: 0,
         title: Text(
-          categoryProvider.category!.name,
-          textAlign: TextAlign.center,
-          style: blackTextStyle.copyWith(fontWeight: semiBold, fontSize: 20),
+          'Semua Toko',
+          style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 20),
         ),
       );
     }
 
-    Widget getGridViewProduct() {
-      if (categoryProvider.category!.products.isEmpty) {
+    Widget getGridViewMarket() {
+      if (tokoProvider.markets.isEmpty) {
         return Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-              ),
               SvgPicture.asset(
                 'assets/images/no_box.svg',
                 width:
@@ -85,7 +78,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 height: 20,
               ),
               Text(
-                'Tidak ada produk',
+                'Tidak ada Toko',
                 style:
                     greyTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
               )
@@ -102,15 +95,13 @@ class _CategoryPageState extends State<CategoryPage> {
                       : 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 16,
-              mainAxisExtent: 230, // here set custom Height You Want
+              mainAxisExtent: 200, // here set custom Height You Want
             ),
-            itemCount: categoryProvider.category!.products.length,
+            itemCount: tokoProvider.markets.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return CardProductCategory(
-                  product: categoryProvider.category!.products[index]
-                      as ProductModel);
+              return CardMarket(toko: tokoProvider.markets[index] as TokoModel);
             },
           ),
         );
@@ -125,23 +116,18 @@ class _CategoryPageState extends State<CategoryPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 20,
-              ),
-              getGridViewProduct(),
+              getGridViewMarket(),
             ]),
       );
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor1,
       body: isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-                strokeWidth: 10.0,
-                color: Colors.green,
-              ),
-            )
+              color: secondaryColor,
+              strokeWidth: 8.0,
+            ))
           : ListView(
               children: [
                 header(),

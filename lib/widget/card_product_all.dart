@@ -16,7 +16,8 @@ class CardProductAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
     return GestureDetector(
       onTap: () {
@@ -42,7 +43,7 @@ class CardProductAll extends StatelessWidget {
                 ),
               ),
               // ignore: unnecessary_null_comparison
-              child: product.image.toString() == null || product.image.isEmpty
+              child: product.image.toString() == null || product.image!.isEmpty
                   ? Image.asset(
                       'assets/images/not_product.jpeg',
                       height: 150,
@@ -78,7 +79,7 @@ class CardProductAll extends StatelessWidget {
                     height: 13,
                   ),
                   Text(
-                    product.name,
+                    product.name.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: blackTextStyle.copyWith(fontSize: 16),
                   ),
@@ -93,7 +94,7 @@ class CardProductAll extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    product.market.nameStore,
+                    product.market!.nameStore.toString(),
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),
