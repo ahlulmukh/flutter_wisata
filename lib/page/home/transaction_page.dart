@@ -5,6 +5,7 @@ import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/order_list.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class TransactionPage extends StatefulWidget {
@@ -49,13 +50,13 @@ class _TransactionPageState extends State<TransactionPage> {
         Tab(
           child: Text(
             'In Progress',
-            style: TextStyle(fontSize: 16, fontWeight: semiBold),
+            style: GoogleFonts.poppins(fontWeight: semiBold, fontSize: 16),
           ),
         ),
         Tab(
           child: Text(
             'Completed',
-            style: TextStyle(fontSize: 16, fontWeight: semiBold),
+            style: GoogleFonts.poppins(fontWeight: semiBold, fontSize: 16),
           ),
         ),
       ],
