@@ -23,6 +23,7 @@ class EditStorePage extends StatefulWidget {
 }
 
 class _EditStorePageState extends State<EditStorePage> {
+  bool isLoading = false;
   File? file;
   String? desa;
 
@@ -43,6 +44,9 @@ class _EditStorePageState extends State<EditStorePage> {
         TextEditingController(text: toko.accountNumber.toString());
 
     submitUpdateToko() async {
+      setState(() {
+        isLoading = true;
+      });
       if (await tokoProvider.updateProfileToko(
           toko.id!.toInt(),
           toko.usersId.toString(),
@@ -68,6 +72,9 @@ class _EditStorePageState extends State<EditStorePage> {
           ),
         );
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     Widget header() {
@@ -90,11 +97,22 @@ class _EditStorePageState extends State<EditStorePage> {
         actions: [
           IconButton(
             onPressed: submitUpdateToko,
-            icon: const Icon(
-              Icons.done,
-              size: 30,
-              color: Colors.black,
-            ),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation(
+                        Colors.black,
+                      ),
+                    ),
+                  )
+                : const Icon(
+                    Icons.done,
+                    size: 30,
+                    color: Colors.black,
+                  ),
           ),
         ],
         elevation: 0,

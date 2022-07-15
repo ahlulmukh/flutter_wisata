@@ -14,6 +14,7 @@ class EditProfilPage extends StatefulWidget {
 }
 
 class _EditProfilPageState extends State<EditProfilPage> {
+  bool isLoading = false;
   File? filePhoto;
 
   @override
@@ -29,6 +30,9 @@ class _EditProfilPageState extends State<EditProfilPage> {
         TextEditingController(text: user.email);
 
     handleUpdateProfile() async {
+      setState(() {
+        isLoading = true;
+      });
       if (await userProvider.updateProfile(
         id: user.id!.toInt(),
         name: controllerName.text,
@@ -50,6 +54,9 @@ class _EditProfilPageState extends State<EditProfilPage> {
           ),
         );
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     Widget header() {
@@ -72,12 +79,23 @@ class _EditProfilPageState extends State<EditProfilPage> {
         actions: [
           IconButton(
             onPressed: handleUpdateProfile,
-            icon: const Icon(Icons.done, size: 30, color: Colors.black),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation(
+                        Colors.black,
+                      ),
+                    ),
+                  )
+                : const Icon(Icons.done, size: 30, color: Colors.black),
           ),
         ],
         elevation: 0,
         title: Text(
-          'Pengaturan Profil',
+          'Edit Profil',
           style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 20),
         ),
       );
