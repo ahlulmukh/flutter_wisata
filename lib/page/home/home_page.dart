@@ -45,13 +45,17 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(), () {
-        getProductLimit();
-        getCategories();
-        getMarketLimits();
-        fetchCart();
+        refreshData();
         // getProfil();
       });
     });
+  }
+
+  Future refreshData() async {
+    getProductLimit();
+    getCategories();
+    getMarketLimits();
+    fetchCart();
   }
 
   Future<void> fetchCart() async {
@@ -563,11 +567,20 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
         backgroundColor: backgroundColor1,
-        body: ListView(
-          children: [
-            header(),
-            content(),
-          ],
+        body: RefreshIndicator(
+          edgeOffset: 20.0,
+          backgroundColor: secondaryColor,
+          triggerMode: RefreshIndicatorTriggerMode.onEdge,
+          strokeWidth: 3.0,
+          color: whiteColor,
+          displacement: 20.0,
+          onRefresh: refreshData,
+          child: ListView(
+            children: [
+              header(),
+              content(),
+            ],
+          ),
         ));
   }
 }

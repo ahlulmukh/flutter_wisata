@@ -118,6 +118,12 @@ class _TransactionPageState extends State<TransactionPage> {
                     )
                   : RefreshIndicator(
                       onRefresh: orderUser,
+                      edgeOffset: 20.0,
+                      backgroundColor: secondaryColor,
+                      triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                      strokeWidth: 3.0,
+                      color: whiteColor,
+                      displacement: 20.0,
                       // ignore: unrelated_type_equality_checks
                       child: (orderProvider.orders!.where((orderStatus) =>
                                   orderStatus.status == OrderStatus.pending ||
