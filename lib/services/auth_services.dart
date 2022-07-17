@@ -22,7 +22,6 @@ class AuthService {
           ),
         );
         print(response.statusCode);
-        print(response.data);
         if (response.statusCode == 200) {
           UserModel user = UserModel.fromJson(response.data['data'][0]);
           return user;

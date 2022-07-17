@@ -131,18 +131,52 @@ class _NewOrderPageState extends State<NewOrderPage> {
                     )
                   : RefreshIndicator(
                       onRefresh: orderMarket,
-                      child: ListView(
-                          children: orderProvider.orders!
-                              .where(
-                                  (userId) => userId.usersId == userId.usersId)
-                              .toList()
-                              .where((orderStatus) =>
+                      child: (orderProvider.orders!.where((orderStatus) =>
                                   orderStatus.status == OrderStatus.pending ||
                                   orderStatus.status == OrderStatus.progress ||
-                                  orderStatus.status == OrderStatus.delivery)
-                              .toList()
-                              .map((order) => OrderToMarket(order: order))
-                              .toList()),
+                                  orderStatus.status ==
+                                      OrderStatus.delivery)).length ==
+                              0
+                          ? Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                  ),
+                                  Image.asset(
+                                    'assets/no_order.png',
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    height: 250,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Belum ada pesanan',
+                                    textAlign: TextAlign.center,
+                                    style: greyTextStyle.copyWith(
+                                        fontSize: 22, fontWeight: semiBold),
+                                  )
+                                ],
+                              ),
+                            )
+                          : ListView(
+                              children: orderProvider.orders!
+                                  .where((userId) =>
+                                      userId.usersId == userId.usersId)
+                                  .toList()
+                                  .where((orderStatus) =>
+                                      orderStatus.status ==
+                                          OrderStatus.pending ||
+                                      orderStatus.status ==
+                                          OrderStatus.progress ||
+                                      orderStatus.status ==
+                                          OrderStatus.delivery)
+                                  .toList()
+                                  .map((order) => OrderToMarket(order: order))
+                                  .toList()),
                     ),
           orderProvider.orders!.isEmpty
               ? Column(

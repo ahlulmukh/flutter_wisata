@@ -74,7 +74,7 @@ class _StorePageState extends State<StorePage> {
           ? Center(
               child: CircularProgressIndicator(
               color: secondaryColor,
-              strokeWidth: 8.0,
+              strokeWidth: 5.0,
             ))
           : ListView(
               children: [

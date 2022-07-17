@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_is_empty
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/order_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
@@ -90,7 +92,7 @@ class _TransactionPageState extends State<TransactionPage> {
               ? Center(
                   child: CircularProgressIndicator(
                   color: secondaryColor,
-                  strokeWidth: 8.0,
+                  strokeWidth: 5.0,
                 ))
               : (orderProvider.orders!.isEmpty)
                   ? Column(
@@ -116,18 +118,53 @@ class _TransactionPageState extends State<TransactionPage> {
                     )
                   : RefreshIndicator(
                       onRefresh: orderUser,
-                      child: ListView(
-                          children: orderProvider.orders!
-                              .where(
-                                  (userId) => userId.usersId == userId.usersId)
-                              .toList()
-                              .where((orderStatus) =>
+                      // ignore: unrelated_type_equality_checks
+                      child: (orderProvider.orders!.where((orderStatus) =>
                                   orderStatus.status == OrderStatus.pending ||
                                   orderStatus.status == OrderStatus.progress ||
-                                  orderStatus.status == OrderStatus.delivery)
-                              .toList()
-                              .map((order) => OrderList(order: order))
-                              .toList()),
+                                  orderStatus.status ==
+                                      OrderStatus.delivery)).length ==
+                              0
+                          ? Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                  ),
+                                  Image.asset(
+                                    'assets/no_order.png',
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    height: 250,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Belum ada transaksi',
+                                    textAlign: TextAlign.center,
+                                    style: greyTextStyle.copyWith(
+                                        fontSize: 22, fontWeight: semiBold),
+                                  )
+                                ],
+                              ),
+                            )
+                          : ListView(
+                              children: orderProvider.orders!
+                                  .where((userId) =>
+                                      userId.usersId == userId.usersId)
+                                  .toList()
+                                  .where((orderStatus) =>
+                                      orderStatus.status ==
+                                          OrderStatus.pending ||
+                                      orderStatus.status ==
+                                          OrderStatus.progress ||
+                                      orderStatus.status ==
+                                          OrderStatus.delivery)
+                                  .toList()
+                                  .map((order) => OrderList(order: order))
+                                  .toList()),
                     ),
           orderProvider.orders!.isEmpty
               ? Column(

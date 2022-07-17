@@ -48,6 +48,104 @@ class _AccountPageState extends State<AccountPage> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     UserModel? user = authProvider.user;
 
+    showSuccessDialog() async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => SizedBox(
+          width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+          child: AlertDialog(
+            backgroundColor: dangerColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: whiteColor,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.exit_to_app,
+                    size: 100,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Yakin ingin keluar?',
+                    style: whiteTextStyle.copyWith(
+                      fontSize: 18,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        width: 90,
+                        height: 44,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xff7d0404),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            'Batal',
+                            style: whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 44,
+                        width: 90,
+                        child: TextButton(
+                          onPressed: handleLogout,
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xff7d0404),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            'Keluar',
+                            style: whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget header() {
       return AppBar(
         centerTitle: true,
@@ -154,7 +252,7 @@ class _AccountPageState extends State<AccountPage> {
                     width: 12,
                   ),
                   GestureDetector(
-                    onTap: handleLogout,
+                    onTap: showSuccessDialog,
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
@@ -180,7 +278,7 @@ class _AccountPageState extends State<AccountPage> {
             ? Center(
                 child: CircularProgressIndicator(
                 color: secondaryColor,
-                strokeWidth: 8.0,
+                strokeWidth: 5.0,
               ))
             : ListView(
                 children: [

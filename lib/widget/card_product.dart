@@ -45,20 +45,24 @@ class CardProduct extends StatelessWidget {
                       'assets/images/not_product.jpeg',
                       fit: BoxFit.cover,
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(defaultRadius)),
-                      child: CachedNetworkImage(
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        imageUrl: product.image.toString(),
-                        placeholder: (context, url) => const Icon(Icons.image),
-                        errorWidget: (context, url, error) => const Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              'assets/images/not_product.jpeg',
-                            )),
+                  : Hero(
+                      tag: product.id!.toInt(),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(defaultRadius)),
+                        child: CachedNetworkImage(
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          imageUrl: product.image.toString(),
+                          placeholder: (context, url) =>
+                              const Icon(Icons.image),
+                          errorWidget: (context, url, error) => const Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                'assets/images/not_product.jpeg',
+                              )),
+                        ),
                       ),
                     ),
             ),

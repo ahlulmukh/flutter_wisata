@@ -141,7 +141,7 @@ class _CartPageState extends State<CartPage> {
           ? Center(
               child: CircularProgressIndicator(
               color: secondaryColor,
-              strokeWidth: 8.0,
+              strokeWidth: 5.0,
             ))
           : cartProvider.cartList!.length == 0
               ? emptyCart()

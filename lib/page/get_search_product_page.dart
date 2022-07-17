@@ -5,7 +5,6 @@ import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
-import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 

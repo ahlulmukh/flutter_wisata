@@ -8,9 +8,8 @@ import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
-import 'package:flutter_tugas_akhir/provider/page_provider.dart';
-import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
+import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -28,18 +27,18 @@ class DetailProductPage extends StatefulWidget {
 
 class _DetailProductPageState extends State<DetailProductPage> {
   bool isWishlist = false;
-  bool isLoading = true;
+  // bool isLoading = true;
   dynamic quantity = 1;
   final currencyFormatter =
       NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
-  fetchProduct() async {
-    ProductProvider productProvider = Provider.of(context, listen: false);
-    await productProvider.getProductId(id: widget.product.id!.toInt());
-    setState(() {
-      isLoading = false;
-    });
-  }
+  // fetchProduct() async {
+  //   ProductProvider productProvider = Provider.of(context, listen: false);
+  //   await productProvider.getProductId(id: widget.product.id!.toInt());
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 
   fetchUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,16 +51,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
   @override
   void initState() {
     super.initState();
-    fetchProduct();
+    // fetchProduct();
     fetchUser();
   }
 
   @override
   Widget build(BuildContext context) {
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
-    ProductProvider productProvider = Provider.of<ProductProvider>(context);
-    PageProvider pageProvider = Provider.of<PageProvider>(context);
-    ProductModel? product = productProvider.getProduct;
     CartProvider cartProvider = Provider.of<CartProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     UserModel? user = authProvider.user;
@@ -151,22 +147,25 @@ class _DetailProductPageState extends State<DetailProductPage> {
         height: MediaQuery.of(context).orientation == Orientation.landscape
             ? MediaQuery.of(context).size.height * 0.6
             : 338,
-        child: product?.image == null || product!.image!.isEmpty
+        child: widget.product.image == null || widget.product.image!.isEmpty
             ? Image.asset(
                 'assets/images/not_product.jpeg',
                 fit: BoxFit.cover,
               )
-            : CachedNetworkImage(
-                fit: BoxFit.cover,
-                width: double.infinity,
-                imageUrl: product.image.toString(),
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Image(
-                  width: double.infinity,
+            : Hero(
+                tag: widget.product.id!.toInt(),
+                child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  image: AssetImage(
-                    'assets/images/not_product.jpeg',
+                  width: double.infinity,
+                  imageUrl: widget.product.image.toString(),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Image(
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      'assets/images/not_product.jpeg',
+                    ),
                   ),
                 ),
               ),
@@ -181,8 +180,9 @@ class _DetailProductPageState extends State<DetailProductPage> {
           children: [
             GestureDetector(
               onTap: () {
-                Get.offNamedUntil('/main-page', (route) => false,
-                    arguments: pageProvider.currentIndex == 0);
+                Get.back();
+                // Get.offNamedUntil('/main-page', (route) => false,
+                //     arguments: pageProvider.currentIndex == 0);
               },
               child: CircleAvatar(
                 backgroundColor: greyColor.withOpacity(0.7),
@@ -219,7 +219,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  product!.name.toString(),
+                  widget.product.name.toString(),
                   style:
                       blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
                 ),
@@ -227,7 +227,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   onTap: () {
                     cartProvider.addtoCart(
                         userId: user!.id.toString(),
-                        productId: product.id!.toString(),
+                        productId: widget.product.id!.toString(),
                         quantity: quantity);
                     showSuccessDialog();
                   },
@@ -263,7 +263,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  currencyFormatter.format(product.price),
+                  currencyFormatter.format(widget.product.price),
                   style:
                       blackTextStyle.copyWith(fontSize: 18, fontWeight: medium),
                 ),
@@ -323,7 +323,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       height: 5,
                     ),
                     Text(
-                      product.category!.name.toString(),
+                      widget.product.category!.name.toString(),
                       style: blackTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -347,7 +347,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       height: 5,
                     ),
                     Text(
-                      product.stock.toString(),
+                      widget.product.stock.toString(),
                       style: blackTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -371,7 +371,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       height: 5,
                     ),
                     Text(
-                      product.weight.toString() + ' Kg',
+                      widget.product.weight.toString() + ' Kg',
                       style: blackTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -395,7 +395,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              product.description.toString(),
+              widget.product.description.toString(),
               textAlign: TextAlign.justify,
               style: blackTextStyle.copyWith(fontSize: 14, fontWeight: medium),
             ),
@@ -407,7 +407,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(defaultRadius),
-                  child: product.market?.image == null
+                  child: widget.product.market?.image == null
                       ? Image.asset(
                           'assets/images/not_product.jpeg',
                           width: 100,
@@ -415,7 +415,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
                           fit: BoxFit.cover,
                         )
                       : Image.network(
-                          product.market!.image.toString(),
+                          Service.urlImage +
+                              widget.product.market!.image.toString(),
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
@@ -428,7 +429,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.market!.nameStore.toString(),
+                      widget.product.market!.nameStore.toString(),
                       style: blackTextStyle.copyWith(
                           fontSize: 16, fontWeight: semiBold),
                     ),
@@ -442,7 +443,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                           width: 5,
                         ),
                         Text(
-                          product.market!.village.toString(),
+                          widget.product.market!.village.toString(),
                           style: blackTextStyle.copyWith(fontWeight: medium),
                         ),
                       ],
@@ -462,7 +463,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       onPressed: () {
                         Get.to(
                           () => DetailStorePage(
-                              toko: product.market as TokoModel),
+                              toko: widget.product.market as TokoModel),
                         );
                       },
                       child: Text('Kunjungi Toko',
@@ -485,23 +486,16 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
     return Scaffold(
       backgroundColor: backgroundColor1,
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 10.0,
-                color: Colors.green,
-              ),
-            )
-          : SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Stack(
-                children: [
-                  detailImage(),
-                  header(),
-                  descriptionProduct(),
-                ],
-              ),
-            ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Stack(
+          children: [
+            detailImage(),
+            header(),
+            descriptionProduct(),
+          ],
+        ),
+      ),
     );
   }
 }

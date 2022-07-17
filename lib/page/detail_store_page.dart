@@ -138,7 +138,7 @@ class _DetailStorePageState extends State<DetailStorePage> {
                     image: AssetImage('assets/images/photo_border.png'),
                   ),
                 ),
-                child: toko?.image == null
+                child: toko?.image == null || toko!.image!.isEmpty
                     ? Image.asset(
                         'assets/images/not_product.jpeg',
                         width: double.infinity,
@@ -148,7 +148,7 @@ class _DetailStorePageState extends State<DetailStorePage> {
                         borderRadius: BorderRadius.circular(100),
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: toko!.image.toString(),
+                          imageUrl: toko.image.toString(),
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),
                           errorWidget: (context, url, error) => const Image(
@@ -240,7 +240,7 @@ class _DetailStorePageState extends State<DetailStorePage> {
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                strokeWidth: 10.0,
+                strokeWidth: 5.0,
                 color: Colors.green,
               ),
             )

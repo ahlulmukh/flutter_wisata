@@ -1,10 +1,11 @@
+// ignore_for_file: prefer_is_empty
+
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
-import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_product_all.dart';
 import 'package:get/get.dart';
@@ -203,7 +204,7 @@ class _AllProductPageState extends State<AllProductPage> {
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                strokeWidth: 10.0,
+                strokeWidth: 5.0,
                 color: Colors.green,
               ),
             )

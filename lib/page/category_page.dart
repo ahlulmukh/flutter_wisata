@@ -138,7 +138,7 @@ class _CategoryPageState extends State<CategoryPage> {
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                strokeWidth: 10.0,
+                strokeWidth: 5.0,
                 color: Colors.green,
               ),
             )

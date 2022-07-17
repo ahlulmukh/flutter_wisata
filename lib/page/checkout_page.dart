@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/cart_model.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/checkout_provider.dart';
-import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/button_loading.dart';
 import 'package:flutter_tugas_akhir/widget/card_checkout.dart';
@@ -38,7 +37,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     CartProvider cartProvider = Provider.of<CartProvider>(context);
-    ProductProvider product = Provider.of<ProductProvider>(context);
     CheckoutProvider checkoutProvider = Provider.of<CheckoutProvider>(context);
 
     int index = cartProvider.cartList!
@@ -54,7 +52,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         phone: numberController.text,
         image: file!,
         totalPrice: cartProvider.totalPrice(),
-        storeId: product.getProduct!.market!.id.toString(),
+        storeId: cartProvider.cartList![index].product!.market!.id.toString(),
       )) {
         cartProvider.removeAllCart();
         Get.offNamedUntil('/checkout-success', (route) => false);
