@@ -402,77 +402,81 @@ class _DetailProductPageState extends State<DetailProductPage> {
             const SizedBox(
               height: 50,
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(defaultRadius),
-                  child: widget.product.market?.image == null
-                      ? Image.asset(
-                          'assets/images/not_product.jpeg',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          Service.urlImage +
-                              widget.product.market!.image.toString(),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                ),
-                const SizedBox(
-                  width: 13,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.product.market!.nameStore.toString(),
-                      style: blackTextStyle.copyWith(
-                          fontSize: 16, fontWeight: semiBold),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(Icons.map_outlined),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          widget.product.market!.village.toString(),
-                          style: blackTextStyle.copyWith(fontWeight: medium),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadiusDirectional.circular(10)),
-                          backgroundColor: secondaryColor,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                          )),
-                      onPressed: () {
-                        Get.to(
-                          () => DetailStorePage(
-                              toko: widget.product.market as TokoModel),
-                        );
-                      },
-                      child: Text('Kunjungi Toko',
-                          style: whiteTextStyle.copyWith(fontWeight: bold)),
-                    )
-                  ],
-                ),
-              ],
-            ),
+            widget.product.market!.id == null
+                ? const SizedBox()
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(defaultRadius),
+                        child: widget.product.market?.image == null
+                            ? Image.asset(
+                                'assets/images/not_product.jpeg',
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                Service.urlImage +
+                                    widget.product.market!.image.toString(),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.product.market!.nameStore.toString(),
+                            style: blackTextStyle.copyWith(
+                                fontSize: 16, fontWeight: semiBold),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              const Icon(Icons.map_outlined),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                widget.product.market!.village.toString(),
+                                style:
+                                    blackTextStyle.copyWith(fontWeight: medium),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadiusDirectional.circular(10)),
+                                backgroundColor: secondaryColor,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                )),
+                            onPressed: () {
+                              Get.to(
+                                () => DetailStorePage(
+                                    toko: widget.product.market as TokoModel),
+                              );
+                            },
+                            child: Text('Kunjungi Toko',
+                                style:
+                                    whiteTextStyle.copyWith(fontWeight: bold)),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
             const SizedBox(height: 14),
             Divider(
               color: greyColor,
