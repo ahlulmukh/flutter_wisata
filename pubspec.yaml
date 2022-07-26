@@ -29,7 +29,6 @@ environment:
 dependencies:
   carousel_slider: ^4.0.0
   cupertino_icons: ^1.0.2
-  double_back_to_close_app: ^2.1.0
   dropdown_search: ^2.0.1
   flutter:
     sdk: flutter
