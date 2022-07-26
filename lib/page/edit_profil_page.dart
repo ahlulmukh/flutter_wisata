@@ -16,44 +16,46 @@ class EditProfilPage extends StatefulWidget {
 class _EditProfilPageState extends State<EditProfilPage> {
   bool isLoading = false;
   File? filePhoto;
+  XFile? photo;
 
   @override
   Widget build(BuildContext context) {
     AuthProvider userProvider = Provider.of<AuthProvider>(context);
+    final _formKey = GlobalKey<FormState>();
     UserModel? user = userProvider.user;
 
-    TextEditingController controllerName =
-        TextEditingController(text: user!.name);
-    TextEditingController controllerUsername =
-        TextEditingController(text: user.username);
-    TextEditingController controllerEmail =
-        TextEditingController(text: user.email);
+    TextEditingController controllerName = TextEditingController(text: '');
+    TextEditingController controllerUsername = TextEditingController(text: '');
+    TextEditingController controllerEmail = TextEditingController(text: '');
 
     handleUpdateProfile() async {
       setState(() {
         isLoading = true;
       });
-      if (await userProvider.updateProfile(
-        id: user.id!.toInt(),
-        name: controllerName.text,
-        username: controllerUsername.text,
-        email: controllerEmail.text,
-        profilePhotoPath: filePhoto!,
-      )) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/main-page', (route) => false);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: dangerColor,
-            content: Text(
-              'Gagal Update Profile',
-              style: whiteTextStyle.copyWith(fontWeight: bold),
-              textAlign: TextAlign.center,
+      if (_formKey.currentState!.validate()) {
+        if (await userProvider.updateProfile(
+          id: user!.id!.toInt(),
+          name: controllerName.text,
+          username: controllerUsername.text,
+          email: controllerEmail.text,
+          profilePhotoPath: filePhoto ?? File(''),
+        )) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/main-page', (route) => false);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Gagal Update Profile',
+                style: whiteTextStyle.copyWith(fontWeight: bold),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
+
       setState(() {
         isLoading = false;
       });
@@ -226,11 +228,12 @@ class _EditProfilPageState extends State<EditProfilPage> {
           children: [
             GestureDetector(
               onTap: () async {
-                XFile? photo =
+                XFile? pickedFile =
                     await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (photo != null) {
-                  filePhoto = File(photo.path);
-                  setState(() {});
+                if (pickedFile != null) {
+                  setState(() {
+                    filePhoto = File(pickedFile.path);
+                  });
                 }
               },
               child: Container(
@@ -270,11 +273,14 @@ class _EditProfilPageState extends State<EditProfilPage> {
 
     return Scaffold(
       backgroundColor: backgroundColor1,
-      body: ListView(
-        children: [
-          header(),
-          content(),
-        ],
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: [
+            header(),
+            content(),
+          ],
+        ),
       ),
     );
   }

@@ -46,7 +46,7 @@ class CardProductAll extends StatelessWidget {
               child: product.image.toString() == null || product.image!.isEmpty
                   ? Image.asset(
                       'assets/images/not_product.jpeg',
-                      height: 150,
+                      height: 120,
                       fit: BoxFit.cover,
                     )
                   : ClipRRect(
@@ -55,7 +55,7 @@ class CardProductAll extends StatelessWidget {
                       child: Hero(
                         tag: product.id!.toInt(),
                         child: CachedNetworkImage(
-                          height: 150,
+                          height: 120,
                           width: double.infinity,
                           fit: BoxFit.cover,
                           imageUrl: product.image.toString(),

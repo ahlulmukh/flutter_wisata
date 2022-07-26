@@ -143,7 +143,7 @@ class _StorePageState extends State<StorePage> {
                                 height: 7,
                               ),
                               Text(
-                                toko.village.toString(),
+                                'Desa ' + toko.village.toString(),
                                 style:
                                     blackTextStyle.copyWith(fontWeight: medium),
                               )

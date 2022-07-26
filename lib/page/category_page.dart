@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -74,8 +73,8 @@ class _CategoryPageState extends State<CategoryPage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
               ),
-              SvgPicture.asset(
-                'assets/images/no_box.svg',
+              Image.asset(
+                'assets/empty.png',
                 width:
                     MediaQuery.of(context).orientation == Orientation.landscape
                         ? MediaQuery.of(context).size.width * 0.6

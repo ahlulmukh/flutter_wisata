@@ -47,7 +47,6 @@ dependencies:
   flutter_svg: ^1.0.3
   mime: ^1.0.1
   badges: ^2.0.2
-  animations: ^2.0.2
 
 dependency_overrides:
   photo_view:

@@ -24,13 +24,7 @@ class CardMarket extends StatelessWidget {
         height: 200,
         margin: const EdgeInsets.only(right: 5, left: 5),
         decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 3.0,
-                color: greyColor.withOpacity(0.4),
-                offset: const Offset(0, 1),
-              ),
-            ],
+            border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
             color: whiteColor,
             borderRadius: BorderRadius.circular(defaultRadius)),
         child: Column(

@@ -77,12 +77,15 @@ class _DetailStorePageState extends State<DetailStorePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(
+                height: 15,
+              ),
               SvgPicture.asset(
                 'assets/images/no_box.svg',
                 width:
                     MediaQuery.of(context).orientation == Orientation.landscape
                         ? MediaQuery.of(context).size.width * 0.6
-                        : MediaQuery.of(context).size.width * 0.8,
+                        : MediaQuery.of(context).size.width * 0.75,
               ),
               const SizedBox(
                 height: 20,
@@ -91,6 +94,9 @@ class _DetailStorePageState extends State<DetailStorePage> {
                 'Tidak ada produk',
                 style:
                     greyTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
+              ),
+              const SizedBox(
+                height: 15,
               )
             ],
           ),

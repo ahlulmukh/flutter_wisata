@@ -59,14 +59,15 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
       });
       if (_formKey.currentState!.validate()) {
         if (await tokoProvider.createToko(
-            usersId: user!.id!.toInt(),
-            nameStore: nameStoreController.text,
-            village: desa.toString(),
-            address: addressController.text,
-            description: descStoreController.text,
-            accountName: nameAccountController.text,
-            accountNumber: numberAccountController.text,
-            image: file!)) {
+          usersId: user!.id!.toInt(),
+          nameStore: nameStoreController.text,
+          village: desa.toString(),
+          address: addressController.text,
+          description: descStoreController.text,
+          accountName: nameAccountController.text,
+          accountNumber: numberAccountController.text,
+          image: file ?? File(''),
+        )) {
           Get.off(() => StorePage(toko: user.toko as TokoModel));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -118,8 +119,9 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
           XFile? pickedFile =
               await ImagePicker().pickImage(source: ImageSource.gallery);
           if (pickedFile != null) {
-            file = File(pickedFile.path);
-            setState(() {});
+            setState(() {
+              file = File(pickedFile.path);
+            });
           }
         },
         child: Container(
@@ -211,7 +213,8 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             ),
             SizedBox(
               child: DropdownSearch<DistrictModel>(
-                validator: (value) => value!.nama.isEmpty ? 'Pilih Desa' : null,
+                validator: (value) =>
+                    value?.nama.isEmpty == null ? 'Pilih Desa' : null,
                 onChanged: (DistrictModel? district) {
                   desa = district!.nama;
                 },

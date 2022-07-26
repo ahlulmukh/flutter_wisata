@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
@@ -83,8 +82,8 @@ class _GetSearchProductState extends State<GetSearchProduct> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
               ),
-              SvgPicture.asset(
-                'assets/images/no_box.svg',
+              Image.asset(
+                'assets/empty.png',
                 width:
                     MediaQuery.of(context).orientation == Orientation.landscape
                         ? MediaQuery.of(context).size.width * 0.6
@@ -94,7 +93,7 @@ class _GetSearchProductState extends State<GetSearchProduct> {
                 height: 20,
               ),
               Text(
-                'Tidak ada produk',
+                'Produk tidak ditemukan',
                 style:
                     greyTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
               )
@@ -161,7 +160,7 @@ class _GetSearchProductState extends State<GetSearchProduct> {
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                strokeWidth: 10.0,
+                strokeWidth: 5.0,
                 color: Colors.green,
               ),
             )

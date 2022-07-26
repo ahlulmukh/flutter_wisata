@@ -37,12 +37,14 @@ class _WishlistPageState extends State<WishlistPage> {
               ? Column(
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.20,
+                      height: MediaQuery.of(context).size.height * 0.15,
                     ),
-                    Icon(
-                      Icons.favorite,
-                      color: greyColor,
-                      size: 90,
+                    Image.asset(
+                      'assets/wishlist.png',
+                      width: 250,
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Text(
                       'Tidak ada wishlist',

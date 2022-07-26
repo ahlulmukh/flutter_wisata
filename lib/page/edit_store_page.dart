@@ -32,23 +32,18 @@ class _EditStorePageState extends State<EditStorePage> {
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
     TokoModel? toko = tokoProvider.toko;
 
-    TextEditingController nameStoreController =
-        TextEditingController(text: toko!.nameStore);
-    TextEditingController addressStore =
-        TextEditingController(text: toko.address);
-    TextEditingController descStore =
-        TextEditingController(text: toko.description);
-    TextEditingController nameAccount =
-        TextEditingController(text: toko.accountName);
-    TextEditingController numberAccount =
-        TextEditingController(text: toko.accountNumber.toString());
+    TextEditingController nameStoreController = TextEditingController(text: '');
+    TextEditingController addressStore = TextEditingController(text: '');
+    TextEditingController descStore = TextEditingController(text: '');
+    TextEditingController nameAccount = TextEditingController(text: '');
+    TextEditingController numberAccount = TextEditingController(text: '');
 
     submitUpdateToko() async {
       setState(() {
         isLoading = true;
       });
       if (await tokoProvider.updateProfileToko(
-          toko.id!.toInt(),
+          toko!.id!.toInt(),
           toko.usersId.toString(),
           nameStoreController.text,
           desa.toString(),
@@ -56,7 +51,7 @@ class _EditStorePageState extends State<EditStorePage> {
           descStore.text,
           nameAccount.text,
           numberAccount.text.toString(),
-          image: file!)) {
+          image: file ?? File(''))) {
         Get.to(
           () => StorePage(toko: toko),
         );
@@ -129,11 +124,10 @@ class _EditStorePageState extends State<EditStorePage> {
           XFile? photo =
               await ImagePicker().pickImage(source: ImageSource.gallery);
           if (photo == null) return;
-          if (photo.path == null) {
-            return;
-          }
-          file = File(photo.path);
-          setState(() {});
+
+          setState(() {
+            file = File(photo.path);
+          });
         },
         child: Container(
             height: 130,
@@ -153,10 +147,10 @@ class _EditStorePageState extends State<EditStorePage> {
                             image: FileImage(file!), fit: BoxFit.cover)),
                   )
                 : Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: NetworkImage(toko.image.toString()),
+                            image: AssetImage('assets/images/photo.png'),
                             fit: BoxFit.cover)),
                   )),
       );
@@ -181,7 +175,6 @@ class _EditStorePageState extends State<EditStorePage> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
                   borderRadius: BorderRadius.circular(defaultRadius)),
               height: 50,
               child: Center(
@@ -204,7 +197,7 @@ class _EditStorePageState extends State<EditStorePage> {
       return Container(
         width: double.infinity,
         margin: EdgeInsets.only(
-            bottom: 19, left: defaultMargin, right: defaultMargin),
+            left: defaultMargin, right: defaultMargin, bottom: 19),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -215,12 +208,10 @@ class _EditStorePageState extends State<EditStorePage> {
             const SizedBox(
               height: 6,
             ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(defaultRadius),
-                  border: Border.all(width: 2.0),
-                  color: whiteColor),
+            SizedBox(
               child: DropdownSearch<DistrictModel>(
+                validator: (value) =>
+                    value?.nama.isEmpty == null ? 'Pilih Desa' : null,
                 onChanged: (DistrictModel? district) {
                   desa = district!.nama;
                 },
@@ -230,13 +221,37 @@ class _EditStorePageState extends State<EditStorePage> {
                         style: blackTextStyle.copyWith(fontWeight: medium),
                       )
                     : Text(
-                        toko.village.toString(),
+                        'Belum memilih desa',
                         style: greyTextStyle.copyWith(fontWeight: semiBold),
                       ),
                 popupItemBuilder: (context, item, isSelected) => ListTile(
                   title: Text(
                     item.nama,
                     style: blackTextStyle.copyWith(fontWeight: medium),
+                  ),
+                ),
+                dropdownSearchDecoration: InputDecoration(
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.red, width: 4),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red, width: 4),
+                      borderRadius: BorderRadius.circular(14)),
+                  errorStyle: whiteTextStyle.copyWith(
+                      fontWeight: bold, fontSize: 14, color: Colors.red),
+                  hintStyle: greyTextStyle,
+                  labelStyle:
+                      blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2),
+                      borderRadius: BorderRadius.circular(10)),
+                  floatingLabelStyle: blackTextStyle.copyWith(
+                      fontSize: 18, fontWeight: semiBold),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: blackColor, width: 3),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onFind: (String? filter) async {
@@ -256,6 +271,7 @@ class _EditStorePageState extends State<EditStorePage> {
                   } else {
                     throw Exception('Gagal ambil data');
                   }
+
                   return districts;
                 },
               ),
@@ -284,7 +300,6 @@ class _EditStorePageState extends State<EditStorePage> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
                   borderRadius: BorderRadius.circular(defaultRadius)),
               child: Center(
                 child: TextFormField(
@@ -322,7 +337,6 @@ class _EditStorePageState extends State<EditStorePage> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
                   borderRadius: BorderRadius.circular(defaultRadius)),
               child: Center(
                 child: TextFormField(
@@ -360,7 +374,6 @@ class _EditStorePageState extends State<EditStorePage> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
                   borderRadius: BorderRadius.circular(defaultRadius)),
               height: 50,
               child: Center(
@@ -398,7 +411,6 @@ class _EditStorePageState extends State<EditStorePage> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                   border: Border.all(color: blackColor, width: 2.0),
-                  color: whiteColor,
                   borderRadius: BorderRadius.circular(defaultRadius)),
               height: 50,
               child: Center(

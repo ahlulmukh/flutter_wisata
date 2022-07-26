@@ -22,6 +22,7 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   bool isLoading = false;
   File? file;
+  final _formKey = GlobalKey<FormState>();
   TextEditingController addressController = TextEditingController(text: '');
   TextEditingController numberController = TextEditingController(text: '');
   final currencyFormatter =
@@ -46,28 +47,31 @@ class _CheckoutPageState extends State<CheckoutPage> {
       setState(() {
         isLoading = true;
       });
-      if (await checkoutProvider.checkout(
-        address: addressController.text,
-        carts: cartProvider.cartList as List<CartModel>,
-        phone: numberController.text,
-        image: file!,
-        totalPrice: cartProvider.totalPrice(),
-        storeId: cartProvider.cartList![index].product!.market!.id.toString(),
-      )) {
-        cartProvider.removeAllCart();
-        Get.offNamedUntil('/checkout-success', (route) => false);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: dangerColor,
-            content: Text(
-              'Gagal Checkout',
-              style: whiteTextStyle.copyWith(fontWeight: bold),
-              textAlign: TextAlign.center,
+      if (_formKey.currentState!.validate()) {
+        if (await checkoutProvider.checkout(
+          address: addressController.text,
+          carts: cartProvider.cartList as List<CartModel>,
+          phone: numberController.text,
+          image: file!,
+          totalPrice: cartProvider.totalPrice(),
+          storeId: cartProvider.cartList![index].product!.market!.id.toString(),
+        )) {
+          cartProvider.removeAllCart();
+          Get.offNamedUntil('/checkout-success', (route) => false);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Gagal Checkout',
+                style: whiteTextStyle.copyWith(fontWeight: bold),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
+
       setState(() {
         isLoading = false;
       });
@@ -153,6 +157,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               keyboardType: TextInputType.text,
               cursorColor: Colors.white,
               maxLines: 3,
+              validator: (value) => value!.isEmpty ? 'Isikan Alamat' : null,
               decoration: InputDecoration(
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -204,6 +209,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               showCursor: true,
               keyboardType: TextInputType.number,
               cursorColor: Colors.white,
+              validator: (value) => value!.isEmpty ? 'Isikan No Telp' : null,
               decoration: InputDecoration(
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -280,8 +286,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           XFile? pickedFile =
               await ImagePicker().pickImage(source: ImageSource.gallery);
           if (pickedFile != null) {
-            file = File(pickedFile.path);
-            setState(() {});
+            setState(() {
+              file = File(pickedFile.path);
+            });
           }
         },
         child: (file != null)
@@ -392,25 +399,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
           margin: const EdgeInsets.symmetric(vertical: 10),
           padding: EdgeInsets.symmetric(horizontal: defaultRadius),
           child: CustomButton(
-            title: 'Bayar Sekarang',
+            title: 'Checkout Now',
             onPressed: handleCheckout,
           ));
     }
 
     return Scaffold(
         backgroundColor: backgroundColor1,
-        body: ListView(
-          children: [
-            header(),
-            item(),
-            listItems(),
-            inputAddress(),
-            inputNumber(),
-            detailMarket(),
-            uploadImage(),
-            detailPayment(),
-            isLoading == true ? const ButtonLoading() : submitCheckout(),
-          ],
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              header(),
+              item(),
+              listItems(),
+              inputAddress(),
+              inputNumber(),
+              detailMarket(),
+              uploadImage(),
+              detailPayment(),
+              isLoading == true ? const ButtonLoading() : submitCheckout(),
+            ],
+          ),
         ));
   }
 }

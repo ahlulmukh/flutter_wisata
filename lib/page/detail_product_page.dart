@@ -32,14 +32,6 @@ class _DetailProductPageState extends State<DetailProductPage> {
   final currencyFormatter =
       NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
-  // fetchProduct() async {
-  //   ProductProvider productProvider = Provider.of(context, listen: false);
-  //   await productProvider.getProductId(id: widget.product.id!.toInt());
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
-
   fetchUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.getString('token');
@@ -488,16 +480,18 @@ class _DetailProductPageState extends State<DetailProductPage> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: backgroundColor1,
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Stack(
-          children: [
-            detailImage(),
-            header(),
-            descriptionProduct(),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: backgroundColor1,
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Stack(
+            children: [
+              detailImage(),
+              header(),
+              descriptionProduct(),
+            ],
+          ),
         ),
       ),
     );

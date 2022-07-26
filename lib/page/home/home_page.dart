@@ -166,10 +166,10 @@ class _HomePageState extends State<HomePage> {
 
     Widget shimmerProduct() {
       return Container(
-        height: 260,
+        height: 220,
         width: MediaQuery.of(context).orientation == Orientation.landscape
             ? MediaQuery.of(context).size.width * 0.3
-            : MediaQuery.of(context).size.width * 0.5,
+            : MediaQuery.of(context).size.width * 0.4,
         margin: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
             color: whiteColor,
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
               baseColor: Colors.grey.shade300,
               highlightColor: Colors.grey.shade100,
               child: Container(
-                height: 160,
+                height: 120,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                         top: Radius.circular(defaultRadius)),
@@ -510,6 +510,7 @@ class _HomePageState extends State<HomePage> {
       return Container(
           margin: const EdgeInsets.only(top: 16, bottom: 15),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

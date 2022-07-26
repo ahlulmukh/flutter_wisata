@@ -10,7 +10,8 @@ class CardMyProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
     return Container(
       width: MediaQuery.of(context).orientation == Orientation.landscape

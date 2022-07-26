@@ -232,18 +232,30 @@ class _OrderListState extends State<OrderList> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(Service.urlImage +
-                        widget.order.market!.image.toString()),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              widget.order.market!.image!.isEmpty
+                  ? Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/not_product.jpeg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: NetworkImage(Service.urlImage +
+                              widget.order.market!.image.toString()),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
               const SizedBox(
                 width: 10,
               ),

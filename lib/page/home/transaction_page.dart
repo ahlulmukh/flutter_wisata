@@ -172,36 +172,63 @@ class _TransactionPageState extends State<TransactionPage> {
                                   .map((order) => OrderList(order: order))
                                   .toList()),
                     ),
-          orderProvider.orders!.isEmpty
-              ? Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.1,
-                    ),
-                    Image.asset(
-                      'assets/no_order.png',
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      height: 250,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Belum ada transaksi',
-                      textAlign: TextAlign.center,
-                      style: greyTextStyle.copyWith(
-                          fontSize: 22, fontWeight: semiBold),
-                    )
-                  ],
+          (orderProvider.orders!.where((orderStatus) =>
+                      orderStatus.status == OrderStatus.success ||
+                      orderStatus.status == OrderStatus.cancel)).length ==
+                  0
+              ? Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                      ),
+                      Image.asset(
+                        'assets/no_order.png',
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: 250,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Belum ada transaksi',
+                        textAlign: TextAlign.center,
+                        style: greyTextStyle.copyWith(
+                            fontSize: 22, fontWeight: semiBold),
+                      )
+                    ],
+                  ),
                 )
-              : ListView(
-                  children: orderProvider.orders!
-                      .where((orderStatus) =>
-                          orderStatus.status == OrderStatus.cancel ||
-                          orderStatus.status == OrderStatus.success)
-                      .toList()
-                      .map((order) => OrderList(order: order))
-                      .toList()),
+              : orderProvider.orders!.isEmpty
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                        ),
+                        Image.asset(
+                          'assets/no_order.png',
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: 250,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Belum ada transaksi',
+                          textAlign: TextAlign.center,
+                          style: greyTextStyle.copyWith(
+                              fontSize: 22, fontWeight: semiBold),
+                        )
+                      ],
+                    )
+                  : ListView(
+                      children: orderProvider.orders!
+                          .where((orderStatus) =>
+                              orderStatus.status == OrderStatus.cancel ||
+                              orderStatus.status == OrderStatus.success)
+                          .toList()
+                          .map((order) => OrderList(order: order))
+                          .toList()),
         ]),
       ),
     );

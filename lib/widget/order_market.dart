@@ -295,28 +295,61 @@ class OrderToMarket extends StatelessWidget {
           Row(
             children: [
               (order.status == OrderStatus.pending)
-                  ? TextButton(
-                      style: TextButton.styleFrom(
-                        fixedSize: const Size.fromWidth(120),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusDirectional.circular(6)),
-                        backgroundColor: lightColor,
-                      ),
-                      onPressed: () async {
-                        await OrderProvider().statusOrder(
-                            id: order.id!.toInt(), status: 'PROGRESS');
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          backgroundColor: secondaryColor,
-                          content: Text(
-                            'Status berhasil diubah silahkan refresh ulang',
-                            textAlign: TextAlign.center,
-                            style:
-                                whiteTextStyle.copyWith(fontWeight: semiBold),
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            fixedSize: const Size.fromWidth(120),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(6)),
+                            backgroundColor: lightColor,
                           ),
-                        ));
-                      },
-                      child: Text('Konfirmasi',
-                          style: whiteTextStyle.copyWith(fontWeight: bold)),
+                          onPressed: () async {
+                            await OrderProvider().statusOrder(
+                                id: order.id!.toInt(), status: 'PROGRESS');
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: secondaryColor,
+                              content: Text(
+                                'Status berhasil diubah silahkan refresh ulang',
+                                textAlign: TextAlign.center,
+                                style: whiteTextStyle.copyWith(
+                                    fontWeight: semiBold),
+                              ),
+                            ));
+                          },
+                          child: Text('Konfirmasi',
+                              style: whiteTextStyle.copyWith(fontWeight: bold)),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            fixedSize: const Size.fromWidth(60),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(6)),
+                            backgroundColor: dangerColor,
+                          ),
+                          onPressed: () async {
+                            await OrderProvider().statusOrder(
+                                id: order.id!.toInt(), status: 'CANCEL');
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: secondaryColor,
+                              content: Text(
+                                'Status berhasil diubah silahkan refresh ulang',
+                                textAlign: TextAlign.center,
+                                style: whiteTextStyle.copyWith(
+                                    fontWeight: semiBold),
+                              ),
+                            ));
+                          },
+                          child: Text('Batal',
+                              style: whiteTextStyle.copyWith(fontWeight: bold)),
+                        ),
+                      ],
                     )
                   : (order.status == OrderStatus.progress)
                       ? TextButton(

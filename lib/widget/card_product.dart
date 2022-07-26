@@ -23,7 +23,7 @@ class CardProduct extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).orientation == Orientation.landscape
             ? 181
-            : MediaQuery.of(context).size.width * 0.45,
+            : MediaQuery.of(context).size.width * 0.43,
         height: 220,
         margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
