@@ -6,8 +6,10 @@ import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
+import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
+import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -52,6 +54,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
     CartProvider cartProvider = Provider.of<CartProvider>(context);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    PageProvider pageProvider = Provider.of<PageProvider>(context);
     UserModel? user = authProvider.user;
 
     Future<void> showSuccessDialog() async {
@@ -258,11 +261,16 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     if (wishlistProvider.isWishlist(widget.product)) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
+                          action: SnackBarAction(
+                            label: 'Lihat',
+                            onPressed: () => Get.to(() => const MainPage(),
+                                arguments: pageProvider.currentIndex = 2),
+                            textColor: whiteColor,
+                          ),
                           backgroundColor: secondaryColor,
                           content: Text(
                             'Berhasil ditambah ke wishlist',
                             style: whiteTextStyle.copyWith(fontWeight: bold),
-                            textAlign: TextAlign.center,
                           ),
                         ),
                       );

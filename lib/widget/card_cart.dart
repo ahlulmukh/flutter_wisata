@@ -84,7 +84,7 @@ class CardCart extends StatelessWidget {
                   Get.snackbar('', '',
                       margin: EdgeInsets.only(
                           top: 20, left: defaultMargin, right: defaultMargin),
-                      backgroundColor: greyColor.withOpacity(0.8),
+                      backgroundColor: greyColor,
                       titleText: Text(
                         'Sukses',
                         style: whiteTextStyle.copyWith(

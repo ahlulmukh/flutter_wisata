@@ -79,7 +79,7 @@ class CardWishlist extends StatelessWidget {
                     Get.snackbar('', '',
                         margin: EdgeInsets.only(
                             top: 20, left: defaultMargin, right: defaultMargin),
-                        backgroundColor: dangerColor.withOpacity(0.8),
+                        backgroundColor: dangerColor,
                         titleText: Text(
                           'Sukses',
                           style: whiteTextStyle.copyWith(

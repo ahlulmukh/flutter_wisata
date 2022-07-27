@@ -61,15 +61,13 @@ class _WishlistPageState extends State<WishlistPage> {
                 ));
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: backgroundColor1,
-        body: ListView(
-          children: [
-            header(),
-            content(),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: backgroundColor1,
+      body: ListView(
+        children: [
+          header(),
+          content(),
+        ],
       ),
     );
   }

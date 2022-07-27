@@ -56,8 +56,10 @@ class _SignInPageState extends State<SignInPage> {
           //     arguments: pageProvider.currentIndex = 0);
         } else {
           Get.snackbar('Gagal Login', "Silahkan isi dengan benar",
+              margin: EdgeInsets.only(
+                  top: 20, left: defaultMargin, right: defaultMargin),
               colorText: Colors.white,
-              backgroundColor: Colors.red[900]!.withOpacity(0.8),
+              backgroundColor: Colors.red[900],
               icon: const Icon(
                 Icons.error,
                 size: 25,

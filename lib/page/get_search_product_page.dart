@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -40,37 +41,7 @@ class _GetSearchProductState extends State<GetSearchProduct> {
   @override
   Widget build(BuildContext context) {
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
-
-    Widget header() {
-      return Container(
-        height: 70,
-        color: whiteColor,
-        padding: EdgeInsets.only(
-          top: 8,
-          bottom: 8,
-          right: defaultMargin,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () => Get.back(),
-              child: Icon(
-                Icons.chevron_left,
-                size: 35,
-                color: greyColor,
-              ),
-            ),
-            Expanded(
-                child: Center(
-                    child: Text(
-              'Hasil Pencarian',
-              style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
-            )))
-          ],
-        ),
-      );
-    }
+    PageProvider pageProvider = Provider.of<PageProvider>(context);
 
     Widget getGridViewProduct() {
       if (productProvider.product.isEmpty) {
@@ -127,7 +98,9 @@ class _GetSearchProductState extends State<GetSearchProduct> {
     Widget content() {
       return Container(
         margin: const EdgeInsets.only(top: 20, bottom: 30),
-        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,6 +130,29 @@ class _GetSearchProductState extends State<GetSearchProduct> {
 
     return Scaffold(
       backgroundColor: backgroundColor1,
+      appBar: AppBar(
+        centerTitle: true,
+        toolbarHeight: 60.0,
+        backgroundColor: whiteColor,
+        leading: Builder(
+          builder: (context) => IconButton(
+            onPressed: () {
+              Get.to(() => const MainPage(),
+                  arguments: pageProvider.currentIndex = 0);
+            },
+            icon: const Icon(
+              Icons.chevron_left,
+              size: 30,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        elevation: 0,
+        title: Text(
+          'Hasil Pencarian',
+          style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 20),
+        ),
+      ),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
@@ -166,7 +162,6 @@ class _GetSearchProductState extends State<GetSearchProduct> {
             )
           : ListView(
               children: [
-                header(),
                 content(),
               ],
             ),
