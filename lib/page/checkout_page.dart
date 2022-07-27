@@ -52,7 +52,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           address: addressController.text,
           carts: cartProvider.cartList as List<CartModel>,
           phone: numberController.text,
-          image: file!,
+          image: file ?? File(""),
           totalPrice: cartProvider.totalPrice(),
           storeId: cartProvider.cartList![index].product!.market!.id.toString(),
         )) {
@@ -63,7 +63,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             SnackBar(
               backgroundColor: dangerColor,
               content: Text(
-                'Gagal Checkout',
+                'Silahkan upload slip pembayaran',
                 style: whiteTextStyle.copyWith(fontWeight: bold),
                 textAlign: TextAlign.center,
               ),

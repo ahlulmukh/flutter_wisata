@@ -28,15 +28,9 @@ class CardWishlist extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(19),
       decoration: BoxDecoration(
-          color: whiteColor,
-          borderRadius: BorderRadius.circular(defaultRadius),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 3.0,
-              color: greyColor.withOpacity(0.3),
-              offset: const Offset(0, 1),
-            )
-          ]),
+        color: whiteColor,
+        borderRadius: BorderRadius.circular(defaultRadius),
+      ),
       child: Column(
         children: [
           Row(
@@ -81,22 +75,13 @@ class CardWishlist extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   wishlistProvider.setProduct(product);
-                  if (wishlistProvider.isWishlist(product)) {
+                  if (!wishlistProvider.isWishlist(product)) {
                     Get.snackbar('', '',
-                        backgroundColor: secondaryColor.withOpacity(0.8),
-                        titleText: Text(
-                          'Sukses',
-                          style: whiteTextStyle.copyWith(
-                              fontWeight: semiBold, fontSize: 17),
-                        ),
-                        messageText: Text('Berhasil ditambah ke wishlist',
-                            style: whiteTextStyle.copyWith(fontSize: 14)),
-                        colorText: Colors.white);
-                  } else {
-                    Get.snackbar('', '',
+                        margin: EdgeInsets.only(
+                            top: 20, left: defaultMargin, right: defaultMargin),
                         backgroundColor: dangerColor.withOpacity(0.8),
                         titleText: Text(
-                          'Berhasil',
+                          'Sukses',
                           style: whiteTextStyle.copyWith(
                               fontWeight: semiBold, fontSize: 17),
                         ),
@@ -115,7 +100,7 @@ class CardWishlist extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 5,
+            height: 10,
           ),
           GestureDetector(
             onTap: () {
@@ -124,19 +109,19 @@ class CardWishlist extends StatelessWidget {
                   productId: product.id.toString(),
                   quantity: 1);
               wishlistProvider.setProduct(product);
-              Get.snackbar('', '',
-                  backgroundColor: secondaryColor.withOpacity(0.8),
-                  titleText: Text(
-                    'Berhasil',
-                    style: whiteTextStyle.copyWith(
-                        fontWeight: semiBold, fontSize: 17),
-                  ),
-                  messageText: Text('Berhasil ditambah ke keranjang',
-                      style: whiteTextStyle.copyWith(fontSize: 14)),
-                  colorText: Colors.white);
+              // Get.snackbar('', '',
+              //     backgroundColor: secondaryColor.withOpacity(0.8),
+              //     titleText: Text(
+              //       'Berhasil',
+              //       style: whiteTextStyle.copyWith(
+              //           fontWeight: semiBold, fontSize: 17),
+              //     ),
+              //     messageText: Text('Berhasil ditambah ke keranjang',
+              //         style: whiteTextStyle.copyWith(fontSize: 14)),
+              //     colorText: Colors.white);
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.symmetric(vertical: 7),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: secondaryColor,

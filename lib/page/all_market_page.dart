@@ -37,7 +37,7 @@ class _AllMarketPageState extends State<AllMarketPage> {
 
     Widget header() {
       return AppBar(
-        toolbarHeight: 70.0,
+        toolbarHeight: 60.0,
         centerTitle: true,
         backgroundColor: whiteColor,
         leading: Builder(

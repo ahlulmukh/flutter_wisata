@@ -3,6 +3,7 @@ import 'package:flutter_tugas_akhir/models/cart_model.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -80,6 +81,18 @@ class CardCart extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   cartProvider.removeCart(cart.id.toInt());
+                  Get.snackbar('', '',
+                      margin: EdgeInsets.only(
+                          top: 20, left: defaultMargin, right: defaultMargin),
+                      backgroundColor: greyColor.withOpacity(0.8),
+                      titleText: Text(
+                        'Sukses',
+                        style: whiteTextStyle.copyWith(
+                            fontWeight: semiBold, fontSize: 17),
+                      ),
+                      messageText: Text('1 produk terhapus',
+                          style: whiteTextStyle.copyWith(fontSize: 14)),
+                      colorText: Colors.white);
                 },
                 child: CircleAvatar(
                   radius: 16.0,

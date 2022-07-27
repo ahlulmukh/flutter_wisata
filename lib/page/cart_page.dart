@@ -51,15 +51,20 @@ class _CartPageState extends State<CartPage> {
     Widget emptyCart() {
       return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.shopping_cart, color: greyColor, size: 90),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.15,
+            ),
+            Image.asset(
+              'assets/wishlist.png',
+              width: MediaQuery.of(context).size.width * 0.75,
+            ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Text(
               'Keranjang kosong',
-              style: greyTextStyle.copyWith(fontSize: 20, fontWeight: semiBold),
+              style: greyTextStyle.copyWith(fontSize: 22, fontWeight: semiBold),
             ),
           ],
         ),

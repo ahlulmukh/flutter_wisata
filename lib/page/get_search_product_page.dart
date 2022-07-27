@@ -64,7 +64,7 @@ class _GetSearchProductState extends State<GetSearchProduct> {
             Expanded(
                 child: Center(
                     child: Text(
-              'Hasil Pencarian Produk',
+              'Hasil Pencarian',
               style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
             )))
           ],

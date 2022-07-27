@@ -167,25 +167,18 @@ class _DetailProductPageState extends State<DetailProductPage> {
     Widget header() {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 17),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-                // Get.offNamedUntil('/main-page', (route) => false,
-                //     arguments: pageProvider.currentIndex == 0);
-              },
-              child: CircleAvatar(
-                backgroundColor: greyColor.withOpacity(0.7),
-                child: Icon(
-                  Icons.chevron_left,
-                  color: whiteColor,
-                  size: 30,
-                ),
-              ),
-            )
-          ],
+        child: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: CircleAvatar(
+            backgroundColor: greyColor.withOpacity(0.7),
+            child: Icon(
+              Icons.chevron_left,
+              color: whiteColor,
+              size: 30,
+            ),
+          ),
         ),
       );
     }
@@ -263,27 +256,27 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   onTap: () async {
                     wishlistProvider.setProduct(widget.product);
                     if (wishlistProvider.isWishlist(widget.product)) {
-                      Get.snackbar('', '',
-                          backgroundColor: secondaryColor.withOpacity(0.8),
-                          titleText: Text(
-                            'Sukses',
-                            style: whiteTextStyle.copyWith(
-                                fontWeight: semiBold, fontSize: 17),
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: secondaryColor,
+                          content: Text(
+                            'Berhasil ditambah ke wishlist',
+                            style: whiteTextStyle.copyWith(fontWeight: bold),
+                            textAlign: TextAlign.center,
                           ),
-                          messageText: Text('Berhasil ditambah ke wishlist',
-                              style: whiteTextStyle.copyWith(fontSize: 14)),
-                          colorText: Colors.white);
+                        ),
+                      );
                     } else {
-                      Get.snackbar('', '',
-                          backgroundColor: dangerColor.withOpacity(0.8),
-                          titleText: Text(
-                            'Berhasil',
-                            style: whiteTextStyle.copyWith(
-                                fontWeight: semiBold, fontSize: 17),
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: dangerColor,
+                          content: Text(
+                            'Berhasil dihapus dari wishlist',
+                            style: whiteTextStyle.copyWith(fontWeight: bold),
+                            textAlign: TextAlign.center,
                           ),
-                          messageText: Text('Berhasil dihapus dari wishlist',
-                              style: whiteTextStyle.copyWith(fontSize: 14)),
-                          colorText: Colors.white);
+                        ),
+                      );
                     }
                   },
                   child: Image.asset(
@@ -480,19 +473,18 @@ class _DetailProductPageState extends State<DetailProductPage> {
       );
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: backgroundColor1,
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Stack(
+    return Scaffold(
+      backgroundColor: backgroundColor1,
+      body: ListView(
+        children: [
+          Stack(
             children: [
               detailImage(),
               header(),
               descriptionProduct(),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

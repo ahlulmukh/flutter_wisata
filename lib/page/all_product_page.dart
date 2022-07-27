@@ -4,6 +4,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
+import 'package:flutter_tugas_akhir/page/get_search_product_page.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -21,6 +22,7 @@ class AllProductPage extends StatefulWidget {
 
 class _AllProductPageState extends State<AllProductPage> {
   bool isLoading = true;
+  final seachController = TextEditingController();
 
   @override
   void initState() {
@@ -60,7 +62,7 @@ class _AllProductPageState extends State<AllProductPage> {
 
     Widget header() {
       return Container(
-        height: 70,
+        height: 60,
         color: whiteColor,
         padding:
             EdgeInsets.only(top: 8, bottom: 8, right: defaultMargin, left: 10),
@@ -88,14 +90,30 @@ class _AllProductPageState extends State<AllProductPage> {
                     borderRadius: BorderRadius.circular(defaultRadius)),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.search,
-                      color: greyColor,
+                    GestureDetector(
+                      onTap: () {
+                        if (seachController.text.length > 0) {
+                          Get.to(
+                            () => GetSearchProduct(
+                              data: seachController.text,
+                            ),
+                          )!
+                              .then(
+                            (value) => seachController.clear(),
+                          );
+                        }
+                        return;
+                      },
+                      child: Icon(
+                        Icons.search,
+                        color: greyColor,
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 11),
                       width: MediaQuery.of(context).size.width * 0.45,
                       child: TextFormField(
+                        controller: seachController,
                         decoration: InputDecoration.collapsed(
                             hintText: "Cari produk.....",
                             hintStyle: greyTextStyle.copyWith(

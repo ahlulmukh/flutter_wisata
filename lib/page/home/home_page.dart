@@ -278,7 +278,7 @@ class _HomePageState extends State<HomePage> {
     Widget header() {
       return Container(
         color: primaryColor,
-        height: 50,
+        height: 60,
         padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
