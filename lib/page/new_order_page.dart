@@ -46,13 +46,26 @@ class _NewOrderPageState extends State<NewOrderPage> {
 
     TabBar myTab = TabBar(
       indicatorColor: secondaryColor,
-      unselectedLabelColor: greyColor,
+      unselectedLabelColor: blackColor,
       labelColor: lightColor,
+      isScrollable: true,
       indicatorWeight: 3.0,
       tabs: <Widget>[
         Tab(
           child: Text(
-            'Order',
+            'New Order',
+            style: GoogleFonts.poppins(fontWeight: semiBold, fontSize: 16),
+          ),
+        ),
+        Tab(
+          child: Text(
+            'In Progress',
+            style: GoogleFonts.poppins(fontWeight: semiBold, fontSize: 16),
+          ),
+        ),
+        Tab(
+          child: Text(
+            'Delivery',
             style: GoogleFonts.poppins(fontWeight: semiBold, fontSize: 16),
           ),
         ),
@@ -66,7 +79,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
     );
 
     return DefaultTabController(
-      length: 2,
+      length: 4,
       initialIndex: currentIndex,
       child: Scaffold(
         backgroundColor: backgroundColor1,
@@ -94,7 +107,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
           ),
           bottom: PreferredSize(
             child: Container(
-              color: backgroundColor1,
+              color: whiteColor,
               child: myTab,
             ),
             preferredSize: Size.fromHeight(myTab.preferredSize.height),
@@ -111,7 +124,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
                   ? Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
+                          height: MediaQuery.of(context).size.height * 0.15,
                         ),
                         Image.asset(
                           'assets/no_order.png',
@@ -138,17 +151,15 @@ class _NewOrderPageState extends State<NewOrderPage> {
                       color: whiteColor,
                       displacement: 20.0,
                       child: (orderProvider.orders!.where((orderStatus) =>
-                                  orderStatus.status == OrderStatus.pending ||
-                                  orderStatus.status == OrderStatus.progress ||
                                   orderStatus.status ==
-                                      OrderStatus.delivery)).length ==
+                                  OrderStatus.pending)).length ==
                               0
                           ? Center(
                               child: Column(
                                 children: [
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.15,
                                   ),
                                   Image.asset(
                                     'assets/no_order.png',
@@ -174,21 +185,154 @@ class _NewOrderPageState extends State<NewOrderPage> {
                                       userId.usersId == userId.usersId)
                                   .toList()
                                   .where((orderStatus) =>
-                                      orderStatus.status ==
-                                          OrderStatus.pending ||
-                                      orderStatus.status ==
-                                          OrderStatus.progress ||
-                                      orderStatus.status ==
-                                          OrderStatus.delivery)
+                                      orderStatus.status == OrderStatus.pending)
                                   .toList()
                                   .map((order) => OrderToMarket(order: order))
                                   .toList()),
                     ),
+          (orderProvider.orders!.isEmpty)
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
+                    Image.asset(
+                      'assets/no_order.png',
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: 250,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Belum ada pesanan',
+                      textAlign: TextAlign.center,
+                      style: greyTextStyle.copyWith(
+                          fontSize: 22, fontWeight: semiBold),
+                    )
+                  ],
+                )
+              : RefreshIndicator(
+                  onRefresh: orderMarket,
+                  edgeOffset: 20.0,
+                  backgroundColor: secondaryColor,
+                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                  strokeWidth: 3.0,
+                  color: whiteColor,
+                  displacement: 20.0,
+                  child: (orderProvider.orders!.where((orderStatus) =>
+                                  orderStatus.status == OrderStatus.progress))
+                              .length ==
+                          0
+                      ? Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                              ),
+                              Image.asset(
+                                'assets/no_order.png',
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: 250,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Belum ada pesanan',
+                                textAlign: TextAlign.center,
+                                style: greyTextStyle.copyWith(
+                                    fontSize: 22, fontWeight: semiBold),
+                              )
+                            ],
+                          ),
+                        )
+                      : ListView(
+                          children: orderProvider.orders!
+                              .where(
+                                  (userId) => userId.usersId == userId.usersId)
+                              .toList()
+                              .where((orderStatus) =>
+                                  orderStatus.status == OrderStatus.progress)
+                              .toList()
+                              .map((order) => OrderToMarket(order: order))
+                              .toList()),
+                ),
           orderProvider.orders!.isEmpty
               ? Column(
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.1,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
+                    Image.asset(
+                      'assets/no_order.png',
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: 250,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Belum ada pesanan',
+                      textAlign: TextAlign.center,
+                      style: greyTextStyle.copyWith(
+                          fontSize: 22, fontWeight: semiBold),
+                    )
+                  ],
+                )
+              : RefreshIndicator(
+                  onRefresh: orderMarket,
+                  edgeOffset: 20.0,
+                  backgroundColor: secondaryColor,
+                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                  strokeWidth: 3.0,
+                  color: whiteColor,
+                  displacement: 20.0,
+                  child: (orderProvider.orders!.where((orderStatus) =>
+                                  orderStatus.status == OrderStatus.delivery))
+                              .length ==
+                          0
+                      ? Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
+                              ),
+                              Image.asset(
+                                'assets/no_order.png',
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: 250,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Belum ada pesanan',
+                                textAlign: TextAlign.center,
+                                style: greyTextStyle.copyWith(
+                                    fontSize: 22, fontWeight: semiBold),
+                              )
+                            ],
+                          ),
+                        )
+                      : ListView(
+                          children: orderProvider.orders!
+                              .where(
+                                  (userId) => userId.usersId == userId.usersId)
+                              .toList()
+                              .where((orderStatus) =>
+                                  orderStatus.status == OrderStatus.delivery)
+                              .toList()
+                              .map((order) => OrderToMarket(order: order))
+                              .toList()),
+                ),
+          orderProvider.orders!.isEmpty
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
                     ),
                     Image.asset(
                       'assets/no_order.png',
@@ -213,7 +357,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
                   ? Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
+                          height: MediaQuery.of(context).size.height * 0.15,
                         ),
                         Image.asset(
                           'assets/no_order.png',

@@ -63,7 +63,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             SnackBar(
               backgroundColor: dangerColor,
               content: Text(
-                'Silahkan upload slip pembayaran',
+                'Gagal Checkout',
                 style: whiteTextStyle.copyWith(fontWeight: bold),
                 textAlign: TextAlign.center,
               ),
@@ -155,7 +155,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               style: blackTextStyle.copyWith(fontSize: 14),
               showCursor: true,
               keyboardType: TextInputType.text,
-              cursorColor: Colors.white,
+              cursorColor: Colors.black,
               maxLines: 3,
               validator: (value) => value!.isEmpty ? 'Isikan Alamat' : null,
               decoration: InputDecoration(
@@ -208,7 +208,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               style: blackTextStyle.copyWith(fontSize: 14),
               showCursor: true,
               keyboardType: TextInputType.number,
-              cursorColor: Colors.white,
+              cursorColor: Colors.black,
               validator: (value) => value!.isEmpty ? 'Isikan No Telp' : null,
               decoration: InputDecoration(
                 focusedErrorBorder: OutlineInputBorder(
@@ -286,9 +286,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
           XFile? pickedFile =
               await ImagePicker().pickImage(source: ImageSource.gallery);
           if (pickedFile != null) {
-            setState(() {
-              file = File(pickedFile.path);
-            });
+            file = File(pickedFile.path);
+            setState(() {});
+          } else {
+            return;
           }
         },
         child: (file != null)

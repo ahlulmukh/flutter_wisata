@@ -80,7 +80,7 @@ class CardCart extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  cartProvider.removeCart(cart.id.toInt());
+                  cartProvider.removeCart(cart.id!.toInt());
                   Get.snackbar('', '',
                       margin: EdgeInsets.only(
                           top: 20, left: defaultMargin, right: defaultMargin),
@@ -111,7 +111,8 @@ class CardCart extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      cartProvider.reduceQuantity(cart.id, cart.quantity - 1);
+                      cartProvider.reduceQuantity(
+                          cart.id!.toInt(), cart.quantity!.toInt());
                     },
                     child: Image.asset(
                       'assets/icon_pengurangan.png',
@@ -130,7 +131,8 @@ class CardCart extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      cartProvider.addQuantity(cart.id, cart.quantity + 1);
+                      cartProvider.addQuantity(
+                          cart.id!.toInt(), cart.quantity!.toInt());
                     },
                     child: Image.asset(
                       'assets/icon_penambahan.png',

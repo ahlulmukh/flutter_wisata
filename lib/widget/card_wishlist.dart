@@ -107,18 +107,18 @@ class CardWishlist extends StatelessWidget {
               cartProvider.addtoCart(
                   userId: user!.id.toString(),
                   productId: product.id.toString(),
-                  quantity: 1);
+                  quantity: cartProvider.cart!.quantity);
               wishlistProvider.setProduct(product);
-              // Get.snackbar('', '',
-              //     backgroundColor: secondaryColor.withOpacity(0.8),
-              //     titleText: Text(
-              //       'Berhasil',
-              //       style: whiteTextStyle.copyWith(
-              //           fontWeight: semiBold, fontSize: 17),
-              //     ),
-              //     messageText: Text('Berhasil ditambah ke keranjang',
-              //         style: whiteTextStyle.copyWith(fontSize: 14)),
-              //     colorText: Colors.white);
+              Get.snackbar('', '',
+                  backgroundColor: secondaryColor.withOpacity(0.8),
+                  titleText: Text(
+                    'Berhasil',
+                    style: whiteTextStyle.copyWith(
+                        fontWeight: semiBold, fontSize: 17),
+                  ),
+                  messageText: Text('Berhasil ditambah ke keranjang',
+                      style: whiteTextStyle.copyWith(fontSize: 14)),
+                  colorText: Colors.white);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 7),

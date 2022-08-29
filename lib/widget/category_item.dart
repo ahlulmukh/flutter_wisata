@@ -21,7 +21,7 @@ class CategoryItem extends StatelessWidget {
         margin: const EdgeInsets.only(right: 10, bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(
-          color: backgroundColor3,
+          color: primaryColor,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(

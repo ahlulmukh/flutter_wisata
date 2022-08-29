@@ -26,47 +26,56 @@ class _EditStorePageState extends State<EditStorePage> {
   bool isLoading = false;
   File? file;
   String? desa;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     TokoProvider tokoProvider = Provider.of<TokoProvider>(context);
     TokoModel? toko = tokoProvider.toko;
 
-    TextEditingController nameStoreController = TextEditingController(text: '');
-    TextEditingController addressStore = TextEditingController(text: '');
-    TextEditingController descStore = TextEditingController(text: '');
-    TextEditingController nameAccount = TextEditingController(text: '');
-    TextEditingController numberAccount = TextEditingController(text: '');
+    TextEditingController nameStoreController =
+        TextEditingController(text: toko?.nameStore);
+    TextEditingController addressStore =
+        TextEditingController(text: toko?.address);
+    TextEditingController descStore =
+        TextEditingController(text: toko?.description);
+    TextEditingController nameAccount =
+        TextEditingController(text: toko?.accountName);
+    TextEditingController numberAccount =
+        TextEditingController(text: toko?.accountNumber);
 
     submitUpdateToko() async {
       setState(() {
         isLoading = true;
       });
-      if (await tokoProvider.updateProfileToko(
-          toko!.id!.toInt(),
-          toko.usersId.toString(),
-          nameStoreController.text,
-          desa.toString(),
-          addressStore.text,
-          descStore.text,
-          nameAccount.text,
-          numberAccount.text.toString(),
-          image: file ?? File(''))) {
-        Get.to(
-          () => StorePage(toko: toko),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: dangerColor,
-            content: Text(
-              'Gagal Update Profile Toko',
-              style: whiteTextStyle.copyWith(fontWeight: bold),
-              textAlign: TextAlign.center,
+      if (_formKey.currentState!.validate()) {
+        if (await tokoProvider.updateProfileToko(
+            toko!.id!.toInt(),
+            toko.usersId.toString(),
+            nameStoreController.text,
+            desa.toString(),
+            addressStore.text,
+            descStore.text,
+            nameAccount.text,
+            numberAccount.text.toString(),
+            image: file ?? File(''))) {
+          Get.to(
+            () => StorePage(toko: toko),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: dangerColor,
+              content: Text(
+                'Gagal Update Profile Toko',
+                style: whiteTextStyle.copyWith(fontWeight: bold),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
+
       setState(() {
         isLoading = false;
       });
@@ -451,11 +460,14 @@ class _EditStorePageState extends State<EditStorePage> {
 
     return Scaffold(
       backgroundColor: backgroundColor1,
-      body: ListView(
-        children: [
-          header(),
-          content(),
-        ],
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: [
+            header(),
+            content(),
+          ],
+        ),
       ),
     );
   }

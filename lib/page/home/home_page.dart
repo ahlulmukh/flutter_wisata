@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
 
   List imageCaraousel = [
     'assets/images/home.png',
-    'assets/img.png',
   ];
 
   @override
@@ -328,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                   decoration: InputDecoration.collapsed(
                       hintText: "Cari produk...",
                       hintStyle: greyTextStyle.copyWith(
-                          fontSize: 12, fontWeight: semiBold)),
+                          fontSize: 13, fontWeight: light)),
                 ),
               ),
             ),
@@ -386,6 +385,7 @@ class _HomePageState extends State<HomePage> {
 
     Widget caraouselAndIndicator() {
       return Container(
+        margin: EdgeInsets.symmetric(horizontal: defaultMargin),
         child: isLoading
             ? shimmerCaraousel()
             : Column(
@@ -395,17 +395,21 @@ class _HomePageState extends State<HomePage> {
                         .map(
                           (item) => ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              item,
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
-                              height: 190,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: Image.asset(
+                                item,
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width,
+                                height: 190,
+                              ),
                             ),
                           ),
                         )
                         .toList(),
                     options: CarouselOptions(
-                      aspectRatio: 2.2,
+                      aspectRatio: 2.7,
                       viewportFraction: 1,
                       initialPage: 0,
                       onPageChanged: (index, reason) {
@@ -423,7 +427,7 @@ class _HomePageState extends State<HomePage> {
 
     Widget category() {
       return Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: EdgeInsets.only(top: 10, left: defaultMargin),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -465,31 +469,36 @@ class _HomePageState extends State<HomePage> {
       return Container(
         margin: const EdgeInsets.only(top: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Produk',
-                  style: blackTextStyle.copyWith(
-                      fontSize: 16, fontWeight: semiBold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed('/all-product');
-                  },
-                  child: Text(
-                    'Semua Produk',
-                    style: blackTextStyle.copyWith(fontSize: 12),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Produk',
+                    style: blackTextStyle.copyWith(
+                        fontSize: 16, fontWeight: semiBold),
                   ),
-                )
-              ],
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/all-product');
+                    },
+                    child: Text(
+                      'Semua Produk',
+                      style: blackTextStyle.copyWith(fontSize: 12),
+                    ),
+                  )
+                ],
+              ),
             ),
             const SizedBox(
               height: 15,
             ),
             SingleChildScrollView(
+              padding: EdgeInsets.only(left: defaultMargin),
               scrollDirection: Axis.horizontal,
               child: isLoading
                   ? Row(children: List.generate(4, (_) => shimmerProduct()))
@@ -512,30 +521,34 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    'Toko',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed('/all-market');
-                    },
-                    child: Text(
-                      'Semua Toko',
-                      style: blackTextStyle.copyWith(fontSize: 12),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: defaultMargin),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Toko',
+                      style: blackTextStyle.copyWith(
+                          fontSize: 16, fontWeight: semiBold),
                     ),
-                  )
-                ],
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/all-market');
+                      },
+                      child: Text(
+                        'Semua Toko',
+                        style: blackTextStyle.copyWith(fontSize: 12),
+                      ),
+                    )
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 15,
               ),
               SingleChildScrollView(
+                padding: EdgeInsets.only(left: defaultMargin),
                 scrollDirection: Axis.horizontal,
                 child: isLoading
                     ? Row(children: List.generate(4, (_) => shimmerMarket()))
@@ -554,7 +567,6 @@ class _HomePageState extends State<HomePage> {
     Widget content() {
       return Container(
           margin: const EdgeInsets.only(top: 20),
-          padding: EdgeInsets.symmetric(horizontal: defaultMargin),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

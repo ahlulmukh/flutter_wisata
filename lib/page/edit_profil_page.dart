@@ -24,9 +24,12 @@ class _EditProfilPageState extends State<EditProfilPage> {
     final _formKey = GlobalKey<FormState>();
     UserModel? user = userProvider.user;
 
-    TextEditingController controllerName = TextEditingController(text: '');
-    TextEditingController controllerUsername = TextEditingController(text: '');
-    TextEditingController controllerEmail = TextEditingController(text: '');
+    TextEditingController controllerName =
+        TextEditingController(text: user?.name);
+    TextEditingController controllerUsername =
+        TextEditingController(text: user?.username);
+    TextEditingController controllerEmail =
+        TextEditingController(text: user?.email);
 
     handleUpdateProfile() async {
       setState(() {

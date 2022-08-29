@@ -24,7 +24,6 @@ class CardMarket extends StatelessWidget {
         height: 200,
         margin: const EdgeInsets.only(right: 5, left: 5),
         decoration: BoxDecoration(
-            border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
             color: whiteColor,
             borderRadius: BorderRadius.circular(defaultRadius)),
         child: Column(
@@ -37,20 +36,23 @@ class CardMarket extends StatelessWidget {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   )
-                : ClipRRect(
-                    borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(defaultRadius)),
-                    child: CachedNetworkImage(
-                      height: 120,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      imageUrl: toko.image.toString(),
-                      placeholder: (context, url) => const Icon(Icons.image),
-                      errorWidget: (context, url, error) => const Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage(
-                            'assets/images/not_product.jpeg',
-                          )),
+                : Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(defaultRadius)),
+                      child: CachedNetworkImage(
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        imageUrl: toko.image.toString(),
+                        placeholder: (context, url) => const Icon(Icons.image),
+                        errorWidget: (context, url, error) => const Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/images/not_product.jpeg',
+                            )),
+                      ),
                     ),
                   ),
             Container(

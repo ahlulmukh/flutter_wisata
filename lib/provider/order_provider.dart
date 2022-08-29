@@ -54,12 +54,15 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> statusOrder({required int id, required String status}) async {
+  void statusOrder(int id, String status) async {
     try {
-      await OrderService().statusOrder(id: id, status: status);
-      return true;
+      int index = _orders!.indexWhere((element) => element.id == id);
+      if (status != '') {
+        _orders![index].status;
+        await OrderService().statusOrder(id: id, status: status);
+      }
+      notifyListeners();
     } catch (e) {
-      print(e);
       throw Exception(e);
     }
   }

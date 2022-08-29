@@ -6,15 +6,22 @@ import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/order_item_list.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
 
-class OrderToMarket extends StatelessWidget {
+class OrderToMarket extends StatefulWidget {
   final OrderModel order;
   const OrderToMarket({Key? key, required this.order}) : super(key: key);
 
   @override
+  State<OrderToMarket> createState() => _OrderToMarketState();
+}
+
+class _OrderToMarketState extends State<OrderToMarket> {
+  @override
   Widget build(BuildContext context) {
     final currencyFormatter =
         NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
+    OrderProvider orderProvider = Provider.of<OrderProvider>(context);
 
     Widget buildSheet() => DraggableScrollableSheet(
         initialChildSize: 0.9,
@@ -49,7 +56,7 @@ class OrderToMarket extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => HeroPaymentPage(
-                                    order: order,
+                                    order: widget.order,
                                   ))),
                       child: Container(
                         width: 150,
@@ -57,8 +64,8 @@ class OrderToMarket extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
-                            image: NetworkImage(
-                                Service.urlImage + order.image.toString()),
+                            image: NetworkImage(Service.urlImage +
+                                widget.order.image.toString()),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -93,7 +100,7 @@ class OrderToMarket extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    order.address.toString(),
+                    widget.order.address.toString(),
                     style: greyTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(
@@ -108,7 +115,7 @@ class OrderToMarket extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    order.phone.toString(),
+                    widget.order.phone.toString(),
                     style: greyTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(
@@ -123,7 +130,7 @@ class OrderToMarket extends StatelessWidget {
                     height: 5,
                   ),
                   Column(
-                    children: order.orderItem!
+                    children: widget.order.orderItem!
                         .map((orderItem) => OrderItemList(
                               orderItem: orderItem,
                             ))
@@ -147,7 +154,7 @@ class OrderToMarket extends StatelessWidget {
                             height: 5,
                           ),
                           Text(
-                            currencyFormatter.format(order.totalPrice),
+                            currencyFormatter.format(widget.order.totalPrice),
                             style: greyTextStyle.copyWith(fontWeight: medium),
                           ),
                         ],
@@ -163,7 +170,7 @@ class OrderToMarket extends StatelessWidget {
                           const SizedBox(
                             height: 5,
                           ),
-                          (order.status == OrderStatus.pending)
+                          (widget.order.status == OrderStatus.pending)
                               ? Text(
                                   'pending',
                                   style: TextStyle(
@@ -171,7 +178,7 @@ class OrderToMarket extends StatelessWidget {
                                     fontWeight: medium,
                                   ),
                                 )
-                              : (order.status == OrderStatus.progress)
+                              : (widget.order.status == OrderStatus.progress)
                                   ? Text(
                                       'progress',
                                       style: TextStyle(
@@ -179,7 +186,8 @@ class OrderToMarket extends StatelessWidget {
                                         fontWeight: medium,
                                       ),
                                     )
-                                  : (order.status == OrderStatus.delivery)
+                                  : (widget.order.status ==
+                                          OrderStatus.delivery)
                                       ? Text(
                                           'delivery',
                                           style: TextStyle(
@@ -187,7 +195,8 @@ class OrderToMarket extends StatelessWidget {
                                             fontWeight: medium,
                                           ),
                                         )
-                                      : (order.status == OrderStatus.success)
+                                      : (widget.order.status ==
+                                              OrderStatus.success)
                                           ? Text(
                                               'success',
                                               style: TextStyle(
@@ -195,7 +204,8 @@ class OrderToMarket extends StatelessWidget {
                                                 fontWeight: medium,
                                               ),
                                             )
-                                          : (order.status == OrderStatus.cancel)
+                                          : (widget.order.status ==
+                                                  OrderStatus.cancel)
                                               ? Text(
                                                   'cancel',
                                                   style: TextStyle(
@@ -230,14 +240,14 @@ class OrderToMarket extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  image: order.user!.profilePhotoPath == null
+                  image: widget.order.user!.profilePhotoPath == null
                       ? const DecorationImage(
                           image: AssetImage('assets/images/user.png'),
                           fit: BoxFit.cover,
                         )
                       : DecorationImage(
                           image: NetworkImage(Service.urlImage +
-                              order.user!.profilePhotoPath.toString()),
+                              widget.order.user!.profilePhotoPath.toString()),
                           fit: BoxFit.cover,
                         ),
                 ),
@@ -250,12 +260,12 @@ class OrderToMarket extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      order.user!.name.toString(),
+                      widget.order.user!.name.toString(),
                       style: blackTextStyle.copyWith(fontSize: 16),
                     ),
                     Text(
                       'Total harga : ' +
-                          currencyFormatter.format(order.totalPrice),
+                          currencyFormatter.format(widget.order.totalPrice),
                       style: greyTextStyle.copyWith(fontSize: 13),
                     ),
                     const SizedBox(
@@ -294,7 +304,7 @@ class OrderToMarket extends StatelessWidget {
           ),
           Row(
             children: [
-              (order.status == OrderStatus.pending)
+              (widget.order.status == OrderStatus.pending)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -306,13 +316,13 @@ class OrderToMarket extends StatelessWidget {
                                     BorderRadiusDirectional.circular(6)),
                             backgroundColor: lightColor,
                           ),
-                          onPressed: () async {
-                            await OrderProvider().statusOrder(
-                                id: order.id!.toInt(), status: 'PROGRESS');
+                          onPressed: () {
+                            orderProvider.statusOrder(
+                                widget.order.id!.toInt(), 'PROGRESS');
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor: secondaryColor,
                               content: Text(
-                                'Status berhasil diubah silahkan refresh ulang',
+                                'Status pesanan berhasil diubah',
                                 textAlign: TextAlign.center,
                                 style: whiteTextStyle.copyWith(
                                     fontWeight: semiBold),
@@ -333,9 +343,9 @@ class OrderToMarket extends StatelessWidget {
                                     BorderRadiusDirectional.circular(6)),
                             backgroundColor: dangerColor,
                           ),
-                          onPressed: () async {
-                            await OrderProvider().statusOrder(
-                                id: order.id!.toInt(), status: 'CANCEL');
+                          onPressed: () {
+                            orderProvider.statusOrder(
+                                widget.order.id!.toInt(), 'CANCEL');
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor: secondaryColor,
                               content: Text(
@@ -349,9 +359,10 @@ class OrderToMarket extends StatelessWidget {
                           child: Text('Batal',
                               style: whiteTextStyle.copyWith(fontWeight: bold)),
                         ),
+                        const SizedBox(width: 5),
                       ],
                     )
-                  : (order.status == OrderStatus.progress)
+                  : (widget.order.status == OrderStatus.progress)
                       ? TextButton(
                           style: TextButton.styleFrom(
                             fixedSize: const Size.fromWidth(120),
@@ -360,14 +371,14 @@ class OrderToMarket extends StatelessWidget {
                                     BorderRadiusDirectional.circular(6)),
                             backgroundColor: secondaryColor,
                           ),
-                          onPressed: () async {
-                            await OrderProvider().statusOrder(
-                                id: order.id!.toInt(), status: 'DELIVERY');
+                          onPressed: () {
+                            orderProvider.statusOrder(
+                                widget.order.id!.toInt(), 'DELIVERY');
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 backgroundColor: secondaryColor,
                                 content: Text(
-                                  'Status berhasil diubah silahkan refresh ulang',
+                                  'Status pesanan berhasil diubah',
                                   textAlign: TextAlign.center,
                                   style: whiteTextStyle.copyWith(
                                       fontWeight: semiBold),
@@ -379,7 +390,7 @@ class OrderToMarket extends StatelessWidget {
                               style: whiteTextStyle.copyWith(fontWeight: bold)),
                         )
                       : const SizedBox(),
-              order.status == OrderStatus.delivery
+              widget.order.status == OrderStatus.delivery
                   ? TextButton(
                       style: TextButton.styleFrom(
                         fixedSize: const Size.fromWidth(120),
@@ -397,11 +408,11 @@ class OrderToMarket extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    convertDateTime(order.createdAT as DateTime),
+                    convertDateTime(widget.order.createdAT as DateTime),
                     textAlign: TextAlign.end,
                     style: greyTextStyle,
                   ),
-                  (order.status == OrderStatus.pending)
+                  (widget.order.status == OrderStatus.pending)
                       ? Text(
                           'pending',
                           style: TextStyle(
@@ -409,7 +420,7 @@ class OrderToMarket extends StatelessWidget {
                             fontWeight: medium,
                           ),
                         )
-                      : (order.status == OrderStatus.progress)
+                      : (widget.order.status == OrderStatus.progress)
                           ? Text(
                               'progress',
                               style: TextStyle(
@@ -417,7 +428,7 @@ class OrderToMarket extends StatelessWidget {
                                 fontWeight: medium,
                               ),
                             )
-                          : (order.status == OrderStatus.delivery)
+                          : (widget.order.status == OrderStatus.delivery)
                               ? Text(
                                   'delivery',
                                   style: TextStyle(
@@ -425,7 +436,7 @@ class OrderToMarket extends StatelessWidget {
                                     fontWeight: medium,
                                   ),
                                 )
-                              : (order.status == OrderStatus.success)
+                              : (widget.order.status == OrderStatus.success)
                                   ? Text(
                                       'success',
                                       style: TextStyle(
@@ -433,7 +444,7 @@ class OrderToMarket extends StatelessWidget {
                                         fontWeight: medium,
                                       ),
                                     )
-                                  : (order.status == OrderStatus.cancel)
+                                  : (widget.order.status == OrderStatus.cancel)
                                       ? Text(
                                           'cancel',
                                           style: TextStyle(

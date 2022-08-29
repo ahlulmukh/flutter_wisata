@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
+// import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/card_cart.dart';
 import 'package:get/get.dart';
@@ -36,12 +37,13 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     CartProvider cartProvider = Provider.of<CartProvider>(context);
+    // PageProvider pageProvider = Provider.of<PageProvider>(context);
 
     Widget content() {
       return Container(
           margin: const EdgeInsets.only(top: 40),
           padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-          child: Column(
+          child: ListView(
             children: cartProvider.cartList!
                 .map((cart) => CardCart(cart: cart))
                 .toList(),
@@ -53,10 +55,10 @@ class _CartPageState extends State<CartPage> {
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.15,
+              height: MediaQuery.of(context).size.height * 0.20,
             ),
             Image.asset(
-              'assets/wishlist.png',
+              'assets/empty.png',
               width: MediaQuery.of(context).size.width * 0.75,
             ),
             const SizedBox(
@@ -127,7 +129,7 @@ class _CartPageState extends State<CartPage> {
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
             icon: const Icon(
               Icons.chevron_left,

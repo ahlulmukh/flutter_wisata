@@ -2,6 +2,8 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tugas_akhir/models/cart_model.dart';
+// import 'package:flutter_tugas_akhir/models/cart_model.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
+import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
@@ -17,6 +20,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DetailProductPage extends StatefulWidget {
   final ProductModel product;
@@ -29,8 +33,7 @@ class DetailProductPage extends StatefulWidget {
 
 class _DetailProductPageState extends State<DetailProductPage> {
   bool isWishlist = false;
-  // bool isLoading = true;
-  dynamic quantity = 1;
+  bool isLoading = true;
   final currencyFormatter =
       NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
@@ -42,20 +45,36 @@ class _DetailProductPageState extends State<DetailProductPage> {
     await authProvider.getProfile();
   }
 
+  Future fetchProduct() async {
+    ProductProvider productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
+    await productProvider.getProductId(id: widget.product.id!.toInt());
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    // fetchProduct();
+    fetchProduct();
     fetchUser();
+    // fetchCart();
   }
 
   @override
   Widget build(BuildContext context) {
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
-    CartProvider cartProvider = Provider.of<CartProvider>(context);
+    CartProvider cartProvider =
+        Provider.of<CartProvider>(context, listen: false);
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     PageProvider pageProvider = Provider.of<PageProvider>(context);
     UserModel? user = authProvider.user;
+
+    Future fetchCart() async {
+      CartProvider cartProvider = Provider.of<CartProvider>(context);
+      await cartProvider.getCart(id: widget.product.id.toString());
+    }
 
     Future<void> showSuccessDialog() async {
       return showDialog(
@@ -142,25 +161,22 @@ class _DetailProductPageState extends State<DetailProductPage> {
         height: MediaQuery.of(context).orientation == Orientation.landscape
             ? MediaQuery.of(context).size.height * 0.6
             : 338,
-        child: widget.product.image == null || widget.product.image!.isEmpty
+        child: widget.product.image!.isEmpty == true
             ? Image.asset(
                 'assets/images/not_product.jpeg',
                 fit: BoxFit.cover,
               )
-            : Hero(
-                tag: widget.product.id!.toInt(),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
+            : CachedNetworkImage(
+                fit: BoxFit.cover,
+                width: double.infinity,
+                imageUrl: widget.product.image.toString(),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Image(
                   width: double.infinity,
-                  imageUrl: widget.product.image.toString(),
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Image(
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      'assets/images/not_product.jpeg',
-                    ),
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                    'assets/images/not_product.jpeg',
                   ),
                 ),
               ),
@@ -203,46 +219,92 @@ class _DetailProductPageState extends State<DetailProductPage> {
             const SizedBox(
               height: 50,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.product.name.toString(),
-                  style:
-                      blackTextStyle.copyWith(fontSize: 18, fontWeight: bold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    cartProvider.addtoCart(
-                        userId: user!.id.toString(),
-                        productId: widget.product.id!.toString(),
-                        quantity: quantity);
-                    showSuccessDialog();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: secondaryColor,
-                    ),
-                    width: 150,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: whiteColor,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Keranjang',
-                          style: whiteTextStyle.copyWith(fontWeight: semiBold),
-                        ),
-                      ],
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.product.name.toString(),
+                      style: blackTextStyle.copyWith(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: 18,
+                          fontWeight: bold),
                     ),
                   ),
-                )
-              ],
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  FutureBuilder(
+                    future: fetchCart(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: secondaryColor,
+                          ),
+                          width: 150,
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 4,
+                                  valueColor: AlwaysStoppedAnimation(
+                                    whiteColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        return GestureDetector(
+                          onTap: () async {
+                            cartProvider.addtoCart(
+                                userId: user!.id.toString(),
+                                productId: widget.product.id!.toString(),
+                                quantity: cartProvider.cart!.quantity);
+                            showSuccessDialog();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: secondaryColor,
+                            ),
+                            width: 150,
+                            height: 40,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: whiteColor,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  'Keranjang',
+                                  style: whiteTextStyle.copyWith(
+                                      fontWeight: semiBold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                      return Text('${snapshot.hasError}');
+                    },
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 30,
@@ -402,7 +464,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(defaultRadius),
-                        child: widget.product.market?.image == null
+                        child: widget.product.market?.image == null ||
+                                widget.product.market!.image!.isEmpty
                             ? Image.asset(
                                 'assets/images/not_product.jpeg',
                                 width: 100,
@@ -481,19 +544,232 @@ class _DetailProductPageState extends State<DetailProductPage> {
       );
     }
 
+    Widget shimmerImage() {
+      return Container(
+        height: MediaQuery.of(context).orientation == Orientation.landscape
+            ? MediaQuery.of(context).size.height * 0.6
+            : 338,
+        decoration: BoxDecoration(
+          color: whiteColor,
+        ),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey.shade400,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: whiteColor,
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget shimmerProduct() {
+      return Container(
+        margin: const EdgeInsets.only(top: 310),
+        padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: const BorderRadiusDirectional.vertical(
+            top: Radius.circular(30),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade400,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      width: 100,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey.shade400,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      width: 170,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade400,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    width: 100,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade400,
+                  highlightColor: Colors.grey.shade100,
+                  child: CircleAvatar(
+                    child: Container(
+                      width: 140,
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade400,
+              highlightColor: Colors.grey.shade100,
+              child: Container(
+                width: double.infinity,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: whiteColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade400,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(defaultRadius),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 13,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade400,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 150,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade400,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 150,
+                        height: 25,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade400,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 120,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Divider(
+              color: greyColor,
+              thickness: 4.0,
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: backgroundColor1,
-      body: ListView(
-        children: [
-          Stack(
-            children: [
-              detailImage(),
-              header(),
-              descriptionProduct(),
-            ],
-          ),
-        ],
-      ),
+      body: isLoading
+          ? ListView(
+              children: [
+                Stack(
+                  children: [
+                    shimmerImage(),
+                    shimmerProduct(),
+                  ],
+                )
+              ],
+            )
+          : ListView(
+              children: [
+                Stack(
+                  children: [
+                    detailImage(),
+                    header(),
+                    descriptionProduct(),
+                  ],
+                ),
+              ],
+            ),
     );
   }
 }

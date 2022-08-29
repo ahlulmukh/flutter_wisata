@@ -13,6 +13,7 @@ import 'package:flutter_tugas_akhir/page/sign_up_page.dart';
 import 'package:flutter_tugas_akhir/page/splash_page.dart';
 import 'package:flutter_tugas_akhir/page/store_information_page.dart';
 import 'package:flutter_tugas_akhir/page/home/wishlist_page.dart';
+import 'package:flutter_tugas_akhir/page/using_guide_app_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/category_provider.dart';
@@ -123,6 +124,10 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/newOrder-page',
             page: () => const NewOrderPage(),
+          ),
+          GetPage(
+            name: '/guide-app',
+            page: () => const UsingGuideAppPage(),
           ),
         ],
       ),

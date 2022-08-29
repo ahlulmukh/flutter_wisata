@@ -17,7 +17,6 @@ class _WishlistPageState extends State<WishlistPage> {
     WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
     Widget header() {
       return AppBar(
-        centerTitle: true,
         toolbarHeight: 60.0,
         backgroundColor: whiteColor,
         automaticallyImplyLeading: false,

@@ -5,7 +5,7 @@ import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/card_product_category.dart';
+import 'package:flutter_tugas_akhir/widget/card_product_store.dart';
 import 'package:provider/provider.dart';
 
 class DetailStorePage extends StatefulWidget {
@@ -47,8 +47,8 @@ class _DetailStorePageState extends State<DetailStorePage> {
 
     Widget header() {
       return AppBar(
-        centerTitle: true,
         toolbarHeight: 60.0,
+        centerTitle: true,
         backgroundColor: whiteColor,
         leading: Builder(
           builder: (context) => IconButton(
@@ -111,13 +111,13 @@ class _DetailStorePageState extends State<DetailStorePage> {
                       : 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 16,
-              mainAxisExtent: 235, // here set custom Height You Want
+              mainAxisExtent: 250, // here set custom Height You Want
             ),
             itemCount: tokoProvider.toko!.products.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return CardProductCategory(
+              return CardProductStore(
                   product: tokoProvider.toko!.products[index] as ProductModel);
             },
           ),

@@ -22,6 +22,33 @@ class CartService {
     print(response.data);
   }
 
+  Future<CartModel> cart({
+    required String id,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var response = await dio.get(
+        Service.apiUrl + '/cart/$id',
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+          followRedirects: false,
+          validateStatus: (status) => true,
+        ),
+      );
+      print(response.data);
+      if (response.statusCode == 200) {
+        return CartModel.fromJson(response.data['data'] ?? {});
+      } else {
+        throw Exception('Gagal ambil data');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future<void> deleteCart(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -91,7 +118,7 @@ class CartService {
 
   Future<CartModel> addCart({
     required String userId,
-    required String productId,
+    required dynamic productId,
     required dynamic quantity,
   }) async {
     try {

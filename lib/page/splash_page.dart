@@ -28,10 +28,10 @@ class _SplashPageState extends State<SplashPage> {
         Provider.of<AuthProvider>(context, listen: false);
     if (token != null) {
       if (await authProvider.getProfile()) {
-        Get.toNamed('/main-page');
+        Get.offAndToNamed('/main-page');
       }
     } else {
-      Get.toNamed('/sign-in');
+      Get.offAndToNamed('/sign-in');
     }
   }
 

@@ -6,10 +6,10 @@ import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class CardProductCategory extends StatelessWidget {
+class CardProductStore extends StatelessWidget {
   final ProductModel product;
 
-  const CardProductCategory({
+  const CardProductStore({
     required this.product,
     Key? key,
   }) : super(key: key);
@@ -94,7 +94,7 @@ class CardProductCategory extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    product.market!.nameStore.toString(),
+                    product.category!.name.toString(),
                     overflow: TextOverflow.ellipsis,
                     style: blackTextStyle.copyWith(
                         fontSize: 15, fontWeight: semiBold),

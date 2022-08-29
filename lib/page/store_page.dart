@@ -47,7 +47,6 @@ class _StorePageState extends State<StorePage> {
     Widget header() {
       return AppBar(
         toolbarHeight: 60.0,
-        centerTitle: true,
         backgroundColor: whiteColor,
         leading: Builder(
           builder: (context) => IconButton(

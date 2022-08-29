@@ -54,7 +54,7 @@ class ProductService {
           validateStatus: (status) => true,
         ),
       );
-      print(response.data);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         return ProductModel.fromJson(response.data['data']);
       } else {

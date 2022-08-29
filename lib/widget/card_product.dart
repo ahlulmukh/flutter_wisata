@@ -27,7 +27,6 @@ class CardProduct extends StatelessWidget {
         height: 220,
         margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
-            border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
             color: whiteColor,
             borderRadius: BorderRadius.circular(defaultRadius)),
         child: Column(
@@ -45,8 +44,8 @@ class CardProduct extends StatelessWidget {
                       'assets/images/not_product.jpeg',
                       fit: BoxFit.cover,
                     )
-                  : Hero(
-                      tag: product.id!.toInt(),
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
                       child: ClipRRect(
                         borderRadius: BorderRadius.vertical(
                             top: Radius.circular(defaultRadius)),

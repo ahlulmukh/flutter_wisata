@@ -148,7 +148,6 @@ class _AccountPageState extends State<AccountPage> {
 
     Widget header() {
       return AppBar(
-        centerTitle: true,
         toolbarHeight: 60.0,
         backgroundColor: whiteColor,
         automaticallyImplyLeading: false,
@@ -223,11 +222,9 @@ class _AccountPageState extends State<AccountPage> {
                   }),
               MenuItem(
                   icons: Icons.store,
-                  // ignore: unrelated_type_equality_checks, unnecessary_null_comparison
                   title: user.toko!.id != null ? 'Toko Saya' : "Buka Toko",
                   // title: user.toko == null ? 'Registrasi Toko' : 'Toko Saya',
                   onPressed: () {
-                    // ignore: unnecessary_null_comparison
                     user.toko!.id != null
                         ? Get.to(
                             () => StorePage(
@@ -241,6 +238,12 @@ class _AccountPageState extends State<AccountPage> {
                   title: 'Informasi',
                   onPressed: () {
                     Get.toNamed('/information-store');
+                  }),
+              MenuItem(
+                  icons: Icons.info_outline,
+                  title: 'Panduan Aplikasi',
+                  onPressed: () {
+                    Get.toNamed('/guide-app');
                   }),
               Row(
                 children: [

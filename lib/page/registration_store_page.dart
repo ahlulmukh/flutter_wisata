@@ -167,7 +167,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             showCursor: true,
             validator: (value) => value!.isEmpty ? 'Isikan Nama Toko' : null,
             keyboardType: TextInputType.text,
-            cursorColor: Colors.white,
+            cursorColor: Colors.black,
             decoration: InputDecoration(
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -302,7 +302,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             showCursor: true,
             validator: (value) => value!.isEmpty ? 'Isikan Alamat Toko' : null,
             keyboardType: TextInputType.text,
-            cursorColor: Colors.white,
+            cursorColor: Colors.black,
             maxLines: 3,
             decoration: InputDecoration(
               focusedErrorBorder: OutlineInputBorder(
@@ -353,7 +353,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             validator: (value) =>
                 value!.isEmpty ? 'Isikan Deskripsi Toko' : null,
             keyboardType: TextInputType.text,
-            cursorColor: Colors.white,
+            cursorColor: Colors.black,
             decoration: InputDecoration(
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -402,7 +402,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             validator: (value) =>
                 value!.isEmpty ? 'Isikan Nama Rekening' : null,
             keyboardType: TextInputType.text,
-            cursorColor: Colors.white,
+            cursorColor: Colors.black,
             decoration: InputDecoration(
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -451,7 +451,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
             validator: (value) =>
                 value!.isEmpty ? 'Isikan Nomor Rekening' : null,
             keyboardType: TextInputType.number,
-            cursorColor: Colors.white,
+            cursorColor: Colors.black,
             decoration: InputDecoration(
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -484,6 +484,7 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
     Widget submitButton() {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 20),
+        width: double.infinity,
         child: CustomButton(
           title: 'Daftar Toko',
           onPressed: handleCreateToko,

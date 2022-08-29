@@ -2,9 +2,9 @@ import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 
 class CartModel {
-  int id;
-  dynamic usersId;
-  dynamic productId;
+  int? id;
+  String? usersId;
+  String? productId;
   dynamic quantity;
   ProductModel? product;
   UserModel? user;
@@ -20,9 +20,9 @@ class CartModel {
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
-      id: json['id'],
-      usersId: int.parse(json['users_id'].toString()),
-      productId: int.parse(json['product_id'].toString()),
+      id: json['id'] ?? 0,
+      usersId: json['users_id'].toString(),
+      productId: json['product_id'].toString(),
       quantity: json['quantity'],
       product: json['product'] != null
           ? ProductModel.fromJson(json['product'])

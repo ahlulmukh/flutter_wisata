@@ -101,7 +101,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       : 2,
               crossAxisSpacing: 1,
               mainAxisSpacing: 16,
-              mainAxisExtent: 230, // here set custom Height You Want
+              mainAxisExtent: 255, // here set custom Height You Want
             ),
             itemCount: categoryProvider.category!.products.length,
             shrinkWrap: true,

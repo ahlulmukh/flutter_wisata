@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tugas_akhir/models/cart_model.dart';
+// import 'package:flutter_tugas_akhir/models/product_model.dart';
 import 'package:flutter_tugas_akhir/services/cart_services.dart';
 
 class CartProvider with ChangeNotifier {
@@ -30,6 +31,17 @@ class CartProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> getCart({required String id}) async {
+    try {
+      CartModel cart = await CartService().cart(id: id);
+      _cart = cart;
+      return true;
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
+
   Future<bool> removeAllCart() async {
     try {
       await CartService().deleteAllCart();
@@ -48,7 +60,7 @@ class CartProvider with ChangeNotifier {
 
   void addQuantity(int id, dynamic quantity) async {
     int index = _cartList!.indexWhere((element) => element.id == id);
-    if (_cartList![index].quantity <= _cartList![index].product!.stock) {
+    if (_cartList![index].quantity! <= _cartList![index].product!.stock) {
       _cartList![index].quantity++;
       await CartService().updateCart(id, quantity);
     }
@@ -58,7 +70,7 @@ class CartProvider with ChangeNotifier {
   totalPrice() {
     double total = 0;
     for (var item in _cartList!) {
-      total += (item.quantity * item.product!.price);
+      total += (item.quantity!.toInt() * item.product!.price!.toDouble());
     }
     return total;
   }
@@ -87,19 +99,19 @@ class CartProvider with ChangeNotifier {
     required String productId,
     required dynamic quantity,
   }) async {
-    await CartService().addCart(
-      userId: userId,
-      productId: productId,
-      quantity: quantity,
-    );
-  }
-
-  isCheckProduct(CartModel cart) {
-    if (_cartList!.indexWhere((element) => element.quantity == cart.quantity) ==
-        1) {
-      return false;
+    if (quantity == null) {
+      await CartService().addCart(
+        userId: userId,
+        productId: productId,
+        quantity: 1,
+      );
     } else {
-      return true;
+      _cart!.quantity++;
+      await CartService().updateCart(
+        _cart!.id!.toInt(),
+        quantity + 1,
+      );
     }
+    notifyListeners();
   }
 }

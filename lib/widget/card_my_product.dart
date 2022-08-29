@@ -42,22 +42,26 @@ class CardMyProduct extends StatelessWidget {
                     height: 150,
                     fit: BoxFit.cover,
                   )
-                : ClipRRect(
-                    borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(defaultRadius)),
-                    child: Hero(
-                      tag: product.image.toString(),
-                      child: CachedNetworkImage(
-                        height: 130,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        imageUrl: product.image.toString(),
-                        placeholder: (context, url) => const Icon(Icons.image),
-                        errorWidget: (context, url, error) => const Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              'assets/images/not_product.jpeg',
-                            )),
+                : Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(defaultRadius)),
+                      child: Hero(
+                        tag: product.image.toString(),
+                        child: CachedNetworkImage(
+                          height: 130,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          imageUrl: product.image.toString(),
+                          placeholder: (context, url) =>
+                              const Icon(Icons.image),
+                          errorWidget: (context, url, error) => const Image(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                'assets/images/not_product.jpeg',
+                              )),
+                        ),
                       ),
                     ),
                   ),

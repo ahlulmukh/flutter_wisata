@@ -4,8 +4,10 @@ import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/order_item_list.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
 
 class OrderList extends StatefulWidget {
   final OrderModel order;
@@ -20,6 +22,7 @@ class _OrderListState extends State<OrderList> {
   Widget build(BuildContext context) {
     final currencyFormatter =
         NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
+    OrderProvider orderProvider = Provider.of<OrderProvider>(context);
 
     Widget buildSheet() => DraggableScrollableSheet(
         initialChildSize: 0.9,
@@ -330,18 +333,23 @@ class _OrderListState extends State<OrderList> {
                             borderRadius: BorderRadiusDirectional.circular(6)),
                         backgroundColor: secondaryColor,
                       ),
-                      onPressed: () async {
-                        await OrderProvider().statusOrder(
-                            id: widget.order.id!.toInt(), status: 'SUCCESS');
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          backgroundColor: secondaryColor,
-                          content: Text(
-                            'Status berhasil diubah silahkan refresh ulang',
-                            textAlign: TextAlign.center,
-                            style:
-                                whiteTextStyle.copyWith(fontWeight: semiBold),
-                          ),
-                        ));
+                      onPressed: () {
+                        orderProvider.statusOrder(
+                            widget.order.id!.toInt(), 'SUCCESS');
+                        Get.snackbar('', '',
+                            margin: EdgeInsets.only(
+                                top: 20,
+                                left: defaultMargin,
+                                right: defaultMargin),
+                            backgroundColor: secondaryColor,
+                            titleText: Text(
+                              'Sukses',
+                              style: whiteTextStyle.copyWith(
+                                  fontWeight: semiBold, fontSize: 17),
+                            ),
+                            messageText: Text('Produk berhasil diterima',
+                                style: whiteTextStyle.copyWith(fontSize: 14)),
+                            colorText: Colors.white);
                       },
                       child: Text('Terima Produk',
                           style: whiteTextStyle.copyWith(fontWeight: bold)),

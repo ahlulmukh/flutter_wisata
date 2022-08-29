@@ -301,7 +301,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       backgroundColor: backgroundColor2,
-      resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
         child: Column(

@@ -30,7 +30,6 @@ class CardProductAll extends StatelessWidget {
         height: 200,
         margin: const EdgeInsets.only(right: 5, left: 5),
         decoration: BoxDecoration(
-            border: Border.all(width: 2.0, color: greyColor.withOpacity(0.2)),
             color: whiteColor,
             borderRadius: BorderRadius.circular(defaultRadius)),
         child: Column(
@@ -49,11 +48,11 @@ class CardProductAll extends StatelessWidget {
                       height: 120,
                       fit: BoxFit.cover,
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(defaultRadius)),
-                      child: Hero(
-                        tag: product.id!.toInt(),
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(defaultRadius)),
                         child: CachedNetworkImage(
                           height: 120,
                           width: double.infinity,
@@ -95,6 +94,7 @@ class CardProductAll extends StatelessWidget {
                   ),
                   Text(
                     product.market!.nameStore.toString(),
+                    overflow: TextOverflow.ellipsis,
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),

@@ -43,9 +43,21 @@ class _TransactionPageState extends State<TransactionPage> {
   Widget build(BuildContext context) {
     OrderProvider orderProvider = Provider.of(context);
 
+    Future orderUser() async {
+      OrderProvider orderProvider =
+          Provider.of<OrderProvider>(context, listen: false);
+      AuthProvider authProvider =
+          Provider.of<AuthProvider>(context, listen: false);
+      UserModel? user = authProvider.user;
+      await orderProvider.orderUser(id: user!.id!.toInt());
+      // setState(() {
+      //   isLoading = false;
+      // });
+    }
+
     TabBar myTab = TabBar(
-      indicatorWeight: 3.0,
-      unselectedLabelColor: greyColor,
+      indicatorWeight: 2.0,
+      unselectedLabelColor: blackColor,
       labelColor: lightColor,
       indicatorColor: secondaryColor,
       tabs: <Widget>[
@@ -70,7 +82,6 @@ class _TransactionPageState extends State<TransactionPage> {
       child: Scaffold(
         backgroundColor: backgroundColor1,
         appBar: AppBar(
-          centerTitle: true,
           toolbarHeight: 60.0,
           backgroundColor: whiteColor,
           automaticallyImplyLeading: false,
@@ -81,154 +92,139 @@ class _TransactionPageState extends State<TransactionPage> {
           ),
           bottom: PreferredSize(
             child: Container(
-              color: backgroundColor1,
+              color: whiteColor,
               child: myTab,
             ),
             preferredSize: Size.fromHeight(myTab.preferredSize.height),
           ),
         ),
         body: TabBarView(children: [
-          isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
+          FutureBuilder(
+            future: orderUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                    child: CircularProgressIndicator(
                   color: secondaryColor,
                   strokeWidth: 5.0,
-                ))
-              : (orderProvider.orders!.isEmpty)
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
-                        Image.asset(
-                          'assets/no_order.png',
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: 250,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Belum ada transaksi',
-                          textAlign: TextAlign.center,
-                          style: greyTextStyle.copyWith(
-                              fontSize: 22, fontWeight: semiBold),
-                        )
-                      ],
-                    )
-                  : RefreshIndicator(
-                      onRefresh: orderUser,
-                      edgeOffset: 20.0,
-                      backgroundColor: secondaryColor,
-                      triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                      strokeWidth: 3.0,
-                      color: whiteColor,
-                      displacement: 20.0,
-                      // ignore: unrelated_type_equality_checks
-                      child: (orderProvider.orders!.where((orderStatus) =>
-                                  orderStatus.status == OrderStatus.pending ||
-                                  orderStatus.status == OrderStatus.progress ||
-                                  orderStatus.status ==
-                                      OrderStatus.delivery)).length ==
-                              0
-                          ? Center(
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.1,
-                                  ),
-                                  Image.asset(
-                                    'assets/no_order.png',
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    height: 250,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Belum ada transaksi',
-                                    textAlign: TextAlign.center,
-                                    style: greyTextStyle.copyWith(
-                                        fontSize: 22, fontWeight: semiBold),
-                                  )
-                                ],
-                              ),
+                ));
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                return (orderProvider.orders!.where((orderStatus) =>
+                                orderStatus.status == OrderStatus.pending ||
+                                orderStatus.status == OrderStatus.progress ||
+                                orderStatus.status == OrderStatus.delivery))
+                            .length ==
+                        0
+                    ? Center(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.15,
+                            ),
+                            Image.asset(
+                              'assets/no_order.png',
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: 250,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Belum ada transaksi',
+                              textAlign: TextAlign.center,
+                              style: greyTextStyle.copyWith(
+                                  fontSize: 22, fontWeight: semiBold),
                             )
-                          : ListView(
-                              children: orderProvider.orders!
-                                  .where((userId) =>
-                                      userId.usersId == userId.usersId)
-                                  .toList()
-                                  .where((orderStatus) =>
-                                      orderStatus.status ==
-                                          OrderStatus.pending ||
-                                      orderStatus.status ==
-                                          OrderStatus.progress ||
-                                      orderStatus.status ==
-                                          OrderStatus.delivery)
-                                  .toList()
-                                  .map((order) => OrderList(order: order))
-                                  .toList()),
-                    ),
-          (orderProvider.orders!.where((orderStatus) =>
-                      orderStatus.status == OrderStatus.success ||
-                      orderStatus.status == OrderStatus.cancel)).length ==
-                  0
-              ? Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.1,
-                      ),
-                      Image.asset(
-                        'assets/no_order.png',
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: 250,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Belum ada transaksi',
-                        textAlign: TextAlign.center,
-                        style: greyTextStyle.copyWith(
-                            fontSize: 22, fontWeight: semiBold),
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                )
-              : orderProvider.orders!.isEmpty
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
-                        Image.asset(
-                          'assets/no_order.png',
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: 250,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Belum ada transaksi',
-                          textAlign: TextAlign.center,
-                          style: greyTextStyle.copyWith(
-                              fontSize: 22, fontWeight: semiBold),
-                        )
-                      ],
+                    : ListView(
+                        children: orderProvider.orders!
+                            .where((userId) => userId.usersId == userId.usersId)
+                            .toList()
+                            .where((orderStatus) =>
+                                orderStatus.status == OrderStatus.pending ||
+                                orderStatus.status == OrderStatus.progress ||
+                                orderStatus.status == OrderStatus.delivery)
+                            .toList()
+                            .map((order) => OrderList(order: order))
+                            .toList());
+              }
+              return Text('${snapshot.hasError}');
+            },
+          ),
+          (orderProvider.orders!.isEmpty)
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
+                    Image.asset(
+                      'assets/no_order.png',
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: 250,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Belum ada transaksi',
+                      textAlign: TextAlign.center,
+                      style: greyTextStyle.copyWith(
+                          fontSize: 22, fontWeight: semiBold),
                     )
-                  : ListView(
-                      children: orderProvider.orders!
-                          .where((orderStatus) =>
-                              orderStatus.status == OrderStatus.cancel ||
-                              orderStatus.status == OrderStatus.success)
-                          .toList()
-                          .map((order) => OrderList(order: order))
-                          .toList()),
+                  ],
+                )
+              : RefreshIndicator(
+                  onRefresh: orderUser,
+                  edgeOffset: 20.0,
+                  backgroundColor: secondaryColor,
+                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                  strokeWidth: 3.0,
+                  color: whiteColor,
+                  displacement: 20.0,
+                  // ignore: unrelated_type_equality_checks
+                  child: (orderProvider.orders!.where((orderStatus) =>
+                                  orderStatus.status == OrderStatus.success ||
+                                  orderStatus.status == OrderStatus.cancel))
+                              .length ==
+                          0
+                      ? Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
+                              ),
+                              Image.asset(
+                                'assets/no_order.png',
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: 250,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Belum ada transaksi',
+                                textAlign: TextAlign.center,
+                                style: greyTextStyle.copyWith(
+                                    fontSize: 22, fontWeight: semiBold),
+                              )
+                            ],
+                          ),
+                        )
+                      : ListView(
+                          children: orderProvider.orders!
+                              .where(
+                                  (userId) => userId.usersId == userId.usersId)
+                              .toList()
+                              .where((orderStatus) =>
+                                  orderStatus.status == OrderStatus.success ||
+                                  orderStatus.status == OrderStatus.cancel)
+                              .toList()
+                              .map((order) => OrderList(order: order))
+                              .toList()),
+                ),
         ]),
       ),
     );

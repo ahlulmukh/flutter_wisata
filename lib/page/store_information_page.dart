@@ -9,7 +9,7 @@ class StoreInformationPage extends StatelessWidget {
     Widget header() {
       return AppBar(
         centerTitle: true,
-        toolbarHeight: 70.0,
+        toolbarHeight: 60.0,
         backgroundColor: whiteColor,
         leading: Builder(
           builder: (context) => IconButton(

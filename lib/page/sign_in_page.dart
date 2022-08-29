@@ -44,14 +44,15 @@ class _SignInPageState extends State<SignInPage> {
           email: emailCon.text,
           password: passCon.text,
         )) {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
               context,
               PageTransition(
                   child: const MainPage(),
                   type: PageTransitionType.rightToLeft,
                   curve: Curves.easeIn,
                   settings:
-                      RouteSettings(arguments: pageProvider.currentIndex = 0)));
+                      RouteSettings(arguments: pageProvider.currentIndex = 0)),
+              (route) => false);
           // Get.offAllNamed('/main-page',
           //     arguments: pageProvider.currentIndex = 0);
         } else {
