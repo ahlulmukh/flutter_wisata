@@ -160,7 +160,7 @@ class _SignInPageState extends State<SignInPage> {
             labelStyle:
                 whiteTextStyle.copyWith(fontSize: 16, fontWeight: medium),
             prefixIcon: const Icon(
-              Icons.key,
+              Icons.lock,
               color: Colors.white,
             ),
             enabledBorder: OutlineInputBorder(

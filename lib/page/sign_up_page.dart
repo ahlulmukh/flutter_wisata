@@ -5,9 +5,9 @@ import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/button_loading.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
+import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -247,7 +247,7 @@ class _SignUpPageState extends State<SignUpPage> {
             hintText: "Masukan Password",
             hintStyle: whiteTextStyle,
             prefixIcon: const Icon(
-              Icons.key,
+              Icons.lock,
               color: Colors.white,
             ),
             labelStyle:

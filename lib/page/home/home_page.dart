@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_is_empty, avoid_returning_null_for_void
 
 import 'package:badges/badges.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/page/get_search_product_page.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
@@ -8,9 +9,7 @@ import 'package:flutter_tugas_akhir/provider/category_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_tugas_akhir/widget/card_product.dart';
-import 'package:flutter_tugas_akhir/widget/card_market.dart';
 import 'package:flutter_tugas_akhir/widget/category_item.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -91,77 +90,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     ProductProvider? productProvider = Provider.of<ProductProvider>(context);
     CategoryProvider? categoryProvider = Provider.of<CategoryProvider>(context);
-    TokoProvider? tokoProvider = Provider.of<TokoProvider>(context);
     CartProvider? cartProvider = Provider.of<CartProvider>(context);
     int index = -1;
-
-    Widget shimmerMarket() {
-      return Container(
-        width: MediaQuery.of(context).orientation == Orientation.landscape
-            ? 181
-            : MediaQuery.of(context).size.width * 0.4,
-        height: 200,
-        margin: const EdgeInsets.only(right: 5, left: 5),
-        decoration: BoxDecoration(
-            color: whiteColor,
-            borderRadius: BorderRadius.circular(defaultRadius)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: Container(
-                width: double.infinity,
-                height: 120,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadiusDirectional.vertical(
-                    top: Radius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 11),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 13,
-                  ),
-                  Shimmer.fromColors(
-                    child: Container(
-                      width: double.infinity,
-                      height: 20,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: whiteColor),
-                    ),
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Shimmer.fromColors(
-                    child: Container(
-                      width: double.infinity,
-                      height: 20,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: whiteColor),
-                    ),
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
-    }
 
     Widget shimmerProduct() {
       return Container(
@@ -325,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                 child: TextFormField(
                   controller: seachController,
                   decoration: InputDecoration.collapsed(
-                      hintText: "Cari produk...",
+                      hintText: "Cari tiket...",
                       hintStyle: greyTextStyle.copyWith(
                           fontSize: 13, fontWeight: light)),
                 ),
@@ -478,7 +408,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Produk',
+                    'Tiket',
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),
@@ -487,7 +417,7 @@ class _HomePageState extends State<HomePage> {
                       Get.toNamed('/all-product');
                     },
                     child: Text(
-                      'Semua Produk',
+                      'Semua Tiket',
                       style: blackTextStyle.copyWith(fontSize: 12),
                     ),
                   )
@@ -515,55 +445,6 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget store() {
-      return Container(
-          margin: const EdgeInsets.only(top: 16, bottom: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: defaultMargin),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Toko',
-                      style: blackTextStyle.copyWith(
-                          fontSize: 16, fontWeight: semiBold),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed('/all-market');
-                      },
-                      child: Text(
-                        'Semua Toko',
-                        style: blackTextStyle.copyWith(fontSize: 12),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              SingleChildScrollView(
-                padding: EdgeInsets.only(left: defaultMargin),
-                scrollDirection: Axis.horizontal,
-                child: isLoading
-                    ? Row(children: List.generate(4, (_) => shimmerMarket()))
-                    : Row(
-                        children: tokoProvider.markets
-                            .map((market) => CardMarket(
-                                  toko: market!,
-                                ))
-                            .toList(),
-                      ),
-              ),
-            ],
-          ));
-    }
-
     Widget content() {
       return Container(
           margin: const EdgeInsets.only(top: 20),
@@ -573,7 +454,6 @@ class _HomePageState extends State<HomePage> {
               caraouselAndIndicator(),
               category(),
               product(),
-              store(),
             ],
           ));
     }

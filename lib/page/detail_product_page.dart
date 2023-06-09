@@ -2,19 +2,15 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tugas_akhir/models/cart_model.dart';
 // import 'package:flutter_tugas_akhir/models/cart_model.dart';
 import 'package:flutter_tugas_akhir/models/product_model.dart';
-import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
-import 'package:flutter_tugas_akhir/page/detail_store_page.dart';
 import 'package:flutter_tugas_akhir/page/home/main_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
-import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -392,7 +388,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Stok',
+                      'Lokasi',
                       style: blackTextStyle.copyWith(
                         fontSize: 16,
                         fontWeight: semiBold,
@@ -402,31 +398,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                       height: 5,
                     ),
                     Text(
-                      widget.product.stock.toString(),
-                      style: blackTextStyle.copyWith(
-                        fontWeight: medium,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Berat',
-                      style: blackTextStyle.copyWith(
-                        fontSize: 16,
-                        fontWeight: semiBold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      widget.product.weight.toString() + ' Kg',
+                      widget.product.lokasi.toString(),
                       style: blackTextStyle.copyWith(
                         fontWeight: medium,
                       ),
@@ -457,82 +429,6 @@ class _DetailProductPageState extends State<DetailProductPage> {
             const SizedBox(
               height: 50,
             ),
-            widget.product.market!.id == null
-                ? const SizedBox()
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(defaultRadius),
-                        child: widget.product.market?.image == null ||
-                                widget.product.market!.image!.isEmpty
-                            ? Image.asset(
-                                'assets/images/not_product.jpeg',
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                Service.urlImage +
-                                    widget.product.market!.image.toString(),
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                      const SizedBox(
-                        width: 13,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.product.market!.nameStore.toString(),
-                            style: blackTextStyle.copyWith(
-                                fontSize: 16, fontWeight: semiBold),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(Icons.map_outlined),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                widget.product.market!.village.toString(),
-                                style:
-                                    blackTextStyle.copyWith(fontWeight: medium),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadiusDirectional.circular(10)),
-                                backgroundColor: secondaryColor,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                )),
-                            onPressed: () {
-                              Get.to(
-                                () => DetailStorePage(
-                                    toko: widget.product.market as TokoModel),
-                              );
-                            },
-                            child: Text('Kunjungi Toko',
-                                style:
-                                    whiteTextStyle.copyWith(fontWeight: bold)),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
             const SizedBox(height: 14),
             Divider(
               color: greyColor,

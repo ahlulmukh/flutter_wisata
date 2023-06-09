@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/cart_model.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
@@ -54,7 +55,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           phone: numberController.text,
           image: file ?? File(""),
           totalPrice: cartProvider.totalPrice(),
-          storeId: cartProvider.cartList![index].product!.market!.id.toString(),
+          storeId: cartProvider.cartList![index].product!.id.toString(),
         )) {
           cartProvider.removeAllCart();
           Get.offNamedUntil('/checkout-success', (route) => false);
@@ -240,46 +241,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }
 
-    Widget detailMarket() {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        decoration: BoxDecoration(
-            border: Border.all(width: 2.0, color: blackColor),
-            color: whiteColor,
-            borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              cartProvider.cartList![index].product!.market!.nameStore
-                  .toString(),
-              style: blackTextStyle.copyWith(fontSize: 18, fontWeight: medium),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Nama Rekening : ' +
-                  cartProvider.cartList![index].product!.market!.accountName
-                      .toString(),
-              style: blackTextStyle.copyWith(fontWeight: semiBold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Nomor Rekening : ' +
-                  cartProvider.cartList![index].product!.market!.accountNumber
-                      .toString(),
-              style: blackTextStyle.copyWith(fontWeight: semiBold),
-            ),
-          ],
-        ),
-      );
-    }
-
     Widget uploadImage() {
       return GestureDetector(
         onTap: () async {
@@ -416,7 +377,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               listItems(),
               inputAddress(),
               inputNumber(),
-              detailMarket(),
               uploadImage(),
               detailPayment(),
               isLoading == true ? const ButtonLoading() : submitCheckout(),

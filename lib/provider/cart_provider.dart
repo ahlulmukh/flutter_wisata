@@ -59,11 +59,6 @@ class CartProvider with ChangeNotifier {
   }
 
   void addQuantity(int id, dynamic quantity) async {
-    int index = _cartList!.indexWhere((element) => element.id == id);
-    if (_cartList![index].quantity! <= _cartList![index].product!.stock) {
-      _cartList![index].quantity++;
-      await CartService().updateCart(id, quantity);
-    }
     notifyListeners();
   }
 

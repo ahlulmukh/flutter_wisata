@@ -92,12 +92,6 @@ class CardProductAll extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    product.market!.nameStore.toString(),
-                    overflow: TextOverflow.ellipsis,
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
-                  ),
                 ],
               ),
             )

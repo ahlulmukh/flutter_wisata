@@ -68,10 +68,6 @@ class CardCart extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                Text(
-                  cart.product!.market!.nameStore.toString(),
-                  style: greyTextStyle.copyWith(fontWeight: semiBold),
-                )
               ],
             ),
           ),

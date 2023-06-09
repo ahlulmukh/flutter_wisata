@@ -30,7 +30,7 @@ class ProductService {
   Future<List<ProductModel>> getProducts() async {
     try {
       var response = await dio.get(
-        Service.apiUrl + '/products',
+        Service.apiUrl + '/tickets',
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
