@@ -48,7 +48,7 @@ class ProductService {
   Future<ProductModel> getProduct({required int id}) async {
     try {
       var response = await dio.get(
-        Service.apiUrl + '/product/$id',
+        Service.apiUrl + '/ticket/$id',
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,

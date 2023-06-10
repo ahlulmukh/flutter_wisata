@@ -126,7 +126,7 @@ class CartService {
       var token = prefs.getString('token');
       FormData formData = FormData.fromMap({
         'users_id': userId,
-        'product_id': productId,
+        'ticket_id': productId,
         'quantity': quantity,
       });
       var response = await dio.post(

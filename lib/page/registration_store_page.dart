@@ -1,11 +1,10 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/district_model.dart';
-import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
-import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
@@ -68,7 +67,6 @@ class _RegistrationStorePageState extends State<RegistrationStorePage> {
           accountNumber: numberAccountController.text,
           image: file ?? File(''),
         )) {
-          Get.off(() => StorePage(toko: user.toko as TokoModel));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

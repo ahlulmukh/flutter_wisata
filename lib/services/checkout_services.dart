@@ -1,10 +1,11 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_tugas_akhir/models/cart_model.dart';
 import 'package:flutter_tugas_akhir/services/service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckoutService {
   var dio = Dio();
@@ -15,7 +16,6 @@ class CheckoutService {
     required String phone,
     required File image,
     required double totalPrice,
-    required String storeId,
   }) async {
     try {
       final mimeTypeData =
@@ -40,7 +40,6 @@ class CheckoutService {
             ),
           ),
           'total_price': totalPrice,
-          'store_id': storeId,
           'status': 'PENDING'
         },
       );

@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
-import 'package:flutter_tugas_akhir/page/store_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/menu_item.dart';
-import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountPage extends StatefulWidget {
@@ -220,19 +218,19 @@ class _AccountPageState extends State<AccountPage> {
                   onPressed: () {
                     Get.toNamed('/edit-profile');
                   }),
-              MenuItem(
-                  icons: Icons.store,
-                  title: user.toko!.id != null ? 'Toko Saya' : "Buka Toko",
-                  // title: user.toko == null ? 'Registrasi Toko' : 'Toko Saya',
-                  onPressed: () {
-                    user.toko!.id != null
-                        ? Get.to(
-                            () => StorePage(
-                                  toko: user.toko as TokoModel,
-                                ),
-                            arguments: user.toko?.id)
-                        : Get.toNamed('/registration-store');
-                  }),
+              // MenuItem(
+              //     icons: Icons.store,
+              //     title: user.toko!.id != null ? 'Toko Saya' : "Buka Toko",
+              //     // title: user.toko == null ? 'Registrasi Toko' : 'Toko Saya',
+              //     onPressed: () {
+              //       user.toko!.id != null
+              //           ? Get.to(
+              //               () => StorePage(
+              //                     toko: user.toko as TokoModel,
+              //                   ),
+              //               arguments: user.toko?.id)
+              //           : Get.toNamed('/registration-store');
+              //     }),
               MenuItem(
                   icons: Icons.perm_device_information_sharp,
                   title: 'Informasi',

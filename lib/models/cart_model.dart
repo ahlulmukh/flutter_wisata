@@ -22,10 +22,10 @@ class CartModel {
     return CartModel(
       id: json['id'] ?? 0,
       usersId: json['users_id'].toString(),
-      productId: json['product_id'].toString(),
+      productId: json['ticket_id'].toString(),
       quantity: json['quantity'],
-      product: json['product'] != null
-          ? ProductModel.fromJson(json['product'])
+      product: json['ticket'] != null
+          ? ProductModel.fromJson(json['ticket'])
           : ProductModel.fromJson({}),
       user: json['user'] != null
           ? UserModel.fromJson(json['user'])
@@ -37,9 +37,9 @@ class CartModel {
     return {
       'id': id,
       'users_id': usersId,
-      'product_id': productId,
+      'ticket_id': productId,
       'quantity': quantity,
-      'product': product,
+      'ticket': product,
       'user': user,
     };
   }

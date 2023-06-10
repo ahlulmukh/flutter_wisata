@@ -41,9 +41,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     CartProvider cartProvider = Provider.of<CartProvider>(context);
     CheckoutProvider checkoutProvider = Provider.of<CheckoutProvider>(context);
 
-    int index = cartProvider.cartList!
-        .indexWhere((element) => element.id == element.id);
-
     handleCheckout() async {
       setState(() {
         isLoading = true;
@@ -55,7 +52,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           phone: numberController.text,
           image: file ?? File(""),
           totalPrice: cartProvider.totalPrice(),
-          storeId: cartProvider.cartList![index].product!.id.toString(),
         )) {
           cartProvider.removeAllCart();
           Get.offNamedUntil('/checkout-success', (route) => false);
