@@ -1,4 +1,6 @@
 class Service {
-  static const String apiUrl = 'http://172.22.128.1:8080/api';
-  static const String urlImage = 'http://172.22.128.1:8080/storage/';
+  static const String apiUrl =
+      'https://92e9-103-179-248-135.ngrok-free.app/api';
+  static const String urlImage =
+      'https://92e9-103-179-248-135.ngrok-free.app/storage';
 }

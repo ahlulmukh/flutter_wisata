@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/order_model.dart';
 import 'package:flutter_tugas_akhir/provider/order_provider.dart';
-import 'package:flutter_tugas_akhir/services/service.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/order_item_list.dart';
 import 'package:get/get.dart';
@@ -43,7 +42,7 @@ class _OrderListState extends State<OrderList> {
                     height: 20,
                   ),
                   Text(
-                    'Slip Pembayaran',
+                    'Qr Code',
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),
@@ -65,7 +64,8 @@ class _OrderListState extends State<OrderList> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
-                            image: NetworkImage(widget.order.image.toString()),
+                            image:
+                                NetworkImage(widget.order.qrcodeurl.toString()),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -235,30 +235,6 @@ class _OrderListState extends State<OrderList> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.order.market!.image!.isEmpty
-                  ? Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/not_product.jpeg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: NetworkImage(Service.urlImage +
-                              widget.order.market!.image.toString()),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
               const SizedBox(
                 width: 10,
               ),
@@ -266,10 +242,6 @@ class _OrderListState extends State<OrderList> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.order.market!.nameStore.toString(),
-                      style: blackTextStyle.copyWith(fontSize: 16),
-                    ),
                     Text(
                       'Total harga : ' +
                           currencyFormatter.format(widget.order.totalPrice),
@@ -318,10 +290,12 @@ class _OrderListState extends State<OrderList> {
                         fixedSize: const Size.fromWidth(120),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadiusDirectional.circular(6)),
-                        backgroundColor: greyColor,
+                        backgroundColor: secondaryColor,
                       ),
-                      onPressed: () {},
-                      child: Text('Terima Produk',
+                      onPressed: () {
+                        Get.toNamed('/checkout-success');
+                      },
+                      child: Text('Scan QR',
                           style: whiteTextStyle.copyWith(fontWeight: bold)),
                     )
                   : const SizedBox(),
@@ -489,7 +463,7 @@ class HeroPaymentPage extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: PhotoView(
-                  imageProvider: NetworkImage(order.image.toString())),
+                  imageProvider: NetworkImage(order.qrcodeurl.toString())),
             )),
       ),
     );

@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_if_null_operators
 
 import 'package:flutter_tugas_akhir/models/order_item_model.dart';
-import 'package:flutter_tugas_akhir/models/toko_model.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 
 enum OrderStatus { pending, progress, delivery, cancel, success }
@@ -11,13 +10,12 @@ class OrderModel {
   String? address;
   String? phone;
   String? image;
+  String? qrcodeurl;
   int? usersId;
-  int? storeId;
   OrderStatus? status;
   double? totalPrice;
   DateTime? createdAT;
   List<OrderItemModel>? orderItem;
-  TokoModel? market;
   UserModel? user;
 
   OrderModel({
@@ -25,13 +23,12 @@ class OrderModel {
     required this.address,
     required this.phone,
     required this.image,
+    required this.qrcodeurl,
     required this.usersId,
-    required this.storeId,
     required this.status,
     required this.totalPrice,
     required this.createdAT,
     required this.orderItem,
-    required this.market,
     required this.user,
   });
 
@@ -41,8 +38,8 @@ class OrderModel {
         address: json['address'] ?? '',
         phone: json['phone'] ?? '',
         image: json['image'] != null ? json['image'] : null,
+        qrcodeurl: json['qrcode_url'] != null ? json['qrcode_url'] : null,
         usersId: int.parse(json['users_id'].toString()),
-        storeId: int.parse(json['store_id'].toString()),
         status: (json['status'] == 'PENDING')
             ? OrderStatus.pending
             : (json['status'] == 'PROGRESS')
@@ -61,9 +58,6 @@ class OrderModel {
                 .map((order) => OrderItemModel.fromJson(order))
                 .toList()
             : [],
-        market: json['market'] != null
-            ? TokoModel.fromJson(json['market'])
-            : TokoModel.fromJson({}),
         user: json['user'] != null
             ? UserModel.fromJson(json['user'])
             : UserModel.fromJson({}));
@@ -75,8 +69,8 @@ class OrderModel {
       'address': address,
       'phone': phone,
       'image': image,
+      'qrcode_url': qrcodeurl,
       'users_id': usersId,
-      'store_id': storeId,
       'status': status,
       'total_price': totalPrice,
       'created_at': createdAT,

@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
           ),
           GetPage(
             name: '/checkout-success',
-            page: () => const CheckoutSuccessPage(),
+            page: () => const ScanPage(),
           ),
           GetPage(
             name: '/newOrder-page',
