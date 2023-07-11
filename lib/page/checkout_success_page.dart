@@ -50,11 +50,11 @@ class _ScanPageState extends State<ScanPage> {
       ),
       body: Column(
         children: [
-          const Text('Waduh'),
+          const SizedBox(height: 20),
           Wrap(
             children: [
               ElevatedButton(
-                child: const Text("parse from image"),
+                child: const Text("Upload dari galeri"),
                 onPressed: () async {
                   List<Media>? res = await ImagesPicker.pick();
                   if (res != null) {

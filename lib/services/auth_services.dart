@@ -6,6 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   var dio = Dio();
 
+  Future<bool> isTokenAvailable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('token');
+  }
+
   Future<UserModel> getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

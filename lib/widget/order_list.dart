@@ -3,6 +3,7 @@ import 'package:flutter_tugas_akhir/models/order_model.dart';
 import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/order_item_list.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -434,6 +435,17 @@ class _OrderListState extends State<OrderList> {
 }
 
 class HeroPaymentPage extends StatelessWidget {
+  Future<void> _saveImageToGallery(String imageUrl) async {
+    try {
+      await GallerySaver.saveImage(imageUrl);
+      print('Gambar berhasil disimpan ke galeri');
+      // Tambahkan penanganan sukses
+    } catch (e) {
+      print('Gagal menyimpan gambar ke galeri: $e');
+      // Tambahkan penanganan gagal
+    }
+  }
+
   final OrderModel order;
   const HeroPaymentPage({Key? key, required this.order}) : super(key: key);
 
@@ -459,12 +471,28 @@ class HeroPaymentPage extends StatelessWidget {
       ),
       body: Center(
         child: Hero(
-            tag: 'payment',
-            child: SizedBox(
-              width: double.infinity,
-              child: PhotoView(
-                  imageProvider: NetworkImage(order.qrcodeurl.toString())),
-            )),
+          tag: 'payment',
+          child: SizedBox(
+            width: double.infinity,
+            child: Stack(
+              children: [
+                PhotoView(
+                  imageProvider: NetworkImage(order.qrcodeurl.toString()),
+                ),
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _saveImageToGallery(order.qrcodeurl.toString());
+                    },
+                    child: Text('Simpan ke Galeri'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
