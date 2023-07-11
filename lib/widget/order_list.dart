@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/order_model.dart';
+import 'package:flutter_tugas_akhir/page/checkout_success_page.dart';
 import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
-import 'package:flutter_tugas_akhir/widget/order_item_list.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +18,22 @@ class OrderList extends StatefulWidget {
 }
 
 class _OrderListState extends State<OrderList> {
+  bool shouldRefresh = false;
+
+  void _navigateToScanPage() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ScanPage()),
+    );
+
+    if (result == true) {
+      setState(() {
+        shouldRefresh =
+            true; // Set shouldRefresh menjadi true untuk melakukan refresh
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currencyFormatter =
@@ -93,21 +109,6 @@ class _OrderListState extends State<OrderList> {
                     height: 10,
                   ),
                   Text(
-                    'Alamat',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    widget.order.address.toString(),
-                    style: greyTextStyle.copyWith(fontWeight: medium),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
                     'No Hp',
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
@@ -116,26 +117,8 @@ class _OrderListState extends State<OrderList> {
                     height: 5,
                   ),
                   Text(
-                    widget.order.phone.toString(),
+                    widget.order.nama.toString(),
                     style: greyTextStyle.copyWith(fontWeight: medium),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Produk',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Column(
-                    children: widget.order.orderItem!
-                        .map((orderItem) => OrderItemList(
-                              orderItem: orderItem,
-                            ))
-                        .toList(),
                   ),
                   const SizedBox(
                     height: 20,
@@ -293,9 +276,7 @@ class _OrderListState extends State<OrderList> {
                             borderRadius: BorderRadiusDirectional.circular(6)),
                         backgroundColor: secondaryColor,
                       ),
-                      onPressed: () {
-                        Get.toNamed('/checkout-success');
-                      },
+                      onPressed: _navigateToScanPage,
                       child: Text('Scan QR',
                           style: whiteTextStyle.copyWith(fontWeight: bold)),
                     )
@@ -486,7 +467,7 @@ class HeroPaymentPage extends StatelessWidget {
                     onPressed: () {
                       _saveImageToGallery(order.qrcodeurl.toString());
                     },
-                    child: Text('Simpan ke Galeri'),
+                    child: const Text('Simpan ke Galeri'),
                   ),
                 ),
               ],

@@ -7,9 +7,7 @@ enum OrderStatus { pending, progress, delivery, cancel, success }
 
 class OrderModel {
   int? id;
-  String? address;
-  String? phone;
-  String? image;
+  String? nama;
   String? qrcodeurl;
   int? usersId;
   OrderStatus? status;
@@ -20,9 +18,7 @@ class OrderModel {
 
   OrderModel({
     required this.id,
-    required this.address,
-    required this.phone,
-    required this.image,
+    required this.nama,
     required this.qrcodeurl,
     required this.usersId,
     required this.status,
@@ -35,9 +31,7 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
         id: json['id'],
-        address: json['address'] ?? '',
-        phone: json['phone'] ?? '',
-        image: json['image'] != null ? json['image'] : null,
+        nama: json['nama'] ?? '',
         qrcodeurl: json['qrcode_url'] != null ? json['qrcode_url'] : null,
         usersId: int.parse(json['users_id'].toString()),
         status: (json['status'] == 'PENDING')
@@ -66,9 +60,7 @@ class OrderModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'address': address,
-      'phone': phone,
-      'image': image,
+      'nama': nama,
       'qrcode_url': qrcodeurl,
       'users_id': usersId,
       'status': status,

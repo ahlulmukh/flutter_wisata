@@ -32,26 +32,52 @@ class _ScanPageState extends State<ScanPage> {
 
       if (response.statusCode == 200) {
         // Verifikasi sukses
-        print('Pembayaran berhasil diverifikasi');
+        _showValidationDialog('Pembayaran berhasil diverifikasi');
       } else {
         // Verifikasi gagal
         print('Verifikasi pembayaran gagal: ${response.data}');
       }
     } catch (e) {
-      print('Terjadi kesalahan: $e');
+      _showValidationDialog(
+          'Verifikasi pembayaran gagal, saldo harus mencukupi');
     }
+  }
+
+  void _showValidationDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Validasi Pembayaran'),
+          content: Text(message),
+          actions: [
+            ElevatedButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pop(context, true); // Menutup dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green, // Warna hijau
         title: const Text('Scan QR Code'),
+        centerTitle: true, // Teks judul di tengah
       ),
       body: Column(
         children: [
           const SizedBox(height: 20),
-          Wrap(
+          Row(
+            mainAxisAlignment:
+                MainAxisAlignment.center, // Tombol terpusat secara horizontal
             children: [
               ElevatedButton(
                 child: const Text("Upload dari galeri"),
@@ -68,8 +94,9 @@ class _ScanPageState extends State<ScanPage> {
                   }
                 },
               ),
+              const SizedBox(width: 10), // Jarak antara tombol
               ElevatedButton(
-                child: const Text('go scan page'),
+                child: const Text('Go Scan Page'),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
                     return scanQR();
@@ -78,7 +105,6 @@ class _ScanPageState extends State<ScanPage> {
               ),
             ],
           ),
-          Text('scan result is $scannedData'),
         ],
       ),
     );

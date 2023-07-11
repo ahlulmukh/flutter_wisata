@@ -9,7 +9,6 @@ import 'package:flutter_tugas_akhir/widget/button_loading.dart';
 import 'package:flutter_tugas_akhir/widget/card_checkout.dart';
 import 'package:flutter_tugas_akhir/widget/custom_button.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -24,14 +23,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
   bool isLoading = false;
   File? file;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController addressController = TextEditingController(text: '');
   TextEditingController numberController = TextEditingController(text: '');
   final currencyFormatter =
       NumberFormat.currency(locale: 'ID', symbol: 'Rp. ', decimalDigits: 0);
 
   @override
   void dispose() {
-    addressController.clear();
     numberController.clear();
     super.dispose();
   }
@@ -127,10 +124,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       });
       if (_formKey.currentState!.validate()) {
         if (await checkoutProvider.checkout(
-          address: addressController.text,
           carts: cartProvider.cartList as List<CartModel>,
-          phone: numberController.text,
-          image: file ?? File(""),
+          nama: numberController.text,
           totalPrice: cartProvider.totalPrice(),
         )) {
           cartProvider.removeAllCart();
@@ -213,67 +208,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }
 
-    Widget inputAddress() {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: defaultRadius),
-        margin: const EdgeInsets.only(bottom: 10, top: 10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            'Alamat Lengkap',
-            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          Container(
-            color: whiteColor,
-            child: TextFormField(
-              controller: addressController,
-              style: blackTextStyle.copyWith(fontSize: 14),
-              showCursor: true,
-              keyboardType: TextInputType.text,
-              cursorColor: Colors.black,
-              maxLines: 3,
-              validator: (value) => value!.isEmpty ? 'Isikan Alamat' : null,
-              decoration: InputDecoration(
-                focusedErrorBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.red, width: 4),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                errorBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.red, width: 4),
-                    borderRadius: BorderRadius.circular(14)),
-                errorStyle: whiteTextStyle.copyWith(
-                    fontWeight: bold, fontSize: 14, color: Colors.red),
-                hintText: "Masukan Alamat Lengkap",
-                hintStyle: greyTextStyle,
-                labelStyle:
-                    blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                    borderRadius: BorderRadius.circular(10)),
-                floatingLabelStyle:
-                    blackTextStyle.copyWith(fontSize: 18, fontWeight: semiBold),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: blackColor, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ),
-        ]),
-      );
-    }
-
-    Widget inputNumber() {
+    Widget inputNama() {
       return Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: defaultRadius),
         margin: const EdgeInsets.only(bottom: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            'No Telp',
+            'Nama',
             style: blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
           ),
           const SizedBox(
@@ -285,9 +227,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
               controller: numberController,
               style: blackTextStyle.copyWith(fontSize: 14),
               showCursor: true,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               cursorColor: Colors.black,
-              validator: (value) => value!.isEmpty ? 'Isikan No Telp' : null,
+              validator: (value) => value!.isEmpty ? 'Isikan Nama' : null,
               decoration: InputDecoration(
                 focusedErrorBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red, width: 4),
@@ -298,7 +240,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     borderRadius: BorderRadius.circular(14)),
                 errorStyle: whiteTextStyle.copyWith(
                     fontWeight: bold, fontSize: 14, color: Colors.red),
-                hintText: "Masukan Nomor Telp",
+                hintText: "Masukan Nama Lengkap",
                 hintStyle: greyTextStyle,
                 labelStyle:
                     blackTextStyle.copyWith(fontSize: 16, fontWeight: medium),
@@ -315,42 +257,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
         ]),
-      );
-    }
-
-    Widget uploadImage() {
-      return GestureDetector(
-        onTap: () async {
-          XFile? pickedFile =
-              await ImagePicker().pickImage(source: ImageSource.gallery);
-          if (pickedFile != null) {
-            file = File(pickedFile.path);
-            setState(() {});
-          } else {
-            return;
-          }
-        },
-        child: (file != null)
-            ? Container(
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                padding: EdgeInsets.symmetric(horizontal: defaultRadius),
-                width: double.infinity,
-                height: 145,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: FileImage(file!), fit: BoxFit.cover),
-                ),
-              )
-            : Container(
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                padding: EdgeInsets.symmetric(horizontal: defaultRadius),
-                width: double.infinity,
-                height: 145,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/img_upload.png'),
-                        fit: BoxFit.contain)),
-              ),
       );
     }
 
@@ -452,9 +358,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               header(),
               item(),
               listItems(),
-              inputAddress(),
-              inputNumber(),
-              uploadImage(),
+              inputNama(),
               detailPayment(),
               isLoading == true ? const ButtonLoading() : submitCheckout(),
             ],

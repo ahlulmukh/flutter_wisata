@@ -65,7 +65,7 @@ class _OrderToMarketState extends State<OrderToMarket> {
                           borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
                             image: NetworkImage(Service.urlImage +
-                                widget.order.image.toString()),
+                                widget.order.qrcodeurl.toString()),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -92,21 +92,6 @@ class _OrderToMarketState extends State<OrderToMarket> {
                     height: 10,
                   ),
                   Text(
-                    'Alamat',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    widget.order.address.toString(),
-                    style: greyTextStyle.copyWith(fontWeight: medium),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
                     'No Hp',
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
@@ -115,7 +100,7 @@ class _OrderToMarketState extends State<OrderToMarket> {
                     height: 5,
                   ),
                   Text(
-                    widget.order.phone.toString(),
+                    widget.order.nama.toString(),
                     style: greyTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(
@@ -537,8 +522,8 @@ class HeroPaymentPage extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: PhotoView(
-                  imageProvider:
-                      NetworkImage(Service.urlImage + order.image.toString())),
+                  imageProvider: NetworkImage(
+                      Service.urlImage + order.qrcodeurl.toString())),
             )),
       ),
     );

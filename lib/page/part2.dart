@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
 
+// ignore: camel_case_types, must_be_immutable
 class scanQR extends StatelessWidget {
   ScanController controller = ScanController();
+
+  scanQR({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +23,7 @@ class scanQR extends StatelessWidget {
                   builder: (BuildContext context) {
                     return Scaffold(
                       appBar: AppBar(
-                        title: Text('scan result'),
+                        title: const Text('scan result'),
                       ),
                       body: Center(
                         child: Text(data),
@@ -37,19 +40,19 @@ class scanQR extends StatelessWidget {
               child: Row(
                 children: [
                   ElevatedButton(
-                    child: Text("toggleTorchMode"),
+                    child: const Text("toggleTorchMode"),
                     onPressed: () {
                       controller.toggleTorchMode();
                     },
                   ),
                   ElevatedButton(
-                    child: Text("pause"),
+                    child: const Text("pause"),
                     onPressed: () {
                       controller.pause();
                     },
                   ),
                   ElevatedButton(
-                    child: Text("resume"),
+                    child: const Text("resume"),
                     onPressed: () {
                       controller.resume();
                     },
