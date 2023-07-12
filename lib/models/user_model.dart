@@ -4,6 +4,7 @@ class UserModel {
   int? id;
   String? name;
   String? username;
+  int? saldo;
   String? email;
   String? profilePhotoPath;
   String? token;
@@ -12,6 +13,7 @@ class UserModel {
       {required this.id,
       required this.name,
       required this.username,
+      required this.saldo,
       required this.email,
       required this.profilePhotoPath,
       required this.token});
@@ -21,6 +23,7 @@ class UserModel {
       id: json['id'] ?? null,
       name: json['name'] ?? '',
       username: json['username'] ?? '',
+      saldo: json['saldo'] ?? null,
       email: json['email'] ?? '',
       profilePhotoPath: json['profile_photo_path'],
       token: json['token'].toString(),
@@ -32,6 +35,7 @@ class UserModel {
       'id': id,
       'name': name,
       'username': username,
+      'saldo': saldo,
       'email': email,
       'profile_photo_path': profilePhotoPath,
       'token': token,

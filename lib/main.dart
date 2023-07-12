@@ -13,6 +13,7 @@ import 'package:flutter_tugas_akhir/page/sign_in_page.dart';
 import 'package:flutter_tugas_akhir/page/sign_up_page.dart';
 import 'package:flutter_tugas_akhir/page/splash_page.dart';
 import 'package:flutter_tugas_akhir/page/store_information_page.dart';
+import 'package:flutter_tugas_akhir/page/toup_saldo_page.dart';
 import 'package:flutter_tugas_akhir/page/using_guide_app_page.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
 import 'package:flutter_tugas_akhir/provider/cart_provider.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/provider/page_provider.dart';
 import 'package:flutter_tugas_akhir/provider/product_provider.dart';
 import 'package:flutter_tugas_akhir/provider/toko_provider.dart';
+import 'package:flutter_tugas_akhir/provider/topup_provider.dart';
 import 'package:flutter_tugas_akhir/provider/wishlist_provider.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +64,9 @@ class MyApp extends StatelessWidget {
           create: (context) => CheckoutProvider(),
         ),
         ChangeNotifierProvider(
+          create: (context) => TopupProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => OrderProvider(),
         ),
       ],
@@ -88,6 +93,10 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: '/edit-profile',
             page: () => const EditProfilPage(),
+          ),
+          GetPage(
+            name: '/saldo-page',
+            page: () => const SaldoPage(),
           ),
           GetPage(
             name: '/registration-store',

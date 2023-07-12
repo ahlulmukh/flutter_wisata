@@ -264,11 +264,14 @@ class _DetailProductPageState extends State<DetailProductPage> {
                           ConnectionState.done) {
                         return GestureDetector(
                           onTap: () async {
-                            cartProvider.addtoCart(
+                            if (cartProvider.cart != null) {
+                              cartProvider.addtoCart(
                                 userId: user!.id.toString(),
                                 productId: widget.product.id!.toString(),
-                                quantity: cartProvider.cart!.quantity);
-                            showSuccessDialog();
+                                quantity: cartProvider.cart!.quantity,
+                              );
+                              showSuccessDialog();
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.all(7),

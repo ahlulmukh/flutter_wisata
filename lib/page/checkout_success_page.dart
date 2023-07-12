@@ -48,11 +48,11 @@ class _ScanPageState extends State<ScanPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Validasi Pembayaran'),
+          title: const Text('Validasi Pembayaran'),
           content: Text(message),
           actions: [
             ElevatedButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.pop(context, true); // Menutup dialog

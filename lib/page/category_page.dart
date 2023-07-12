@@ -66,7 +66,7 @@ class _CategoryPageState extends State<CategoryPage> {
     }
 
     Widget getGridViewProduct() {
-      if (categoryProvider.category!.products.isEmpty) {
+      if (categoryProvider.category!.tickets.isEmpty) {
         return Center(
           child: Column(
             children: [
@@ -103,12 +103,12 @@ class _CategoryPageState extends State<CategoryPage> {
               mainAxisSpacing: 16,
               mainAxisExtent: 255, // here set custom Height You Want
             ),
-            itemCount: categoryProvider.category!.products.length,
+            itemCount: categoryProvider.category!.tickets.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return CardProductCategory(
-                  product: categoryProvider.category!.products[index]
+                  product: categoryProvider.category!.tickets[index]
                       as ProductModel);
             },
           ),

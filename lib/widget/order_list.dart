@@ -23,7 +23,7 @@ class _OrderListState extends State<OrderList> {
   void _navigateToScanPage() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ScanPage()),
+      MaterialPageRoute(builder: (context) => const ScanPage()),
     );
 
     if (result == true) {

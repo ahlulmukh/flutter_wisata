@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/user_model.dart';
 import 'package:flutter_tugas_akhir/provider/auth_provider.dart';
+import 'package:flutter_tugas_akhir/services/status_services.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:flutter_tugas_akhir/widget/menu_item.dart';
 import 'package:get/get.dart';
@@ -208,6 +209,11 @@ class _AccountPageState extends State<AccountPage> {
                   style: blackTextStyle.copyWith(
                       fontSize: 16, fontWeight: semiBold),
                 ),
+                Text(
+                  'Rp. ' + user.saldo.toString(),
+                  style: blackTextStyle.copyWith(
+                      fontSize: 16, fontWeight: semiBold),
+                ),
               ]),
               const SizedBox(
                 height: 40,
@@ -218,19 +224,37 @@ class _AccountPageState extends State<AccountPage> {
                   onPressed: () {
                     Get.toNamed('/edit-profile');
                   }),
-              // MenuItem(
-              //     icons: Icons.store,
-              //     title: user.toko!.id != null ? 'Toko Saya' : "Buka Toko",
-              //     // title: user.toko == null ? 'Registrasi Toko' : 'Toko Saya',
-              //     onPressed: () {
-              //       user.toko!.id != null
-              //           ? Get.to(
-              //               () => StorePage(
-              //                     toko: user.toko as TokoModel,
-              //                   ),
-              //               arguments: user.toko?.id)
-              //           : Get.toNamed('/registration-store');
-              //     }),
+              MenuItem(
+                icons: Icons.account_circle_outlined,
+                title: 'Top Up Saldo',
+                onPressed: () async {
+                  // Panggil fungsi untuk mendapatkan status top up dari backend
+                  var getTopUpStatus = GetTopUpStatus();
+                  var topUpStatus = await getTopUpStatus.getStatus();
+
+                  // Cek apakah status top up masih pending
+                  if (topUpStatus == 'PENDING') {
+                    // Tampilkan pesan atau larangan untuk membuka halaman
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Tidak dapat membuka halaman'),
+                        content: const Text(
+                            'Status top up masih pending. Harap tunggu hingga top up selesai diproses.'),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Tutup'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    // Jika status top up bukan pending, buka halaman top up saldo
+                    Get.toNamed('/saldo-page');
+                  }
+                },
+              ),
               MenuItem(
                   icons: Icons.perm_device_information_sharp,
                   title: 'Informasi',
