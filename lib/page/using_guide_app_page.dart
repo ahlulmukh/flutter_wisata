@@ -97,6 +97,36 @@ class UsingGuideAppPage extends StatelessWidget {
       );
     }
 
+    Widget tutorialBuySaldo() {
+      return Container(
+        width: double.infinity,
+        margin:
+            EdgeInsets.only(top: 20, left: defaultMargin, right: defaultMargin),
+        padding: EdgeInsets.symmetric(horizontal: defaultMargin, vertical: 8),
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(defaultRadius),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tata Cara Top Up Saldo',
+              style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              'Tata cara melakukan top up saldo yaitu dengan cara masuk ke halaman home page, kemudian isikan nominal saldo dan lakukan pengiriman ke nomor rek yang disediakan dengan mengupload slip pembayaran pada form image.\nselanjutnya jika top up saldo sebelumya masih dalam status pending maka saldo page belum bisa dibuka. Jika slip valid maka saldo akan masuk, jika gagal saldo tidak akan masuk, silahkan melakukan top up ulang',
+              textAlign: TextAlign.justify,
+              style: greyTextStyle.copyWith(fontWeight: semiBold),
+            )
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: backgroundColor1,
       body: ListView(
@@ -104,6 +134,7 @@ class UsingGuideAppPage extends StatelessWidget {
           header(),
           guideBuyingProduct(),
           tutorialBuyProduct(),
+          tutorialBuySaldo(),
         ],
       ),
     );

@@ -37,6 +37,86 @@ class _SaldoPagePageState extends State<SaldoPage> {
   Widget build(BuildContext context) {
     TopupProvider topupProvider = Provider.of<TopupProvider>(context);
 
+    Future<void> showSuccessDialog() async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => SizedBox(
+          width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+          child: AlertDialog(
+            backgroundColor: backgroundColor3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: whiteColor,
+                      ),
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/icon_success.png',
+                    width: 100,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Berhasil',
+                    style: whiteTextStyle.copyWith(
+                      fontSize: 18,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Berhasil melakukan\n top up saldo\nCek saldo secara berkala',
+                    textAlign: TextAlign.center,
+                    style: whiteTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: 154,
+                    height: 44,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.toNamed('/main-page');
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Kembali',
+                        style: whiteTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: semiBold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     handleCheckout() async {
       setState(() {
         isLoading = true;
@@ -46,7 +126,7 @@ class _SaldoPagePageState extends State<SaldoPage> {
           saldo: numberController.text,
           image: file ?? File(""),
         )) {
-          Get.toNamed('/main-page');
+          showSuccessDialog();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
