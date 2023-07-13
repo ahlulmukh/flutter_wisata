@@ -59,6 +59,9 @@ class CartProvider with ChangeNotifier {
   }
 
   void addQuantity(int id, dynamic quantity) async {
+    await CartService().updateCart(id, quantity);
+    int index = _cartList!.indexWhere((element) => element.id == id);
+    _cartList![index].quantity++;
     notifyListeners();
   }
 
