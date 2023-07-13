@@ -127,6 +127,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           carts: cartProvider.cartList as List<CartModel>,
           nama: numberController.text,
           totalPrice: cartProvider.totalPrice(),
+          nameTicket: cartProvider.cartList![0].product?.name ?? '',
         )) {
           cartProvider.removeAllCart();
           showSuccessDialog();
@@ -287,7 +288,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Jumlah Produk',
+                  'Jumlah Tiket',
                   style: whiteTextStyle.copyWith(fontWeight: medium),
                 ),
                 Text(
@@ -295,6 +296,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   style: whiteTextStyle.copyWith(fontWeight: medium),
                 )
               ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Column(
+              children: cartProvider.cartList!
+                  .map((cart) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Ticket',
+                            style: whiteTextStyle.copyWith(fontWeight: medium),
+                          ),
+                          Text(
+                            cart.product?.name ?? '',
+                            style: whiteTextStyle.copyWith(fontWeight: medium),
+                          )
+                        ],
+                      ))
+                  .toList(),
             ),
             const SizedBox(
               height: 12,

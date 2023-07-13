@@ -10,6 +10,7 @@ class CheckoutService {
     required List<CartModel> carts,
     required String nama,
     required double totalPrice,
+    required String nameTicket,
   }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,6 +25,7 @@ class CheckoutService {
               .toList(),
           'nama': nama,
           'total_price': totalPrice,
+          'name_ticket': nameTicket,
           'status': 'PENDING'
         },
       );

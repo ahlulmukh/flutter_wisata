@@ -109,7 +109,7 @@ class _OrderListState extends State<OrderList> {
                     height: 10,
                   ),
                   Text(
-                    'No Hp',
+                    'Nama Pembeli',
                     style: blackTextStyle.copyWith(
                         fontSize: 16, fontWeight: semiBold),
                   ),
@@ -118,6 +118,21 @@ class _OrderListState extends State<OrderList> {
                   ),
                   Text(
                     widget.order.nama.toString(),
+                    style: greyTextStyle.copyWith(fontWeight: medium),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Ticket',
+                    style: blackTextStyle.copyWith(
+                        fontSize: 16, fontWeight: semiBold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    widget.order.nameticket.toString(),
                     style: greyTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(

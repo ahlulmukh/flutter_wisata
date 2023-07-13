@@ -8,6 +8,7 @@ enum OrderStatus { pending, progress, delivery, cancel, success }
 class OrderModel {
   int? id;
   String? nama;
+  String? nameticket;
   String? qrcodeurl;
   int? usersId;
   OrderStatus? status;
@@ -19,6 +20,7 @@ class OrderModel {
   OrderModel({
     required this.id,
     required this.nama,
+    required this.nameticket,
     required this.qrcodeurl,
     required this.usersId,
     required this.status,
@@ -32,6 +34,7 @@ class OrderModel {
     return OrderModel(
         id: json['id'],
         nama: json['nama'] ?? '',
+        nameticket: json['name_ticket'] ?? '',
         qrcodeurl: json['qrcode_url'] != null ? json['qrcode_url'] : null,
         usersId: int.parse(json['users_id'].toString()),
         status: (json['status'] == 'PENDING')
@@ -61,6 +64,7 @@ class OrderModel {
     return {
       'id': id,
       'nama': nama,
+      'name_ticket': nameticket,
       'qrcode_url': qrcodeurl,
       'users_id': usersId,
       'status': status,

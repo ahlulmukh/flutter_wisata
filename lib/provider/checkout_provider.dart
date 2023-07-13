@@ -7,12 +7,14 @@ class CheckoutProvider with ChangeNotifier {
     required List<CartModel> carts,
     required String nama,
     required double totalPrice,
+    required String nameTicket,
   }) async {
     try {
       if (await CheckoutService().checkout(
         carts: carts,
         nama: nama,
         totalPrice: totalPrice,
+        nameTicket: nameTicket,
       )) {
         return true;
       } else {

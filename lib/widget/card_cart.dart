@@ -41,7 +41,10 @@ class CardCart extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
                   image: NetworkImage(
-                    Service.urlImage + cart.product!.image.toString(),
+                    Service.urlImage +
+                        cart.product!.image
+                            .toString()
+                            .replaceFirst("public", ""),
                   ),
                   fit: BoxFit.cover,
                 )),
