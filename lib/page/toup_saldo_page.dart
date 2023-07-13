@@ -267,12 +267,25 @@ class _SaldoPagePageState extends State<SaldoPage> {
 
     Widget submitCheckout() {
       return Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          padding: EdgeInsets.symmetric(horizontal: defaultRadius),
-          child: CustomButton(
-            title: 'Top Up',
-            onPressed: handleCheckout,
-          ));
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: defaultRadius),
+        child: Column(
+          children: [
+            CustomButton(
+              title: 'Top Up',
+              onPressed: handleCheckout,
+            ),
+            const SizedBox(height: 8), // Jarak antara tombol dan teks catatan
+            const Text(
+              'Catatan: Harap melakukan pembayaran ke nomor rek 000000 atas Nama Fira Fadilah sebelum melakukan transaksi, karena jika slip pembayaran tidak valid maka status top up akan gagal. Terima Kasih',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     return Scaffold(

@@ -77,7 +77,7 @@ class _SignInPageState extends State<SignInPage> {
       return Container(
         margin: const EdgeInsets.only(bottom: 20),
         child: Text(
-          'MARKETTANI',
+          'TRAVELIO',
           style: whiteTextStyle.copyWith(
               fontSize: 40, letterSpacing: 8.2, fontWeight: bold),
         ),

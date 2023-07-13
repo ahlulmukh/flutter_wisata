@@ -54,28 +54,13 @@ class UsingGuideAppPage extends StatelessWidget {
             ),
             const StatusWidget(
               status: 'Pending',
-              statusDetail: 'Status pembayaran belum dikonfirmasi',
+              statusDetail: 'Status pembayaran belum dibayar',
               colors: Colors.orange,
-            ),
-            const StatusWidget(
-              status: 'Progress',
-              statusDetail: 'Status pembayaran sedang diproses',
-              colors: Colors.yellow,
-            ),
-            StatusWidget(
-              status: 'Delivery',
-              statusDetail: 'Status pembayaran produk sedang dalam perjalanan',
-              colors: lightColor,
             ),
             StatusWidget(
               status: 'Success',
               statusDetail: 'Status produk sudah diterima ke user',
               colors: primaryColor,
-            ),
-            StatusWidget(
-              status: 'Cancel',
-              statusDetail: 'Status pembayaran produk ditolak dari penjual',
-              colors: Colors.red[800] as Color,
             ),
           ],
         ),
@@ -96,14 +81,14 @@ class UsingGuideAppPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Tata Cara Pembelian Produk',
+              'Tata Cara Pembelian Ticket',
               style: blackTextStyle.copyWith(fontSize: 20, fontWeight: bold),
             ),
             const SizedBox(
               height: 5,
             ),
             Text(
-              'Tata cara pembelian produk yaitu pilih salah satu atau klik item produk yang ingin belikan kemudian akan diarahkan ke halaman detail produk, selanjutnya tambahkan ke keranjang, selanjutnya muncul dialog telah berhasil di tambah ke dalam keranjang, kemudian pada halaman keranjang tersebut bisa menambahkan item quantity produk sampai pada persediaan produk dari penjual.\nselanjutnya pada halaman pembayaran isikan input untuk tujuan pengiriman produk yaitu nomor hp, alamat dan gambar bukti upload slip pembayaran yang telah dilakukannya dan tunggu proses konfirmasi pembelian produk dari penjual.',
+              'Tata cara pembelian produk yaitu pilih salah satu atau klik item tiket yang ingin belikan kemudian akan diarahkan ke halaman detail produk, selanjutnya tambahkan ke keranjang, selanjutnya muncul dialog telah berhasil di tambah ke dalam keranjang, kemudian pada halaman keranjang tersebut bisa menambahkan item quantity tiket.\nselanjutnya pada halaman pembayaran isikan input nama kemudian sung checkout.',
               textAlign: TextAlign.justify,
               style: greyTextStyle.copyWith(fontWeight: semiBold),
             )

@@ -42,7 +42,7 @@ class StoreInformationPage extends StatelessWidget {
               height: 100,
             ),
             Text(
-              'MARKETTANI',
+              'TRAVELIO',
               style: greenTextStyle.copyWith(
                   fontSize: 30, letterSpacing: 7.2, fontWeight: bold),
             ),

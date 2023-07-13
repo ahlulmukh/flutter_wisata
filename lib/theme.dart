@@ -4,17 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 double defaultMargin = 10.0;
 double defaultRadius = 10.0;
 
-Color primaryColor = const Color(0xff2E7D32);
-Color secondaryColor = const Color(0xff43A047);
-Color lightColor = const Color(0xff66BB6A);
-Color priceColor = const Color(0xff1B5E20);
+Color primaryColor = const Color(0xff1AA7EC);
+Color secondaryColor = const Color(0xff42b6f0);
+Color lightColor = const Color(0xff71c8f4);
+Color priceColor = const Color(0xff0f83bd);
 Color greyColor = const Color(0xff8D92A3);
 Color whiteColor = const Color(0xffFFFFFF);
 Color dangerColor = const Color(0xffBD1414);
 Color warningColor = const Color(0xffF3AE28);
 Color backgroundColor1 = const Color(0xffF8F8F8);
-Color backgroundColor2 = const Color(0xff2E7D32);
-Color backgroundColor3 = const Color(0xff43A047);
+Color backgroundColor2 = const Color(0xff1AA7EC);
+Color backgroundColor3 = const Color(0xff1AA7EC);
 Color blackColor = const Color(0xff000000);
 Color transParentColor = Colors.transparent;
 
