@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tugas_akhir/models/order_model.dart';
 import 'package:flutter_tugas_akhir/page/checkout_success_page.dart';
@@ -5,7 +7,9 @@ import 'package:flutter_tugas_akhir/provider/order_provider.dart';
 import 'package:flutter_tugas_akhir/theme.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +23,35 @@ class OrderList extends StatefulWidget {
 
 class _OrderListState extends State<OrderList> {
   bool shouldRefresh = false;
+
+  Future<void> _downloadPDF() async {
+    if (widget.order.strukurl != null &&
+        (widget.order.strukurl!.startsWith('http://') ||
+            widget.order.strukurl!.startsWith('https://'))) {
+      try {
+        // Lakukan permintaan jaringan untuk mengunduh PDF
+        final response = await http.get(Uri.parse(widget.order.strukurl!));
+
+        // Dapatkan direktori penyimpanan eksternal (misalnya, galeri)
+        Directory? externalDir = await getExternalStorageDirectory();
+
+        if (externalDir != null) {
+          // Buat file baru dengan nama unik di direktori penyimpanan eksternal
+          File file = File('${externalDir.path}/order_${widget.order.id}.pdf');
+
+          // Tulis konten yang diunduh ke dalam file
+          await file.writeAsBytes(response.bodyBytes);
+          print('PDF berhasil diunduh ke: ${file.path}');
+        } else {
+          print('Tidak dapat mengakses direktori penyimpanan eksternal.');
+        }
+      } catch (e) {
+        print('Gagal mengunduh PDF: $e');
+      }
+    } else {
+      print('URL PDF tidak valid');
+    }
+  }
 
   void _navigateToScanPage() async {
     final result = await Navigator.push(
@@ -58,56 +91,50 @@ class _OrderListState extends State<OrderList> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    'Qr Code',
-                    style: blackTextStyle.copyWith(
-                        fontSize: 16, fontWeight: semiBold),
-                  ),
                   const SizedBox(
                     height: 5,
                   ),
-                  Hero(
-                    tag: 'payment',
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HeroPaymentPage(
-                                    order: widget.order,
-                                  ))),
-                      child: Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image:
-                                NetworkImage(widget.order.qrcodeurl.toString()),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            width: 100,
-                            padding: const EdgeInsets.all(9),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: greyColor.withOpacity(0.6)),
-                            child: Text(
-                              'Lihat',
-                              textAlign: TextAlign.center,
-                              style: whiteTextStyle.copyWith(
-                                  fontWeight: semiBold, fontSize: 16),
+                  (widget.order.status == OrderStatus.pending)
+                      ? Hero(
+                          tag: 'payment',
+                          child: GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HeroPaymentPage(
+                                          order: widget.order,
+                                        ))),
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      widget.order.qrcodeurl.toString()),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  width: 100,
+                                  padding: const EdgeInsets.all(9),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: greyColor.withOpacity(0.6)),
+                                  child: Text(
+                                    'Lihat',
+                                    textAlign: TextAlign.center,
+                                    style: whiteTextStyle.copyWith(
+                                        fontWeight: semiBold, fontSize: 16),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                        )
+                      : const SizedBox(),
                   Text(
                     'Nama Pembeli',
                     style: blackTextStyle.copyWith(
@@ -133,6 +160,21 @@ class _OrderListState extends State<OrderList> {
                   ),
                   Text(
                     widget.order.nameticket.toString(),
+                    style: greyTextStyle.copyWith(fontWeight: medium),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Jumlah Tiket',
+                    style: blackTextStyle.copyWith(
+                        fontSize: 16, fontWeight: semiBold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    widget.order.quantities.toString(),
                     style: greyTextStyle.copyWith(fontWeight: medium),
                   ),
                   const SizedBox(
@@ -304,7 +346,9 @@ class _OrderListState extends State<OrderList> {
                             borderRadius: BorderRadiusDirectional.circular(6)),
                         backgroundColor: secondaryColor,
                       ),
-                      onPressed: (),
+                      onPressed: () {
+                        _downloadPDF();
+                      },
                       child: Text('Unduh Slip',
                           style: whiteTextStyle.copyWith(fontWeight: bold)),
                     )

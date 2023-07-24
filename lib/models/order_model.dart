@@ -10,6 +10,7 @@ class OrderModel {
   String? nama;
   String? nameticket;
   String? qrcodeurl;
+  String? strukurl;
   int? usersId;
   int? quantities;
   OrderStatus? status;
@@ -23,6 +24,7 @@ class OrderModel {
     required this.nama,
     required this.nameticket,
     required this.qrcodeurl,
+    required this.strukurl,
     required this.usersId,
     required this.status,
     required this.totalPrice,
@@ -39,6 +41,7 @@ class OrderModel {
         nameticket: json['name_ticket'] ?? '',
         quantities: json['quantities'] ?? '',
         qrcodeurl: json['qrcode_url'] != null ? json['qrcode_url'] : null,
+        strukurl: json['struk_url'] != null ? json['struk_url'] : null,
         usersId: int.parse(json['users_id'].toString()),
         status: (json['status'] == 'PENDING')
             ? OrderStatus.pending
@@ -69,6 +72,7 @@ class OrderModel {
       'nama': nama,
       'name_ticket': nameticket,
       'qrcode_url': qrcodeurl,
+      'struk_url': strukurl,
       'users_id': usersId,
       'status': status,
       'total_price': totalPrice,
