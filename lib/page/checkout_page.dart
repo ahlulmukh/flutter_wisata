@@ -123,11 +123,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
         isLoading = true;
       });
       if (_formKey.currentState!.validate()) {
+        List<CartModel> cartItems = cartProvider.cartList!;
+        double totalPrice = cartProvider.totalPrice();
+        int quantities = cartProvider.totalItems();
+        print("Quantities: $quantities");
         if (await checkoutProvider.checkout(
           carts: cartProvider.cartList as List<CartModel>,
           nama: numberController.text,
-          totalPrice: cartProvider.totalPrice(),
+          totalPrice: totalPrice,
           nameTicket: cartProvider.cartList![0].product?.name ?? '',
+          quantities: quantities,
         )) {
           cartProvider.removeAllCart();
           showSuccessDialog();

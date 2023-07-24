@@ -110,7 +110,7 @@ class _GetSearchProductState extends State<GetSearchProduct> {
                 child: RichText(
                   text: TextSpan(children: [
                     TextSpan(
-                        text: 'Hasil pencarian produk ',
+                        text: 'Hasil pencarian Tiket ',
                         style: blackTextStyle.copyWith(
                             fontSize: 16, fontWeight: medium)),
                     TextSpan(

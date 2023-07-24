@@ -11,6 +11,7 @@ class CheckoutService {
     required String nama,
     required double totalPrice,
     required String nameTicket,
+    required int quantities,
   }) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -26,7 +27,8 @@ class CheckoutService {
           'nama': nama,
           'total_price': totalPrice,
           'name_ticket': nameTicket,
-          'status': 'PENDING'
+          'quantities': quantities,
+          'status': 'PENDING',
         },
       );
       var response = await dio.post(Service.apiUrl + '/checkout',

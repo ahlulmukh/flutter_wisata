@@ -296,6 +296,19 @@ class _OrderListState extends State<OrderList> {
                           style: whiteTextStyle.copyWith(fontWeight: bold)),
                     )
                   : const SizedBox(),
+              (widget.order.status == OrderStatus.success)
+                  ? TextButton(
+                      style: TextButton.styleFrom(
+                        fixedSize: const Size.fromWidth(120),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(6)),
+                        backgroundColor: secondaryColor,
+                      ),
+                      onPressed: (),
+                      child: Text('Unduh Slip',
+                          style: whiteTextStyle.copyWith(fontWeight: bold)),
+                    )
+                  : const SizedBox(),
               widget.order.status == OrderStatus.delivery
                   ? TextButton(
                       style: TextButton.styleFrom(

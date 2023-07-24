@@ -11,6 +11,7 @@ class OrderModel {
   String? nameticket;
   String? qrcodeurl;
   int? usersId;
+  int? quantities;
   OrderStatus? status;
   double? totalPrice;
   DateTime? createdAT;
@@ -28,6 +29,7 @@ class OrderModel {
     required this.createdAT,
     required this.orderItem,
     required this.user,
+    required this.quantities,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class OrderModel {
         id: json['id'],
         nama: json['nama'] ?? '',
         nameticket: json['name_ticket'] ?? '',
+        quantities: json['quantities'] ?? '',
         qrcodeurl: json['qrcode_url'] != null ? json['qrcode_url'] : null,
         usersId: int.parse(json['users_id'].toString()),
         status: (json['status'] == 'PENDING')

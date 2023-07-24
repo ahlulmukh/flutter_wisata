@@ -8,6 +8,7 @@ class CheckoutProvider with ChangeNotifier {
     required String nama,
     required double totalPrice,
     required String nameTicket,
+    required int quantities,
   }) async {
     try {
       if (await CheckoutService().checkout(
@@ -15,6 +16,7 @@ class CheckoutProvider with ChangeNotifier {
         nama: nama,
         totalPrice: totalPrice,
         nameTicket: nameTicket,
+        quantities: quantities,
       )) {
         return true;
       } else {

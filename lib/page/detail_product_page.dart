@@ -115,7 +115,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     height: 12,
                   ),
                   Text(
-                    'Berhasil ditambahkan\n ke keranjang',
+                    'Berhasil ditambahkan\n ke Book',
                     textAlign: TextAlign.center,
                     style: whiteTextStyle,
                   ),
@@ -136,7 +136,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         ),
                       ),
                       child: Text(
-                        'Lihat Keranjang',
+                        'Lihat Book',
                         style: whiteTextStyle.copyWith(
                           fontSize: 16,
                           fontWeight: semiBold,
@@ -417,7 +417,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
               height: 20,
             ),
             Text(
-              'Deskripsi Produk',
+              'Deskripsi Tempat Wisata',
               style: blackTextStyle.copyWith(
                 fontSize: 16,
                 fontWeight: semiBold,

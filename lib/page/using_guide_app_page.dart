@@ -88,7 +88,7 @@ class UsingGuideAppPage extends StatelessWidget {
               height: 5,
             ),
             Text(
-              'Tata cara pembelian produk yaitu pilih salah satu atau klik item tiket yang ingin belikan kemudian akan diarahkan ke halaman detail produk, selanjutnya tambahkan ke keranjang, selanjutnya muncul dialog telah berhasil di tambah ke dalam keranjang, kemudian pada halaman keranjang tersebut bisa menambahkan item quantity tiket.\nselanjutnya pada halaman pembayaran isikan input nama kemudian sung checkout.',
+              'Tata cara pembelian produk yaitu pilih salah satu atau klik item tiket yang ingin belikan kemudian akan diarahkan ke halaman detail produk, selanjutnya tambahkan ke book, selanjutnya muncul dialog telah berhasil di tambah ke dalam book, kemudian pada halaman keranjang tersebut bisa menambahkan item quantity tiket.\nselanjutnya pada halaman pembayaran isikan input nama kemudian sung checkout.',
               textAlign: TextAlign.justify,
               style: greyTextStyle.copyWith(fontWeight: semiBold),
             )

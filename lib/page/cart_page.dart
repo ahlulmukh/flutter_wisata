@@ -65,7 +65,7 @@ class _CartPageState extends State<CartPage> {
               height: 20,
             ),
             Text(
-              'Keranjang kosong',
+              'Book kosong',
               style: greyTextStyle.copyWith(fontSize: 22, fontWeight: semiBold),
             ),
           ],

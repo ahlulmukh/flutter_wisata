@@ -111,7 +111,7 @@ class CardWishlist extends StatelessWidget {
                     style: whiteTextStyle.copyWith(
                         fontWeight: semiBold, fontSize: 17),
                   ),
-                  messageText: Text('Berhasil ditambah ke keranjang',
+                  messageText: Text('Berhasil ditambah ke book',
                       style: whiteTextStyle.copyWith(fontSize: 14)),
                   colorText: Colors.white);
             },
