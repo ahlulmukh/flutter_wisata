@@ -122,7 +122,7 @@ class _TransactionPageState extends State<TransactionPage> {
                               height: MediaQuery.of(context).size.height * 0.15,
                             ),
                             Image.asset(
-                              'assets/no_order.png',
+                              'assets/kosong.png',
                               width: MediaQuery.of(context).size.width * 0.5,
                               height: 250,
                             ),
@@ -160,7 +160,7 @@ class _TransactionPageState extends State<TransactionPage> {
                       height: MediaQuery.of(context).size.height * 0.15,
                     ),
                     Image.asset(
-                      'assets/no_order.png',
+                      'assets/kosong.png',
                       width: MediaQuery.of(context).size.width * 0.5,
                       height: 250,
                     ),
@@ -197,7 +197,7 @@ class _TransactionPageState extends State<TransactionPage> {
                                     MediaQuery.of(context).size.height * 0.15,
                               ),
                               Image.asset(
-                                'assets/no_order.png',
+                                'assets/kosong.png',
                                 width: MediaQuery.of(context).size.width * 0.5,
                                 height: 250,
                               ),
