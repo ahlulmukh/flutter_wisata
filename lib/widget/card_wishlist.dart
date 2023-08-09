@@ -111,7 +111,7 @@ class CardWishlist extends StatelessWidget {
                     style: whiteTextStyle.copyWith(
                         fontWeight: semiBold, fontSize: 17),
                   ),
-                  messageText: Text('Berhasil ditambah ke book',
+                  messageText: Text('Berhasil ditambah ke booking list',
                       style: whiteTextStyle.copyWith(fontSize: 14)),
                   colorText: Colors.white);
             },
@@ -122,7 +122,7 @@ class CardWishlist extends StatelessWidget {
                   color: secondaryColor,
                   borderRadius: BorderRadius.circular(6)),
               child: Text(
-                'Tambah keranjang',
+                'Tiket',
                 textAlign: TextAlign.center,
                 style:
                     whiteTextStyle.copyWith(fontSize: 16, fontWeight: semiBold),

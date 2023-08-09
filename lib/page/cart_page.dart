@@ -58,14 +58,14 @@ class _CartPageState extends State<CartPage> {
               height: MediaQuery.of(context).size.height * 0.20,
             ),
             Image.asset(
-              'assets/empty.png',
+              'assets/kosong.png',
               width: MediaQuery.of(context).size.width * 0.75,
             ),
             const SizedBox(
               height: 20,
             ),
             Text(
-              'Book kosong',
+              'Booking Empty',
               style: greyTextStyle.copyWith(fontSize: 22, fontWeight: semiBold),
             ),
           ],
@@ -140,7 +140,7 @@ class _CartPageState extends State<CartPage> {
         ),
         elevation: 0,
         title: Text(
-          'Keranjang',
+          'Booking List',
           style: blackTextStyle.copyWith(fontWeight: bold, fontSize: 20),
         ),
       ),
