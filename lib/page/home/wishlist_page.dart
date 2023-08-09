@@ -39,7 +39,7 @@ class _WishlistPageState extends State<WishlistPage> {
                       height: MediaQuery.of(context).size.height * 0.15,
                     ),
                     Image.asset(
-                      'assets/wishlist.png',
+                      'assets/pana.png',
                       width: 250,
                     ),
                     const SizedBox(
