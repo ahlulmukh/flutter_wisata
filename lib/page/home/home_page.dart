@@ -267,7 +267,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: cartProvider.cartList!.length == 0
                     ? const Icon(
-                        Icons.shopping_cart_outlined,
+                        Icons.list_outlined,
                         size: 25,
                         color: Colors.white,
                       )
@@ -282,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                             style: whiteTextStyle.copyWith(
                                 fontSize: 14, fontWeight: semiBold)),
                         child: const Icon(
-                          Icons.shopping_cart_outlined,
+                          Icons.list_outlined,
                           size: 25,
                           color: Colors.white,
                         ),

@@ -290,7 +290,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  'Keranjang',
+                                  'Tiket',
                                   style: whiteTextStyle.copyWith(
                                       fontWeight: semiBold),
                                 ),

@@ -130,7 +130,7 @@ class _AllProductPageState extends State<AllProductPage> {
                 },
                 child: cartProvider.cartList!.length == 0
                     ? const Icon(
-                        Icons.shopping_cart_outlined,
+                        Icons.list_outlined,
                         size: 28,
                         color: Colors.grey,
                       )
@@ -145,7 +145,7 @@ class _AllProductPageState extends State<AllProductPage> {
                             style: whiteTextStyle.copyWith(
                                 fontSize: 14, fontWeight: semiBold)),
                         child: const Icon(
-                          Icons.shopping_cart_outlined,
+                          Icons.list_outlined,
                           size: 28,
                           color: Colors.grey,
                         ),
