@@ -20,30 +20,69 @@ class _ScanPageState extends State<ScanPage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      Dio dio = Dio(); // Membuat instance Dio
+      Dio dio = Dio();
 
       dio.options.headers['Authorization'] = 'Bearer $token';
 
       Response response = await dio.post(
-        Service.apiUrl +
-            '/verify-payment', // Ganti dengan URL endpoint verifikasi pembayaran Anda
+        Service.apiUrl + '/verify-payment',
         data: {'data': scannedData},
       );
 
       if (response.statusCode == 200) {
         // Verifikasi sukses
-        _showValidationDialog('Pembayaran berhasil diverifikasi');
+        var orderData =
+            response.data['order']; // Anggap respons mengandung data pesanan
+        _showValidationDialog('Pembayaran berhasil diverifikasi', orderData);
       } else {
         // Verifikasi gagal
         print('Verifikasi pembayaran gagal: ${response.data}');
       }
     } catch (e) {
-      _showValidationDialog(
+      _showValidationDialogG(
           'Verifikasi pembayaran gagal, saldo harus mencukupi');
     }
   }
 
-  void _showValidationDialog(String message) {
+  void _showValidationDialog(String message, Map<String, dynamic>? orderData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Validasi Pembayaran'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(message),
+              if (orderData != null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Status: ${orderData['status']}'),
+                    Text('Total Harga: Rp.${orderData['total_price']}'),
+                    Text('Jumlah: ${orderData['quantities']}'),
+                    Text('Nama Tiket: ${orderData['name_ticket']}'),
+                    const Text('Harap Simpan bukti pembayaran ini'),
+                  ],
+                ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showValidationDialogG(String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
