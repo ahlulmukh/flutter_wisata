@@ -99,7 +99,7 @@ class _ScanPageState extends State<ScanPage> {
                 child: const Text('Go Scan Page'),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return scanQR();
+                    return const ScanQRPage();
                   }));
                 },
               ),
